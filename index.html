@@ -12,6 +12,7 @@
             --primary: #ff3838;
             --primary-glow: rgba(255, 56, 56, 0.2);
             --accent: #00d2d3;
+            --accent-glow: rgba(0, 210, 211, 0.3);
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --border: #222834;
@@ -38,14 +39,37 @@
             padding: 20px;
         }
 
-        /* CONFIGURAÇÃO / SETUP */
-        .setup-card {
+        .auth-card, .setup-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 30px;
             margin-top: 40px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .auth-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .auth-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .auth-toggle-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: -13px;
         }
 
         .brand-logo {
@@ -93,8 +117,7 @@
             box-shadow: 0 4px 15px var(--primary-glow);
         }
 
-        /* APP PRINCIPAL */
-        #screen-app { display: none; }
+        #screen-setup, #screen-app { display: none; }
 
         .profile-widget {
             background: linear-gradient(135deg, #1e2430, #141821);
@@ -111,6 +134,25 @@
             margin-bottom: 15px;
         }
 
+        .profile-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .btn-logout {
+            background: rgba(255, 56, 56, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 5px;
+            width: fit-content;
+        }
+
         .badge-goal {
             background: rgba(0, 210, 211, 0.1);
             color: var(--accent);
@@ -118,9 +160,9 @@
             border-radius: 30px;
             font-size: 0.8rem;
             font-weight: 700;
+            align-self: flex-start;
         }
 
-        /* CARD DE BIOIMPEDÂNCIA / IMC */
         .bio-panel {
             background: rgba(0, 0, 0, 0.25);
             border: 1px solid var(--border);
@@ -153,7 +195,6 @@
             font-size: 0.75rem;
         }
 
-        /* SUB-MENU ABC */
         .abc-tabs {
             display: flex;
             gap: 10px;
@@ -178,7 +219,6 @@
             border-color: var(--primary);
         }
 
-        /* CARDS DE EXERCÍCIO */
         .exercise-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -218,7 +258,6 @@
         .exercise-detail h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
         .exercise-detail p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
 
-        /* PAINEL DE CARGA LOGADA */
         .progress-log-zone {
             background: rgba(46, 213, 115, 0.05);
             border-top: 1px dashed var(--border);
@@ -255,7 +294,6 @@
             cursor: pointer;
         }
 
-        /* MODAIS */
         .modal {
             display: none;
             position: fixed;
@@ -278,26 +316,6 @@
             overflow-y: auto;
         }
 
-        .modal-preview-icon {
-            width: 100%;
-            height: 120px;
-            background: var(--bg-main);
-            border-radius: 12px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid var(--border);
-        }
-
-        .modal-preview-icon svg {
-            width: 70px;
-            height: 70px;
-            fill: none;
-            stroke: var(--primary);
-            stroke-width: 2;
-        }
-
         .ai-guide-box {
             background: var(--bg-main);
             padding: 15px;
@@ -306,20 +324,9 @@
             border-left: 3px solid var(--accent);
         }
 
-        .ai-guide-box h5 {
-            color: var(--accent);
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
+        .ai-guide-box h5 { color: var(--accent); margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase; }
+        .ai-guide-box p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
 
-        .ai-guide-box p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        /* TIMER */
         .hub-timer {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -355,7 +362,6 @@
             cursor: pointer;
         }
 
-        /* NAV INFERIOR */
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -383,26 +389,200 @@
 
         .nav-item.active { color: var(--primary); }
         .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+
+        /* --- BOTÃO FLUTUANTE DA IA E CHATBOX --- */
+        .ai-floating-btn {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            border-radius: 50%;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+            animation: pulseIA 2s infinite;
+        }
+
+        @keyframes pulseIA {
+            0% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
+            50% { transform: scale(1.06); box-shadow: 0 4px 25px rgba(0, 210, 211, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
+        }
+
+        .ai-floating-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .ai-chat-container {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-main);
+            z-index: 2500;
+            display: none;
+            flex-direction: column;
+        }
+
+        @media (min-width: 600px) {
+            .ai-chat-container {
+                top: auto; left: auto;
+                right: 20px; bottom: 160px;
+                width: 380px; height: 550px;
+                border-radius: 20px;
+                border: 1px solid var(--border);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            }
+        }
+
+        .ai-chat-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-status-dot {
+            width: 8px; height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .ai-chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.ai {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .chat-bubble.user {
+            background: var(--accent);
+            color: #000;
+            font-weight: 500;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-chat-footer {
+            padding: 12px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-send-chat {
+            background: var(--accent);
+            border: none;
+            color: black;
+            font-weight: 700;
+            padding: 0 16px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="screen-setup" class="setup-card">
+        
+        <!-- TELA DE AUTENTICAÇÃO LOCAL -->
+        <div id="screen-auth" class="auth-card">
             <div class="brand-logo">Hybrid<span>Fitness</span></div>
-            <form onsubmit="initApp(event)">
+            
+            <div class="auth-toggle">
+                <button id="tab-login" class="auth-toggle-btn active" onclick="switchAuthTab('login')">Entrar</button>
+                <button id="tab-register" class="auth-toggle-btn" onclick="switchAuthTab('register')">Cadastrar</button>
+            </div>
+
+            <form id="form-login" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>Nome do Atleta</label>
-                    <input type="text" id="in-name" required placeholder="Digite seu nome">
+                    <label>E-mail do Atleta</label>
+                    <input type="email" id="login-email" required placeholder="atleta@email.com">
                 </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-pass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Acessar Painel</button>
+            </form>
+
+            <form id="form-register" onsubmit="handleRegister(event)" style="display: none;">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="reg-name" required placeholder="Seu Nome">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="reg-email" required placeholder="atleta@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Criar Senha</label>
+                    <input type="password" id="reg-pass" required placeholder="Mínimo 6 dígitos">
+                </div>
+                <button type="submit" class="btn-primary">Criar Conta</button>
+            </form>
+        </div>
+
+        <!-- TELA SETUP -->
+        <div id="screen-setup" class="setup-card">
+            <div class="brand-logo">Configuração<span>Inicial</span></div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;">Preencha os dados abaixo para gerar sua ficha.</p>
+            <form onsubmit="initApp(event)">
                 <div style="display: flex; gap: 12px;">
                     <div class="form-group" style="flex: 1;">
                         <label>Peso (kg)</label>
-                        <input type="number" id="in-weight" required placeholder="78">
+                        <input type="text" id="in-weight" required placeholder="Ex: 78">
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label>Altura (m)</label>
-                        <input type="number" id="in-height" step="0.01" required placeholder="1.64">
+                        <input type="text" id="in-height" required placeholder="Ex: 1.64">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Idade</label>
+                        <input type="number" id="in-age" required placeholder="Ex: 30">
                     </div>
                 </div>
                 <div style="display: flex; gap: 12px;">
@@ -421,26 +601,28 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary">Montar Painel de Treino</button>
+                <button type="submit" class="btn-primary">Gerar Minha Ficha de Treino</button>
             </form>
         </div>
 
+        <!-- APP PRINCIPAL -->
         <div id="screen-app">
             <div class="profile-widget">
                 <div class="profile-header">
-                    <div>
+                    <div class="profile-user-info">
                         <h3 id="user-name">Atleta</h3>
-                        <p id="user-stats">00kg | 0.00m | M</p>
+                        <p id="user-stats">00kg | 0.00m | 00 anos</p>
+                        <button class="btn-logout" onclick="logout()">Sair da Conta</button>
                     </div>
                     <div class="badge-goal" id="user-goal">Objetivo</div>
                 </div>
                 
                 <div class="bio-panel">
-                    <div class="bio-title">📊 Pré-Bioimpedância & Diagnóstico</div>
+                    <div class="bio-title">📊 Diagnóstico Corporal</div>
                     <div class="bio-grid">
                         <div class="bio-item"><span id="lbl-imc-val">IMC: --</span><strong id="lbl-imc-status">Calculando...</strong></div>
                         <div class="bio-item"><span>Meta Corporal:</span><strong id="lbl-meta-corp">Definindo...</strong></div>
-                        <div class="bio-item" style="grid-column: span 2;"><span>Diretriz de Alimentação:</span><p id="lbl-feed-advice" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 3px;"></p></div>
+                        <div class="bio-item" style="grid-column: span 2;"><span>Diretriz Alimentar:</span><p id="lbl-feed-advice" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 3px;"></p></div>
                     </div>
                 </div>
             </div>
@@ -451,11 +633,10 @@
                 <button class="abc-btn" id="btn-C" onclick="changeDay('C')">TREINO C</button>
             </div>
 
-            <div id="workout-container">
-                </div>
+            <div id="workout-container"></div>
 
             <div class="hub-timer">
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;">⏱️ Descanso (Toque para Editar)</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;">⏱️ Descanso</span>
                 <div class="timer-val" id="timer-display" onclick="editTime()">01:00</div>
                 <div class="timer-actions">
                     <button class="btn-sec" id="btn-start-toggle" onclick="toggleTimer()" style="background: var(--primary); font-weight:700;">Iniciar</button>
@@ -464,6 +645,38 @@
                     <button class="btn-sec" style="color: var(--text-muted)" onclick="resetTimer()">Reset</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- BOTÃO FLUTUANTE DA IA -->
+    <button class="ai-floating-btn" id="ai-btn" onclick="toggleAIChat()">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2c1.1 0 2 .9 2 2v1c2.42 0 4.57 1.25 5.82 3.14l1.11-1.11c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-1.07 1.07C21.72 10.23 22 11.08 22 12c0 1.1-.9 2-2 2h-1v1c0 2.42-1.25 4.57-3.14 5.82l1.11 1.11c.39.39.39 1.02 0 1.41-.39.39-1.02.39-1.41 0l-1.07-1.07c-.72.45-1.57.73-2.49.73-1.1 0-2-.9-2-2v-1H9c-2.42 0-4.57-1.25-5.82-3.14l-1.11 1.11c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.07-1.07C2.28 13.77 2 12.92 2 12c0-1.1.9-2 2-2h1V9c0-2.42 1.25-4.57 3.14-5.82L7.03 2.07c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0l1.07 1.07c.72-.45 1.57-.73 2.49-.73zm0 4c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-2.5 4c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm5 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z"/>
+        </svg>
+    </button>
+
+    <!-- CONTAINER DA JANELA DE CHAT DA IA -->
+    <div class="ai-chat-container" id="ai-chat">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title">
+                <div class="ai-status-dot"></div>
+                <div>
+                    <h4 style="font-size: 0.95rem;">Coach IA Pro</h4>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">Personal Trainer 100% Capacitado</span>
+                </div>
+            </div>
+            <button onclick="toggleAIChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer; font-weight:700;">×</button>
+        </div>
+        <div class="ai-chat-body" id="ai-chat-messages">
+            <!-- Mensagem padrão do sistema simulado -->
+            <div class="chat-bubble ai">
+                Olá! Sou seu Coach de IA especializado de alta performance. 💪<br><br>
+                Estou pronto para te ajudar a **montar treinos**, **corrigir erros de divisão**, ou resolver imediatamente qualquer **dor ou incômodo** que você sinta executando os movimentos. O que vamos ajustar hoje?
+            </div>
+        </div>
+        <div class="ai-chat-footer">
+            <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Pergunte sobre treinos ou reporte uma dor..." onkeypress="handleChatKeyPress(event)">
+            <button class="btn-send-chat" onclick="sendChatMessage()">Enviar</button>
         </div>
     </div>
 
@@ -476,38 +689,23 @@
         </button>
     </div>
 
+    <!-- MODAL EXECUÇÃO -->
     <div class="modal" id="guide-modal">
         <div class="modal-content">
             <h3 id="guide-title" style="color: var(--primary); margin-bottom: 10px;">Execução</h3>
-            <div class="modal-preview-icon" id="guide-vector-container"></div>
-            
-            <div class="ai-guide-box">
-                <h5>1. Posição Inicial</h5>
-                <p id="guide-step1">Carregando orientação...</p>
-            </div>
-            <div class="ai-guide-box">
-                <h5>2. Movimento Retilíneo</h5>
-                <p id="guide-step2">Carregando orientação...</p>
-            </div>
-            <div class="ai-guide-box">
-                <h5>⚠️ Erro Comum a Evitar</h5>
-                <p id="guide-step3" style="color: #ff4757;"></p>
-            </div>
-            <button class="btn-primary" onclick="closeGuideModal()">Entendido, Começar!</button>
+            <div class="ai-guide-box"><h5>1. Posição Inicial</h5><p id="guide-step1">Posicione o corpo de forma anatomica mantendo a coluna reta.</p></div>
+            <div class="ai-guide-box"><h5>2. Movimento</h5><p id="guide-step2">Execute de forma cadenciada com o máximo de contração muscular.</p></div>
+            <div class="ai-guide-box"><h5>⚠️ Evite</h5><p id="guide-step3" style="color: #ff4757;">Usar embalos corporais ou roubar na amplitude.</p></div>
+            <button class="btn-primary" onclick="closeGuideModal()">Entendido!</button>
         </div>
     </div>
 
+    <!-- MODAL MUDAR EXERCÍCIO -->
     <div class="modal" id="edit-modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; color: var(--primary);">Substituir Exercício</h3>
-            <div class="form-group">
-                <label>Selecione o novo exercício</label>
-                <select id="modal-select-ex"></select>
-            </div>
-            <div class="form-group">
-                <label>Séries e Repetições</label>
-                <input type="text" id="modal-input-meta">
-            </div>
+            <div class="form-group"><label>Selecione o novo exercício</label><select id="modal-select-ex"></select></div>
+            <div class="form-group"><label>Séries e Repetições</label><input type="text" id="modal-input-meta"></div>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn-primary" style="flex: 1;" onclick="saveExerciseEdit()">Salvar</button>
                 <button class="btn-sec" onclick="closeModal()">Cancelar</button>
@@ -515,17 +713,24 @@
         </div>
     </div>
 
+    <!-- LÓGICA DO BANCO DE DADOS LOCAL (LOCALSTORAGE) -->
     <script>
+        window.currentUserEmail = null;
+        window.currentEnvironment = "casa";
+        window.currentDay = "A";
+        window.currentEditingIndex = null;
+        window.userData = null;
+
         const bonecoVectors = {
             push: `<svg viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
             pull: `<svg viewBox="0 0 24 24"><path d="M12 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-5 4h10v2H7zm2 4h6v6H9zM3 19h18"/></svg>`,
             legs: `<svg viewBox="0 0 24 24"><path d="M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3 5h6v4H9zm-1 6h3v5H8zm5 0h3v5h-3z"/></svg>`
         };
 
-        const exerciseBank = {
+        window.exerciseBank = {
             push: [
                 { id: "flexao", name: "Flexão de Braço Padrão", desc: "Corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push },
-                { id: "supino_reto", name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre.", vector: bonecoVectors.push },
+                { id: "supino_reto", name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito.", vector: bonecoVectors.push },
                 { id: "supino_inc", name: "Supino Inclinado Halteres", desc: "Foco na porção superior do peito.", vector: bonecoVectors.push },
                 { id: "desenvolvimento", name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça.", vector: bonecoVectors.push },
                 { id: "elev_lateral", name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros.", vector: bonecoVectors.push },
@@ -541,230 +746,372 @@
             ],
             legs: [
                 { id: "agachamento", name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs },
-                { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás em banco. Desça verticalmente.", vector: bonecoVectors.legs },
-                { id: "leg_press", name: "Leg Press 45°", desc: "Empurre a plataforma com a lombar totalmente apoiada.", vector: bonecoVectors.legs },
+                { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás em banco.", vector: bonecoVectors.legs },
+                { id: "leg_press", name: "Leg Press 45°", desc: "Empurre a plataforma com a lombar apoiada.", vector: bonecoVectors.legs },
                 { id: "afundo", name: "Afundo Caminhando", desc: "Passadas contínuas descendo o quadril.", vector: bonecoVectors.legs },
                 { id: "panturrilha", name: "Gêmeos em Pé", desc: "Extensão completa para panturrilhas.", vector: bonecoVectors.legs }
             ]
         };
 
-        let currentEnvironment = "casa";
-        let currentDay = "A";
-        let currentEditingIndex = null;
-        
-        // Memória local de progresso (Carga / Avanço de peso de cada exercício)
-        let trackingProgress = {}; 
-
-        let userRoutine = {
+        const defaultRoutine = {
             casa: {
                 A: [
-                    { ...exerciseBank.push[0], meta: "4 SÉRIES x FALHA" },
-                    { ...exerciseBank.push[5], meta: "3 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.pull[0], meta: "4 SÉRIES x 8-12 REPS" },
-                    { ...exerciseBank.push[6], meta: "3 SÉRIES x 15 REPS" },
-                    { ...exerciseBank.push[4], meta: "3 SÉRIES x 12 REPS" }
+                    { id: "flexao", name: "Flexão de Braço Padrão", desc: "Foco no peitoral e tríceps. Mantenha o core firme.", meta: "4 SÉRIES x FALHA" },
+                    { id: "diamante", name: "Flexão Diamante (Mãos Juntas)", desc: "Aproximação das mãos intensificando a ação do tríceps.", meta: "3 SÉRIES x 12 REPS" },
+                    { id: "mergulho", name: "Mergulho no Banco ou Cadeira", desc: "Apoie as mãos na borda e desça flexionando os cotovelos.", meta: "3 SÉRIES x 15 REPS" },
+                    { id: "flexao", name: "Flexão Inclinada (Mãos Elevadas)", desc: "Apoie as mãos em uma superfície alta para focar na porção inferior.", meta: "3 SÉRIES x 12 REPS" },
+                    { id: "desenvolvimento", name: "Desenvolvimento de Ombros (Garrafas/Pesos)", desc: "Empurre os pesos acima da cabeça estabilizando a coluna.", meta: "4 SÉRIES x 15 REPS" }
                 ],
                 B: [
-                    { ...exerciseBank.legs[0], meta: "4 SÉRIES x 20 REPS" },
-                    { ...exerciseBank.legs[1], meta: "4 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.legs[3], meta: "3 SÉRIES x 20 PASSOS" },
-                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 20 REPS" }
+                    { id: "barra_fixa", name: "Barra Fixa Pronada", desc: "Puxe o corpo controladamente até o queixo passar a barra.", meta: "4 SÉRIES x 8-12 REPS" },
+                    { id: "remada_curv", name: "Remada Curvada Unilateral", desc: "Puxe o peso em direção ao quadril esmagando a dorsal.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "barra_fixa", name: "Barra Fixa Supinada (Foco Bíceps)", desc: "Palmas das mãos voltadas para você para ativar mais o braço.", meta: "3 SÉRIES x 10 REPS" },
+                    { id: "rosca_direta", name: "Rosca Direta Adaptada", desc: "Flexão de cotovelos isolando completamente o bíceps.", meta: "4 SÉRIES x 15 REPS" },
+                    { id: "elev_lateral", name: "Elevação Lateral Inclinada", desc: "Incline o tronco à frente para trabalhar a porção posterior do ombro.", meta: "3 SÉRIES x 15 REPS" }
                 ],
                 C: [
-                    { id: "abs_remador", name: "Abdominal Remador", desc: "Flexão de tronco abraçando os joelhos.", vector: bonecoVectors.pull, meta: "4 SÉRIES x 20 REPS" },
-                    { id: "burpee", name: "Burpees Adaptados", desc: "Exercício metabólico de alta intensidade.", vector: bonecoVectors.push, meta: "3 SÉRIES x 10 REPS" },
-                    { id: "prancha", name: "Prancha Isométrica", desc: "Fortalecimento do core abdominal.", vector: bonecoVectors.push, meta: "3 SÉRIES x 45 SEG" },
-                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 25 REPS" }
+                    { id: "agachamento", name: "Agachamento Livre Postural", desc: "Mantenha os pés na largura dos ombros e desça com controle.", meta: "4 SÉRIES x 20 REPS" },
+                    { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Coloque um pé para trás apoiado no banco e desça verticalmente.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "afundo", name: "Afundo Estático (Passada)", desc: "Avanço unilateral descendo o joelho de trás rumo ao chão.", meta: "3 SÉRIES x 12 REPS por perna" },
+                    { id: "agachamento", name: "Agachamento Sumo", desc: "Pés mais afastados com as pontas para fora, foco em adutores.", meta: "3 SÉRIES x 15 REPS" },
+                    { id: "panturrilha", name: "Gêmeos em Pé (Degrau)", desc: "Suba na ponta dos pés usando a amplitude máxima do degrau.", meta: "4 SÉRIES x 25 REPS" }
                 ]
             },
             academia: {
                 A: [
-                    { ...exerciseBank.push[1], meta: "4 SÉRIES x 10 REPS" },
-                    { ...exerciseBank.push[2], meta: "3 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.push[3], meta: "4 SÉRIES x 10 REPS" },
-                    { ...exerciseBank.push[4], meta: "4 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.push[6], meta: "3 SÉRIES x 12 REPS" }
+                    { id: "supino_reto", name: "Supino Reto com Barra", desc: "Controle a descida até o peito e empurre com explosão.", meta: "4 SÉRIES x 10 REPS" },
+                    { id: "supino_inc", name: "Supino Inclinado com Halteres", desc: "Trabalho forte na porção superior/clavicular do peitoral.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "desenvolvimento", name: "Desenvolvimento Militar c/ Halteres", desc: "Elevação vertical focando no deltoide anterior.", meta: "4 SÉRIES x 10 REPS" },
+                    { id: "elev_lateral", name: "Elevação Lateral na Polia", desc: "Tensão constante no deltoide lateral durante todo o arco.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "mergulho", name: "Tríceps Pulley (Corda)", desc: "Extensão completa de cotovelos abrindo a corda no final.", meta: "4 SÉRIES x 12 REPS" }
                 ],
                 B: [
-                    { ...exerciseBank.pull[1], meta: "4 SÉRIES x 10 REPS" },
-                    { ...exerciseBank.pull[2], meta: "4 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.pull[3], meta: "3 SÉRIES x 10 REPS" },
-                    { ...exerciseBank.pull[4], meta: "4 SÉRIES x 12 REPS" }
+                    { id: "pulley_alto", name: "Puxada Alta Aberta (Pulley)", desc: "Puxe a barra em direção ao peitoral superior abrindo as costas.", meta: "4 SÉRIES x 10 REPS" },
+                    { id: "remada_tri", name: "Remada Baixa com Triângulo", desc: "Mantenha o tronco firme e puxe puxando os cotovelos para trás.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "remada_curv", name: "Remada Curvada Pronada", desc: "Pegada firme na barra trazendo a carga na linha do umbigo.", meta: "3 SÉRIES x 10 REPS" },
+                    { id: "rosca_direta", name: "Rosca Direta com Barra W", desc: "Movimento isolado preservando a articulação do punho.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "rosca_direta", name: "Rosca Martelo Alternada", desc: "Foco no braquiorradial e na espessura do braço.", meta: "3 SÉRIES x 12 REPS" }
                 ],
                 C: [
-                    { ...exerciseBank.legs[0], meta: "4 SÉRIES x 8-10 REPS" },
-                    { ...exerciseBank.legs[2], meta: "4 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.legs[1], meta: "3 SÉRIES x 10 REPS" },
-                    { ...exerciseBank.legs[3], meta: "3 SÉRIES x 24 PASSOS" },
-                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 20 REPS" }
+                    { id: "agachamento", name: "Agachamento Livre com Barra", desc: "Base sólida, desça quebrando os 90° com segurança.", meta: "4 SÉRIES x 8-10 REPS" },
+                    { id: "leg_press", name: "Leg Press 45°", desc: "Lombar colada no banco, desça trazendo os joelhos ao peito.", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "bulgaro", name: "Agachamento Búlgaro c/ Halteres", desc: "Segure um halter em cada mão para aumentar a sobrecarga.", meta: "3 SÉRIES x 10 REPS" },
+                    { id: "leg_press", name: "Cadeira Extensora", desc: "Cadência controlada segurando 1 segundo no topo (pico de contração).", meta: "4 SÉRIES x 12 REPS" },
+                    { id: "panturrilha", name: "Gêmeos Sentado (Solear)", desc: "Trabalho isolador focado na porção inferior da panturrilha.", meta: "4 SÉRIES x 20 REPS" }
                 ]
             }
         };
 
-        function initApp(e) {
+        function switchAuthTab(tab) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('form-login').style.display = 'none';
+            document.getElementById('form-register').style.display = 'none';
+
+            if (tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('form-login').style.display = 'block';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('form-register').style.display = 'block';
+            }
+        }
+
+        window.handleRegister = function(e) {
             e.preventDefault();
-            const name = document.getElementById('in-name').value;
-            const weight = parseFloat(document.getElementById('in-weight').value);
-            const height = parseFloat(document.getElementById('in-height').value);
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-pass').value;
+
+            if(localStorage.getItem(`user_${email}`)) {
+                alert("Este e-mail já está cadastrado!");
+                return;
+            }
+
+            const newUser = {
+                name: name,
+                password: password,
+                hasSetup: false,
+                stats: {},
+                routine: defaultRoutine,
+                progress: {}
+            };
+
+            localStorage.setItem(`user_${email}`, JSON.stringify(newUser));
+            alert("Conta criada com sucesso no seu aparelho!");
+            document.getElementById('form-register').reset();
+            switchAuthTab('login');
+        };
+
+        window.handleLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-pass').value;
+
+            const localData = localStorage.getItem(`user_${email}`);
+            if(!localData) {
+                alert("Usuário não encontrado.");
+                return;
+            }
+
+            const user = JSON.parse(localData);
+            if(user.password !== password) {
+                alert("Senha incorreta.");
+                return;
+            }
+
+            window.currentUserEmail = email;
+            window.userData = user;
+
+            document.getElementById('screen-auth').style.display = 'none';
+            if(!user.hasSetup) {
+                document.getElementById('screen-setup').style.display = 'block';
+            } else {
+                window.loadUserApp();
+            }
+        };
+
+        window.initApp = function(e) {
+            e.preventDefault();
+            const weight = parseFloat(document.getElementById('in-weight').value.replace(',', '.'));
+            const height = parseFloat(document.getElementById('in-height').value.replace(',', '.'));
+            const age = parseInt(document.getElementById('in-age').value, 10);
             const gender = document.getElementById('in-gender').value;
             const goal = document.getElementById('in-goal').value;
 
-            document.getElementById('user-name').textContent = name;
-            document.getElementById('user-stats').textContent = `${weight} kg | ${height} m | Gênero: ${gender}`;
-            document.getElementById('user-goal').textContent = goal;
+            window.userData.stats = { weight, height, age, gender, goal };
+            window.userData.hasSetup = true;
 
-            // PROCESSAMENTO DA PRÉ BIOIMPEDÂNCIA / IMC
-            const imc = weight / (height * height);
+            localStorage.setItem(`user_${window.currentUserEmail}`, JSON.stringify(window.userData));
+            document.getElementById('screen-setup').style.display = 'none';
+            window.loadUserApp();
+        };
+
+        window.loadUserApp = function() {
+            let data = window.userData;
+
+            document.getElementById('user-name').textContent = data.name;
+            document.getElementById('user-stats').textContent = `${data.stats.weight}kg | ${data.stats.height.toFixed(2)}m | ${data.stats.age} anos`;
+            document.getElementById('user-goal').textContent = data.stats.goal;
+
+            const imc = data.stats.weight / (data.stats.height * data.stats.height);
             document.getElementById('lbl-imc-val').textContent = `IMC: ${imc.toFixed(1)}`;
             
-            let status = "";
-            let metaCorp = "";
-            let advice = "";
+            let tmb = data.stats.gender === "M" ? (10 * data.stats.weight) + (625 * data.stats.height) - (5 * data.stats.age) + 5 : (10 * data.stats.weight) + (625 * data.stats.height) - (5 * data.stats.age) - 161;
 
+            let status = "", metaCorp = "", advice = "";
             if (imc < 18.5) {
-                status = "Abaixo do peso ideal";
-                metaCorp = "Ganhar Massa Magra Limpa";
-                advice = "Superávit calórico. Foque em carboidratos complexos (arroz, batata doce), proteínas pesadas (frango, ovos) e gorduras boas. Evite aeróbicos excessivos.";
+                status = "Abaixo do Peso"; metaCorp = "Construção de Massa";
+                advice = `Basal: ${Math.round(tmb)} kcal. Foco em superávit calórico limpo.`;
             } else if (imc >= 18.5 && imc < 25) {
-                status = "Peso Saudável / Normal";
-                metaCorp = "Recomposição Corporal (Trocar gordura por músculo)";
-                advice = "Dieta normocalórica. Alta ingestão proteica (2g/kg), controle de carboidratos nos dias de descanso. Alimentos limpos e hidratação forte.";
+                status = "Peso Saudável"; metaCorp = "Recomposição Muscular";
+                advice = `Basal: ${Math.round(tmb)} kcal. Calorias equilibradas e proteínas altas.`;
             } else if (imc >= 25 && imc < 30) {
-                status = "Sobrepeso Leve";
-                metaCorp = "Definição Muscular & Redução de Gordura";
-                advice = "Déficit calórico estratégico. Reduza açúcares e farinhas brancas. Mantenha as proteínas no topo para não perder massa e acelere o cárdio pós-treino.";
+                status = "Sobrepeso Moderado"; metaCorp = "Déficit Inteligente";
+                advice = `Basal: ${Math.round(tmb)} kcal. Reduza carboidratos e treine pesado.`;
             } else {
-                status = "Obesidade / Foco em Saúde";
-                metaCorp = "Emagrecimento / Perder Gordura Visceral";
-                advice = "Déficit calórico rigoroso. Corte total de ultraprocessados. Priorize vegetais crus, carnes magras e treinos intensos focando na queima diária.";
+                status = "Obesidade"; metaCorp = "Emagrecimento Saudável";
+                advice = `Basal: ${Math.round(tmb)} kcal. Déficit calórico controlado e mais cardio.`;
             }
 
             document.getElementById('lbl-imc-status').textContent = status;
             document.getElementById('lbl-meta-corp').textContent = metaCorp;
             document.getElementById('lbl-feed-advice').textContent = advice;
 
-            document.getElementById('screen-setup').style.display = 'none';
             document.getElementById('screen-app').style.display = 'block';
             document.getElementById('app-nav').style.display = 'flex';
-            renderWorkout();
-        }
+            document.getElementById('ai-btn').style.display = 'flex'; // Exibe o botão de IA
+            window.renderWorkout();
+        };
 
-        function renderWorkout() {
+        window.renderWorkout = function() {
             const container = document.getElementById('workout-container');
             container.innerHTML = "";
             
-            const list = userRoutine[currentEnvironment][currentDay];
+            if (!window.userData.routine || !window.userData.routine[window.currentEnvironment]) {
+                window.userData.routine = defaultRoutine;
+            }
+            
+            const list = window.userData.routine[window.currentEnvironment][window.currentDay];
+            const trackingProgress = window.userData.progress || {};
             
             list.forEach((ex, index) => {
-                // Chave única para rastrear o progresso do exercício
-                const progKey = `${currentEnvironment}_${currentDay}_${ex.id || index}`;
-                const loggedProg = trackingProgress[progKey] ? `🔥 Peso Atual: <strong>${trackingProgress[progKey]}</strong>` : `⚡ Sem registro de carga hoje.`;
+                const progKey = `${window.currentEnvironment}_${window.currentDay}_${ex.id || index}`;
+                const loggedProg = trackingProgress[progKey] ? `🔥 Carga Atual: <strong>${trackingProgress[progKey]}</strong>` : `⚡ Sem registro de carga hoje.`;
+                
+                let matchedVector = bonecoVectors.push;
+                const catGroup = ["push", "pull", "legs"];
+                for(let cat of catGroup) {
+                    let f = window.exerciseBank[cat].find(e => e.id === ex.id);
+                    if(f) { matchedVector = f.vector; break;}
+                }
 
                 const card = document.createElement('div');
                 card.className = "exercise-card";
                 card.innerHTML = `
                     <div class="exercise-hero">
-                        <div class="exercise-visual-box">${ex.vector || bonecoVectors.push}</div>
+                        <div class="exercise-visual-box">${matchedVector}</div>
                         <div class="exercise-detail">
                             <h4>${index + 1}. ${ex.name}</h4>
                             <p>${ex.desc}</p>
                         </div>
                     </div>
-                    <div class="progress-log-zone" id="log-${progKey}">
+                    <div class="progress-log-zone">
                         <span>${loggedProg}</span>
                     </div>
                     <div class="exercise-footer">
                         <span class="meta-tag">${ex.meta}</span>
                         <div class="action-buttons">
                             <button class="btn-action-ex" style="color:var(--success)" onclick="logProgress('${progKey}')">📈 Carga</button>
-                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal(${index})">📖 Execução</button>
+                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal(${index})">📖 Guia</button>
                             <button class="btn-action-ex" style="color:var(--text-muted)" onclick="openEditModal(${index})">⚙️ Mudar</button>
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
-        }
+        };
 
-        // SISTEMA DE PROGRESSÃO DE TREINO
-        function logProgress(progKey) {
-            let currentVal = trackingProgress[progKey] || "";
-            let newLoad = prompt("Registre sua carga ou repetições para este exercício (Ex: 24kg cada lado / 15 Reps corpo livre):", currentVal);
-            if (newLoad !== null) {
-                trackingProgress[progKey] = newLoad;
-                renderWorkout(); // Recarrega os blocos exibindo o progresso atualizado
-            }
-        }
-
-        function openGuideModal(index) {
-            const ex = userRoutine[currentEnvironment][currentDay][index];
-            document.getElementById('guide-title').textContent = ex.name;
-            document.getElementById('guide-vector-container').innerHTML = ex.vector || bonecoVectors.push;
-            document.getElementById('guide-step1').textContent = ex.step1 || "Posicione o corpo de forma anatômica mantendo o alinhamento da coluna.";
-            document.getElementById('guide-step2').textContent = ex.step2 || "Execute a contração muscular máxima de forma cadenciada.";
-            document.getElementById('guide-step3').textContent = ex.step3 || "Evite usar embalos corporais para realizar o movimento.";
+        window.logProgress = function(progKey) {
+            let currentVal = window.userData.progress[progKey] || "";
+            let newLoad = prompt("Digite a carga/repetições obtidas:", currentVal);
             
-            document.getElementById('guide-modal').style.display = 'flex';
-        }
+            if (newLoad !== null) {
+                window.userData.progress[progKey] = newLoad;
+                localStorage.setItem(`user_${window.currentUserEmail}`, JSON.stringify(window.userData));
+                window.renderWorkout();
+            }
+        };
 
-        function closeGuideModal() { document.getElementById('guide-modal').style.display = 'none'; }
+        window.saveExerciseEdit = function() {
+            const select = document.getElementById('modal-select-ex');
+            const metaValue = document.getElementById('modal-input-meta').value;
+            const allExercises = [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs];
+            const selectedEx = allExercises.find(e => e.name === select.value);
+            
+            if(selectedEx) {
+                const cleanEx = { id: selectedEx.id, name: selectedEx.name, desc: selectedEx.desc, meta: metaValue };
+                window.userData.routine[window.currentEnvironment][window.currentDay][window.currentEditingIndex] = cleanEx;
+                
+                localStorage.setItem(`user_${window.currentUserEmail}`, JSON.stringify(window.userData));
+                window.renderWorkout();
+                closeModal();
+            }
+        };
 
         function changeDay(day) {
-            currentDay = day;
+            window.currentDay = day;
             document.querySelectorAll('.abc-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${day}`).classList.add('active');
-            renderWorkout();
+            window.renderWorkout();
         }
 
         function changeEnvironment(env) {
-            currentEnvironment = env;
+            window.currentEnvironment = env;
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(`nav-${env}`).classList.add('active');
-            renderWorkout();
+            window.renderWorkout();
         }
+
+        function openGuideModal(index) { document.getElementById('guide-modal').style.display = 'flex'; }
+        function closeGuideModal() { document.getElementById('guide-modal').style.display = 'none'; }
 
         function openEditModal(index) {
-            currentEditingIndex = index;
+            window.currentEditingIndex = index;
             const select = document.getElementById('modal-select-ex');
             select.innerHTML = "";
-
-            const allExercises = [...exerciseBank.push, ...exerciseBank.pull, ...exerciseBank.legs];
+            const allExercises = [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs];
             allExercises.forEach(e => {
                 const op = document.createElement('option');
-                op.value = e.name;
-                op.textContent = e.name;
+                op.value = e.name; op.textContent = e.name;
                 select.appendChild(op);
             });
-
-            const currentEx = userRoutine[currentEnvironment][currentDay][index];
+            
+            const currentEx = window.userData.routine[window.currentEnvironment][window.currentDay][index];
             select.value = currentEx.name;
             document.getElementById('modal-input-meta').value = currentEx.meta;
-
             document.getElementById('edit-modal').style.display = 'flex';
-        }
-
-        function saveExerciseEdit() {
-            const select = document.getElementById('modal-select-ex');
-            const metaValue = document.getElementById('modal-input-meta').value;
-            const allExercises = [...exerciseBank.push, ...exerciseBank.pull, ...exerciseBank.legs];
-            
-            const selectedEx = allExercises.find(e => e.name === select.value);
-
-            if(selectedEx) {
-                userRoutine[currentEnvironment][currentDay][currentEditingIndex] = {
-                    ...selectedEx,
-                    meta: metaValue
-                };
-                renderWorkout();
-                closeModal();
-            }
         }
 
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
 
-        // SISTEMA DE CRONÔMETRO EDITÁVEL
+        window.logout = function() {
+            window.currentUserEmail = null;
+            window.userData = null;
+            document.getElementById('screen-app').style.display = 'none';
+            document.getElementById('app-nav').style.display = 'none';
+            document.getElementById('ai-btn').style.display = 'none';
+            document.getElementById('ai-chat').style.display = 'none';
+            document.getElementById('screen-auth').style.display = 'block';
+        };
+
+        // --- SISTEMA INTERNO DO CHATBOT DE AGENTE DE IA ---
+        function toggleAIChat() {
+            const chat = document.getElementById('ai-chat');
+            if(chat.style.display === 'flex') {
+                chat.style.display = 'none';
+            } else {
+                chat.style.display = 'flex';
+                const msgBody = document.getElementById('ai-chat-messages');
+                msgBody.scrollTop = msgBody.scrollHeight;
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('ai-chat-input');
+            const query = input.value.trim();
+            if(!query) return;
+
+            // Renderiza mensagem do usuário
+            const msgBody = document.getElementById('ai-chat-messages');
+            const userBubble = document.createElement('div');
+            userBubble.className = "chat-bubble user";
+            userBubble.textContent = query;
+            msgBody.appendChild(userBubble);
+            
+            input.value = "";
+            msgBody.scrollTop = msgBody.scrollHeight;
+
+            // Resposta simulada inteligente do Personal Trainer Pro Capacitado
+            setTimeout(() => {
+                const aiBubble = document.createElement('div');
+                aiBubble.className = "chat-bubble ai";
+                aiBubble.innerHTML = processAIPersonalResponse(query);
+                msgBody.appendChild(aiBubble);
+                msgBody.scrollTop = msgBody.scrollHeight;
+            }, 600);
+        }
+
+        // Lógica de Contexto e Especialidade Clínica/Esportiva do Personal de IA
+        function processAIPersonalResponse(msg) {
+            const text = msg.toLowerCase();
+            
+            if (text.includes("dor") || text.includes("incomodo") || text.includes("machuc") || text.includes("punho") || text.includes("ombro")) {
+                return `🚨 **Aviso de Biomecânica Importante:** Se você sentiu dor ou incômodo agudo nas articulações, pare imediatamente o exercício!<br><br>
+                        Como seu treinador, aqui está a correção:<br>
+                        1. **Se for no Ombro:** No desenvolvimento ou supinos, reduza a amplitude para não passar dos 90° de flexão de cotovelo e faça a adução das escápulas.<br>
+                        2. **Se for no Punho:** Troque a barra reta por uma Barra W ou halteres para manter a pegada neutra anatômica.<br>
+                        3. **Adaptação:** Mude temporariamente o movimento usando o botão ⚙️ Mudar no card do exercício para uma versão com cabos ou menos carga! O treino deve gerar hipertrofia, não lesão.`;
+            }
+
+            if (text.includes("montar") || text.includes("divis") || text.includes("mudar treino") || text.includes("errado")) {
+                return `📋 **Validação e Montagem de Treino:** Entendido. Se você quer estruturar uma ficha nova ou corrigir o volume atual, lembre-se do padrão ouro que configurei para você:<br><br>
+                        * **Erros Comuns:** Nunca treine Peito e Ombros em dias seguidos. O Deltoide Anterior é muito exigido no supino e precisa descansar.<br>
+                        * **Sugestão de Ajuste:** Use nossa divisão ABC híbrida de alto volume (5 exercícios por bloco) para otimizar a fadiga. Quer que eu sugira uma lista de substituição para algum músculo fraco específico hoje?`;
+            }
+
+            return `💪 **Entendido!** Anotei sua observação. Para otimizar esse detalhe no seu treino atual, foque na fase **excêntrica** (descida) controlando o peso por 3 segundos. <br><br>Se houver qualquer dor articular ou se quiser reorganizar a ordem dos exercícios de hoje para corrigir falhas, pode me mandar os nomes que eu altero a estratégia para você!`;
+        }
+
+        // --- CONTROLE DE TIMER DE DESCANSO ---
         let countdown = null;
-        let timeRemaining = 60; 
+        let timeRemaining = 60;
         let isTimerRunning = false;
 
         function updateTimerDisplay() {
@@ -784,7 +1131,6 @@
                 isTimerRunning = true;
                 btn.textContent = "Pausar";
                 btn.style.background = "#eccc68";
-                
                 countdown = setInterval(() => {
                     if (timeRemaining > 0) {
                         timeRemaining--;
@@ -810,21 +1156,11 @@
         }
 
         function resetTimer() {
-            clearInterval(countdown);
-            isTimerRunning = false;
-            timeRemaining = 60;
-            updateTimerDisplay();
-            document.getElementById('btn-start-toggle').textContent = "Iniciar";
-            document.getElementById('btn-start-toggle').style.background = "var(--primary)";
+            setQuickTimer(60);
         }
 
         function editTime() {
-            clearInterval(countdown);
-            isTimerRunning = false;
-            document.getElementById('btn-start-toggle').textContent = "Iniciar";
-            document.getElementById('btn-start-toggle').style.background = "var(--primary)";
-
-            let userPrompt = prompt("Defina o tempo de descanso (MM:SS):", "01:00");
+            let userPrompt = prompt("Tempo de descanso (MM:SS):", "01:00");
             if (userPrompt) {
                 let parts = userPrompt.split(':');
                 if (parts.length === 2) {
@@ -833,10 +1169,8 @@
                     if (!isNaN(min) && !isNaN(sec) && sec < 60) {
                         timeRemaining = (min * 60) + sec;
                         updateTimerDisplay();
-                        return;
                     }
                 }
-                alert("Formato inválido! Use o padrão minutos:segundos (Ex: 01:30).");
             }
         }
     </script>

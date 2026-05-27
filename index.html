@@ -3,590 +3,605 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Fitness - Seu Treino Personalizado</title>
+    <title>Hybrid Fitness Pro Ultimate</title>
     <style>
         :root {
-            --primary: #ff4757;
-            --primary-hover: #ff6b81;
-            --secondary: #2f3542;
-            --dark: #1e222b;
-            --light: #f1f2f6;
-            --text: #ffffff;
-            --card-bg: #262c38;
-            --accent: #2ed573;
+            --bg-main: #0f1115;
+            --bg-card: #181c24;
+            --bg-nav: #12141c;
+            --primary: #ff3838;
+            --primary-glow: rgba(255, 56, 56, 0.2);
+            --accent: #00d2d3;
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            --border: #222834;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--dark);
-            color: var(--text);
-            padding-bottom: 50px;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--secondary), var(--dark));
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 4px solid var(--primary);
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        header p {
-            color: #a4b0be;
-            font-style: italic;
-            font-size: 0.9rem;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding-bottom: 90px;
         }
 
         .container {
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        /* TELA DE CADASTRO */
-        .setup-screen {
-            background-color: var(--card-bg);
-            border-radius: 12px;
+        /* CONFIGURAÇÃO / SETUP */
+        .setup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border: 1px solid #3d4656;
+            margin-top: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
 
-        .setup-screen h2 {
-            margin-bottom: 20px;
-            color: var(--primary);
+        .brand-logo {
             text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-transform: uppercase;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .brand-logo span { color: var(--primary); }
 
+        .form-group { margin-bottom: 18px; }
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
             font-weight: 600;
-            color: #f1f2f6;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #3d4656;
-            background-color: var(--dark);
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 10px;
             color: white;
             font-size: 1rem;
             outline: none;
-            transition: 0.3s;
         }
 
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--primary);
-        }
-
-        .btn-submit {
+        .btn-primary {
             width: 100%;
-            background-color: var(--primary);
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-        }
-
-        /* PAINEL PRINCIPAL DO TREINO */
-        .main-app {
-            display: none;
-        }
-
-        .user-welcome-card {
-            background: linear-gradient(135deg, var(--card-bg), var(--secondary));
-            padding: 20px;
+            padding: 16px;
             border-radius: 12px;
-            margin-bottom: 25px;
-            border: 1px solid #3d4656;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .user-meta span {
-            background-color: rgba(255,255,255,0.1);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            margin-right: 5px;
-            color: #a4b0be;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            background-color: var(--secondary);
-            border-radius: 8px;
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: none;
-            color: #a4b0be;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px var(--primary-glow);
         }
 
-        .tab-btn.active {
-            color: white;
-            background-color: var(--primary);
-        }
+        /* APP PRINCIPAL */
+        #screen-app { display: none; }
 
-        .workout-section {
-            display: none;
-        }
-
-        .workout-section.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .day-title {
-            background-color: #3d4656;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            margin: 25px 0 15px 0;
-            border-left: 4px solid var(--primary);
-        }
-
-        /* CARD DE EXERCÍCIO COM ILUSTRAÇÃO */
-        .exercise-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
+        .profile-widget {
+            background: linear-gradient(135deg, #1e2430, #141821);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 15px 20px;
             margin-bottom: 20px;
-            overflow: hidden;
-            border: 1px solid #3d4656;
-        }
-
-        .exercise-header {
-            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgba(0,0,0,0.1);
-            border-bottom: 1px solid #3d4656;
         }
 
-        .exercise-header h4 {
-            font-size: 1.1rem;
-        }
-
-        .exercise-body {
-            display: flex;
-            padding: 15px;
-            gap: 15px;
-        }
-
-        /* Ilustrações Esquemáticas Nativas */
-        .exercise-animation-box {
-            width: 100px;
-            height: 100px;
-            background-color: var(--dark);
-            border-radius: 8px;
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.05);
-            overflow: hidden;
-        }
-
-        /* Boneco Esquemático Animado por CSS */
-        .stick-figure {
-            width: 8px;
-            height: 25px;
-            background-color: #ced6e0;
-            position: relative;
-            border-radius: 4px;
-        }
-        .stick-figure::before { /* Cabeça */
-            content: '';
-            position: absolute;
-            top: -12px; left: -2px;
-            width: 12px; height: 12px;
-            background-color: #ff7f50;
-            border-radius: 50%;
-        }
-
-        /* Animação Específica para Agachamento */
-        .anim-squat .stick-figure {
-            animation: squatting 2s infinite ease-in-out;
-        }
-        @keyframes squatting {
-            0%, 100% { transform: translateY(0) scaleY(1); }
-            50% { transform: translateY(15px) scaleY(0.7); }
-        }
-
-        /* Animação Específica para Flexão / Supino */
-        .anim-push .stick-figure {
-            transform: rotate(90deg);
-            animation: pushing 2s infinite ease-in-out;
-        }
-        @keyframes pushing {
-            0%, 100% { transform: rotate(90deg) translateY(0); }
-            50% { transform: rotate(90deg) translateY(10px); }
-        }
-
-        /* Animação Específica para Barra / Puxadas */
-        .anim-pull .stick-figure {
-            animation: pulling 2s infinite ease-in-out;
-        }
-        @keyframes pulling {
-            0%, 100% { transform: translateY(15px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .exercise-instructions {
-            flex: 1;
-        }
-
-        .exercise-instructions p {
-            font-size: 0.9rem;
-            color: #a4b0be;
-            margin-bottom: 8px;
-        }
-
-        .instruction-tag {
-            display: inline-block;
-            background-color: rgba(46, 213, 115, 0.1);
+        .badge-goal {
+            background: rgba(0, 210, 211, 0.1);
             color: var(--accent);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
 
-        /* CRONÔMETRO */
-        .timer-container {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 30px;
-            border: 1px solid #3d4656;
+        /* SUB-MENU ABC */
+        .abc-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .timer-display {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 5px 0;
-            font-family: monospace;
-        }
-
-        .timer-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border-radius: 6px;
+        .abc-btn {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
             cursor: pointer;
-            margin: 3px;
             transition: 0.2s;
         }
 
-        .timer-btn.secondary-btn {
-            background-color: #57606f;
+        .abc-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .section-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0;
+            font-weight: 700;
         }
 
-        @media (max-width: 500px) {
-            .exercise-body { flex-direction: column; align-items: center; text-align: center; }
-            .user-welcome-card { text-align: center; justify-content: center; }
+        .workout-block { display: none; }
+        .workout-block.active { display: block; }
+
+        /* CARDS DE EXERCÍCIO */
+        .exercise-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 15px;
+            overflow: hidden;
         }
+
+        .exercise-hero {
+            display: flex;
+            padding: 16px;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .exercise-visual {
+            width: 70px;
+            height: 70px;
+            background: var(--bg-main);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+
+        .stick-man {
+            width: 5px;
+            height: 20px;
+            background: #d1d8e0;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .stick-man::before {
+            content: '';
+            position: absolute;
+            top: -9px; left: -2px;
+            width: 9px; height: 9px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        /* Animações CSS Base */
+        .anim-push .stick-man { animation: pro-push 2s infinite ease-in-out; }
+        .anim-pull .stick-man { animation: pro-pull 2s infinite ease-in-out; }
+        .anim-squat .stick-man { animation: pro-squat 2.5s infinite ease-in-out; }
+
+        @keyframes pro-push { 0%, 100% { transform: rotate(90deg) translateY(-3px); } 50% { transform: rotate(90deg) translateY(6px); } }
+        @keyframes pro-pull { 0%, 100% { transform: translateY(6px); } 50% { transform: translateY(-6px); } }
+        @keyframes pro-squat { 0%, 100% { transform: translateY(-3px) scaleY(1); } 50% { transform: translateY(8px) scaleY(0.75); } }
+
+        .exercise-detail { flex: 1; }
+        .exercise-detail h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+        .exercise-detail p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
+
+        .exercise-footer {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 10px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meta-tag { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+        
+        .btn-edit-ex {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* MODAL DE EDIÇÃO */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        /* TIMER */
+        .hub-timer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .timer-val { font-size: 2.5rem; font-weight: 800; font-family: monospace; margin: 5px 0; }
+        .timer-actions { display: flex; gap: 8px; justify-content: center; }
+
+        .btn-sec {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* NAV INFERIOR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 70px;
+            background: var(--bg-nav);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .nav-item.active { color: var(--primary); }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Hybrid Fitness</h1>
-        <p>Ajustado para o seu corpo, focado na sua meta.</p>
-    </header>
-
     <div class="container">
-
-        <!-- TELA 1: CADASTRO DO USUÁRIO -->
-        <div id="setup-screen" class="setup-screen">
-            <h2>Monte seu Perfil de Treino</h2>
-            <form id="profile-form" onsubmit="generateApp(event)">
+        <!-- TELA SETUP -->
+        <div id="screen-setup" class="setup-card">
+            <div class="brand-logo">Hybrid<span>Fitness</span></div>
+            <form onsubmit="initApp(event)">
                 <div class="form-group">
-                    <label for="username">Qual é o seu nome?</label>
-                    <input type="text" id="username" required placeholder="Ex: Thiago">
+                    <label>Nome do Atleta</label>
+                    <input type="text" id="in-name" required placeholder="Digite seu nome">
                 </div>
-                <div style="display: flex; gap: 15px;">
+                <div style="display: flex; gap: 12px;">
                     <div class="form-group" style="flex: 1;">
-                        <label for="weight">Peso (kg)</label>
-                        <input type="number" id="weight" step="0.1" required placeholder="Ex: 78">
+                        <label>Peso (kg)</label>
+                        <input type="number" id="in-weight" required placeholder="78">
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label for="height">Altura (m)</label>
-                        <input type="number" id="height" step="0.01" required placeholder="Ex: 1.64">
+                        <label>Altura (m)</label>
+                        <input type="number" id="in-height" step="0.01" required placeholder="1.64">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="goal">Qual é o seu foco principal?</label>
-                    <select id="goal" required>
-                        <option value="Hipertrofia (Ganho de Massa)">💪 Hipertrofia (Ganho de Massa)</option>
-                        <option value="Emagrecimento & Definição">🔥 Emagrecimento & Definição</option>
-                        <option value="Condicionamento & Calistenia">🤸 Condicionamento & Calistenia</option>
+                    <label>Objetivo</label>
+                    <select id="in-goal">
+                        <option value="Hipertrofia">💪 Hipertrofia Acelerada</option>
+                        <option value="Definição">🔥 Queima & Definição</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-submit">Gerar Plataforma de Treino</button>
+                <button type="submit" class="btn-primary">Montar Painel de Treino</button>
             </form>
         </div>
 
-        <!-- TELA 2: APLICATIVO PRINCIPAL (OCULTO INICIALMENTE) -->
-        <div id="main-app" class="main-app">
-            
-            <!-- Card Informativo do Usuário -->
-            <div class="user-welcome-card">
+        <!-- APP PRINCIPAL -->
+        <div id="screen-app">
+            <div class="profile-widget">
                 <div>
-                    <h3 style="color: white; margin-bottom: 5px;">Fala, <span id="display-name" style="color:var(--primary)"></span>!</h3>
-                    <div class="user-meta">
-                        <span id="display-metrics"></span>
-                        <span id="display-goal" style="color: var(--accent); font-weight: bold;"></span>
-                    </div>
+                    <h3 id="user-name">Atleta</h3>
+                    <p id="user-stats">00kg | 0.00m</p>
                 </div>
-                <button onclick="resetApp()" class="timer-btn secondary-btn" style="padding: 5px 10px; font-size: 0.8rem;">Alterar Dados</button>
+                <div class="badge-goal" id="user-goal">Objetivo</div>
             </div>
 
-            <!-- Seleção de Ambiente -->
-            <div class="tabs">
-                <button class="tab-btn active" id="btn-casa" onclick="switchTab('casa')">🏠 Treinar em Casa</button>
-                <button class="tab-btn" id="btn-academia" onclick="switchTab('academia')">🏢 Na Academia</button>
+            <!-- Seleção de Ficha (A, B, C) -->
+            <div class="abc-tabs">
+                <button class="abc-btn active" id="btn-A" onclick="changeDay('A')">TREINO A</button>
+                <button class="abc-btn" id="btn-B" onclick="changeDay('B')">TREINO B</button>
+                <button class="abc-btn" id="btn-C" onclick="changeDay('C')">TREINO C</button>
             </div>
 
-            <!-- CONTEÚDO: TREINO EM CASA -->
-            <div id="casa" class="workout-section active">
-                
-                <div class="day-title">Treino Superior - Empurrar e Puxar</div>
-                
-                <div class="exercise-card">
-                    <div class="exercise-header">
-                        <h4>1. Flexões de Braço (Push-ups)</h4>
-                        <span class="instruction-tag">4 Séries x Máximo</span>
-                    </div>
-                    <div class="exercise-body">
-                        <div class="exercise-animation-box anim-push"><div class="stick-figure"></div></div>
-                        <div class="exercise-instructions">
-                            <p>Apoie as mãos no chão em uma abertura um pouco maior que os ombros. Desça o corpo mantendo o abdômen firme até o peito quase tocar o chão e empurre de volta.</p>
-                            <span class="instruction-tag" style="background-color: rgba(255,71,87,0.1); color: var(--primary);">Alvo: Peito e Tríceps</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="exercise-card">
-                    <div class="exercise-header">
-                        <h4>2. Barra Fixa (Pull-ups)</h4>
-                        <span class="instruction-tag">4 Séries x 8 a 12 Reps</span>
-                    </div>
-                    <div class="exercise-body">
-                        <div class="exercise-animation-box anim-pull"><div class="stick-figure"></div></div>
-                        <div class="exercise-instructions">
-                            <p>Segure na barra com as palmas voltadas para fora. Puxe o peso do seu corpo para cima erguendo o queixo acima da barra. Controle rigorosamente a descida.</p>
-                            <span class="instruction-tag" style="background-color: rgba(255,71,87,0.1); color: var(--primary);">Alvo: Costas e Bíceps</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="day-title">Treino Inferior - Pernas Firmes</div>
-
-                <div class="exercise-card">
-                    <div class="exercise-header">
-                        <h4>1. Agachamento Búlgaro</h4>
-                        <span class="instruction-tag">3 Séries x 12 Reps (Cada perna)</span>
-                    </div>
-                    <div class="exercise-body">
-                        <div class="exercise-animation-box anim-squat"><div class="stick-figure"></div></div>
-                        <div class="exercise-instructions">
-                            <p>Coloque um pé para trás apoiado sobre uma cadeira ou sofá. Agache com a perna da frente até que a coxa fique paralela ao chão. Costas sempre eretas.</p>
-                            <span class="instruction-tag" style="background-color: rgba(255,71,87,0.1); color: var(--primary);">Alvo: Quadríceps e Glúteos</span>
-                        </div>
-                    </div>
-                </div>
+            <div id="workout-container">
+                <!-- Injetado dinamicamente via JS -->
             </div>
 
-            <!-- CONTEÚDO: TREINO NA ACADEMIA -->
-            <div id="academia" class="workout-section">
-                
-                <div class="day-title">Foco Push - Peitorais e Ombros</div>
-
-                <div class="exercise-card">
-                    <div class="exercise-header">
-                        <h4>1. Supino Reto (Barra ou Halteres)</h4>
-                        <span class="instruction-tag">4 Séries x 10 Reps</span>
-                    </div>
-                    <div class="exercise-body">
-                        <div class="exercise-animation-box anim-push"><div class="stick-figure"></div></div>
-                        <div class="exercise-instructions">
-                            <p>Deitado no banco reto, desça a carga controladamente até a linha do peito e empurre verticalmente com força total. Mantenha as escápulas travadas.</p>
-                            <span class="instruction-tag" style="background-color: rgba(255,71,87,0.1); color: var(--primary);">Descanso: 90s</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="day-title">Foco Legs - Pernas Completas</div>
-
-                <div class="exercise-card">
-                    <div class="exercise-header">
-                        <h4>1. Agachamento Livre com Barra</h4>
-                        <span class="instruction-tag">4 Séries x 8 a 10 Reps</span>
-                    </div>
-                    <div class="exercise-body">
-                        <div class="exercise-animation-box anim-squat"><div class="stick-figure"></div></div>
-                        <div class="exercise-instructions">
-                            <p>Apoie a barra firmemente no trapézio. Realize o agachamento projetando o quadril para trás, mantendo os joelhos alinhados com as pontas dos pés.</p>
-                            <span class="instruction-tag" style="background-color: rgba(255,71,87,0.1); color: var(--primary);">Descanso: 90s</span>
-                        </div>
-                    </div>
+            <!-- CRONÔMETRO -->
+            <div class="hub-timer">
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Recuperação</span>
+                <div class="timer-val" id="timer-display">01:00</div>
+                <div class="timer-actions">
+                    <button class="btn-sec" onclick="runTimer(60)">60s</button>
+                    <button class="btn-sec" onclick="runTimer(90)">90s</button>
+                    <button class="btn-sec" style="color: var(--primary)" onclick="clearTimer()">Reset</button>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- CRONÔMETRO INTEGRADO -->
-            <div class="timer-container">
-                <h4 style="margin-bottom: 5px;">⏱️ Descanso Ativo</h4>
-                <div class="timer-display" id="timer">01:00</div>
-                <button class="timer-btn" onclick="startTimer(60)">60 Segundos</button>
-                <button class="timer-btn" onclick="startTimer(90)">90 Segundos</button>
-                <button class="timer-btn secondary-btn" onclick="resetTimer()">Reset</button>
+    <!-- NAVEGAÇÃO INTERNA AMBIENTE -->
+    <div class="bottom-nav" id="app-nav" style="display: none;">
+        <button class="nav-item active" id="nav-casa" onclick="changeEnvironment('casa')">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Casa
+        </button>
+        <button class="nav-item" id="nav-academia" onclick="changeEnvironment('academia')">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Academia
+        </button>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO DE EXERCÍCIO -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Substituir Exercício</h3>
+            <div class="form-group">
+                <label>Selecione o novo exercício</label>
+                <select id="modal-select-ex"></select>
             </div>
-
+            <div class="form-group">
+                <label>Séries e Repetições</label>
+                <input type="text" id="modal-input-meta">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" style="flex: 1;" onclick="saveExerciseEdit()">Salvar</button>
+                <button class="btn-sec" onclick="closeModal()">Cancelar</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Inicialização do aplicativo e persistência dos dados informados
-        function generateApp(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('username').value;
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value);
-            const goal = document.getElementById('goal').value;
+        // BANCO DE DADOS INTEGRADO DE EXERCÍCIOS COMPLETO (EDITÁVEL)
+        const exerciseBank = {
+            push: [
+                { name: "Flexão de Braço Padrão", desc: "Mantenha o corpo reto e desça até o peito quase tocar o chão.", anim: "anim-push" },
+                { name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre com força explosiva.", anim: "anim-push" },
+                { name: "Supino Inclinado com Halteres", desc: "Foco na porção superior do peito. Angulação de 30 a 45 graus.", anim: "anim-push" },
+                { name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça estendendo os braços.", anim: "anim-push" },
+                { name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros focando na lateral do deltoide.", anim: "anim-push" },
+                { name: "Tríceps Testa", desc: "Deitado, flexione apenas os cotovelos trazendo a barra até a testa.", anim: "anim-push" },
+                { name: "Flexão Diamante (Casa)", desc: "Mãos juntas formando um diamante, foco total no tríceps.", anim: "anim-push" },
+                { name: "Mergulho no Banco", desc: "Apoie as mãos em uma cadeira e desça o quadril flexionando os cotovelos.", anim: "anim-push" }
+            ],
+            pull: [
+                { name: "Barra Fixa Pronada", desc: "Puxe o corpo para cima até o queixo passar a linha da barra.", anim: "anim-pull" },
+                { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", anim: "anim-pull" },
+                { name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga em direção ao abdômen.", anim: "anim-pull" },
+                { name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra trabalhando toda a dorsal.", anim: "anim-pull" },
+                { name: "Crucifixo Invertido", desc: "Abra os braços para trás focando na porção posterior do ombro.", anim: "anim-pull" },
+                { name: "Rosca Direta", desc: "Flexão de cotovelos com barra ou halteres isolando o bíceps.", anim: "anim-pull" },
+                { name: "Rosca Martelo", desc: "Pegada neutra, excelente para trabalhar bíceps e antebraço.", anim: "anim-pull" },
+                { name: "Remada com Elástico (Casa)", desc: "Prenda o elástico e puxe simulando o movimento de remada.", anim: "anim-pull" }
+            ],
+            legs: [
+                { name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", anim: "anim-squat" },
+                { name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás. Desça verticalmente concentrando a força na perna da frente.", anim: "anim-squat" },
+                { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada no banco.", anim: "anim-squat" },
+                { name: "Cadeira Extensora", desc: "Extensão completa das pernas travando bem o quadríceps no topo.", anim: "anim-squat" },
+                { name: "Mesa Flexora", desc: "Flexão de pernas focando diretamente na região posterior da coxa.", anim: "anim-squat" },
+                { name: "Elevação Pélvica", desc: "Eleve o quadril contraindo ao máximo os glúteos e abdômen.", anim: "anim-squat" },
+                { name: "Gêmeos em Pé (Panturrilha)", desc: "Suba na ponta dos pés buscando a maior amplitude possível.", anim: "anim-squat" },
+                { name: "Afundo Caminhando", desc: "Dê passos longos descendo o joelho de trás até quase tocar o chão.", anim: "anim-squat" }
+            ]
+        };
 
-            // Cálculo básico de IMC para exibição informativa complementar
-            const imc = (weight / (height * height)).toFixed(1);
+        // ESTRUTURA ATUAL DE TREINO DO USUÁRIO (MUTÁVEL)
+        let currentEnvironment = "casa";
+        let currentDay = "A";
+        let currentEditingIndex = null;
 
-            // Atualização dinâmica da UI com os dados do usuário
-            document.getElementById('display-name').textContent = name;
-            document.getElementById('display-metrics').textContent = `${weight}kg | ${height}m | IMC: ${imc}`;
-            document.getElementById('display-goal').textContent = goal;
+        let userRoutine = {
+            casa: {
+                A: [
+                    { ...exerciseBank.push[0], meta: "4 SÉRIES x FALHA" },
+                    { ...exerciseBank.push[6], meta: "3 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.pull[0], meta: "4 SÉRIES x 8-12 REPS" },
+                    { ...exerciseBank.pull[7], meta: "4 SÉRIES x 15 REPS" },
+                    { ...exerciseBank.push[7], meta: "3 SÉRIES x 15 REPS" }
+                ],
+                B: [
+                    { ...exerciseBank.legs[1], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.legs[0], meta: "4 SÉRIES x 20 REPS" },
+                    { ...exerciseBank.legs[5], meta: "4 SÉRIES x 15 REPS" },
+                    { ...exerciseBank.legs[7], meta: "3 SÉRIES x 20 PASSOS" },
+                    { ...exerciseBank.legs[6], meta: "4 SÉRIES x 20 REPS" }
+                ],
+                C: [
+                    { name: "Burpees Infinitos", desc: "Salte, agache e faça uma flexão completa. Cardio intenso.", anim: "anim-push", meta: "4 SÉRIES x 12 REPS" },
+                    { name: "Escalador (Mountain Climbers)", desc: "Posição de prancha trazendo os joelhos alternadamente ao peito.", anim: "anim-push", meta: "4 SÉRIES x 45 SEG" },
+                    { name: "Agachamento com Salto", desc: "Agache e suba executando um salto vertical explosivo.", anim: "anim-squat", meta: "4 SÉRIES x 15 REPS" },
+                    { name: "Abdominal Remador", desc: "Estique o corpo todo e suba abraçando os joelhos.", anim: "anim-pull", meta: "4 SÉRIES x 20 REPS" },
+                    { ...exerciseBank.legs[6], meta: "4 SÉRIES x 25 REPS" }
+                ]
+            },
+            academia: {
+                A: [
+                    { ...exerciseBank.push[1], meta: "4 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.push[2], meta: "3 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.push[3], meta: "4 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.push[4], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.push[5], meta: "4 SÉRIES x 12 REPS" }
+                ],
+                B: [
+                    { ...exerciseBank.pull[1], meta: "4 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.pull[2], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.pull[3], meta: "3 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.pull[4], meta: "3 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.pull[5], meta: "4 SÉRIES x 10 REPS" }
+                ],
+                C: [
+                    { ...exerciseBank.legs[0], meta: "4 SÉRIES x 8-10 REPS" },
+                    { ...exerciseBank.legs[2], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.legs[3], meta: "3 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.legs[5], meta: "4 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.legs[6], meta: "4 SÉRIES x 20 REPS" }
+                ]
+            }
+        };
 
-            // Transição de telas
-            document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
+        function initApp(e) {
+            e.preventDefault();
+            document.getElementById('user-name').textContent = document.getElementById('in-name').value;
+            document.getElementById('user-stats').textContent = `${document.getElementById('in-weight').value} kg | ${document.getElementById('in-height').value} m`;
+            document.getElementById('user-goal').textContent = document.getElementById('in-goal').value;
+
+            document.getElementById('screen-setup').style.display = 'none';
+            document.getElementById('screen-app').style.display = 'block';
+            document.getElementById('app-nav').style.display = 'flex';
+            renderWorkout();
         }
 
-        function resetApp() {
-            document.getElementById('setup-screen').style.display = 'block';
-            document.getElementById('main-app').style.display = 'none';
+        // REDERIZAÇÃO DA GRADE DE EXERCÍCIOS COMPLETA
+        function renderWorkout() {
+            const container = document.getElementById('workout-container');
+            container.innerHTML = "";
+            
+            const list = userRoutine[currentEnvironment][currentDay];
+            
+            list.forEach((ex, index) => {
+                const card = document.createElement('div');
+                card.className = "exercise-card";
+                card.innerHTML = `
+                    <div class="exercise-hero">
+                        <div class="exercise-visual ${ex.anim}"><div class="stick-man"></div></div>
+                        <div class="exercise-detail">
+                            <h4>${index + 1}. ${ex.name}</h4>
+                            <p>${ex.desc}</p>
+                        </div>
+                    </div>
+                    <div class="exercise-footer">
+                        <span class="meta-tag">${ex.meta}</span>
+                        <button class="btn-edit-ex" onclick="openEditModal(${index})">⚙️ Editar Treino</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        // Alternar visualização entre Casa e Academia
-        function switchTab(tabId) {
-            document.querySelectorAll('.workout-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
+        function changeDay(day) {
+            currentDay = day;
+            document.querySelectorAll('.abc-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${day}`).classList.add('active');
+            renderWorkout();
+        }
+
+        function changeEnvironment(env) {
+            currentEnvironment = env;
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`nav-${env}`).classList.add('active');
+            renderWorkout();
+        }
+
+        // SISTEMA DE EDIÇÃO DINÂMICA (MODAL)
+        function openEditModal(index) {
+            currentEditingIndex = index;
+            const select = document.getElementById('modal-select-ex');
+            select.innerHTML = "";
+
+            // Junta todas as categorias para disponibilizar todos os exercícios cadastrados
+            const allExercises = [...exerciseBank.push, ...exerciseBank.pull, ...exerciseBank.legs];
+            allExercises.forEach(e => {
+                const op = document.createElement('option');
+                op.value = e.name;
+                op.textContent = e.name;
+                select.appendChild(op);
             });
 
-            document.getElementById(tabId).classList.add('active');
+            const currentEx = userRoutine[currentEnvironment][currentDay][index];
+            select.value = currentEx.name;
+            document.getElementById('modal-input-meta').value = currentEx.meta;
+
+            document.getElementById('edit-modal').style.display = 'flex';
+        }
+
+        function saveExerciseEdit() {
+            const select = document.getElementById('modal-select-ex');
+            const metaValue = document.getElementById('modal-input-meta').value;
+            const allExercises = [...exerciseBank.push, ...exerciseBank.pull, ...exerciseBank.legs];
             
-            if(tabId === 'casa') {
-                document.getElementById('btn-casa').classList.add('active');
-            } else {
-                document.getElementById('btn-academia').classList.add('active');
+            const selectedEx = allExercises.find(e => e.name === select.value);
+
+            if(selectedEx) {
+                userRoutine[currentEnvironment][currentDay][currentEditingIndex] = {
+                    ...selectedEx,
+                    meta: metaValue
+                };
+                renderWorkout();
+                closeModal();
             }
         }
 
-        // Sistema de contagem regressiva do cronômetro
+        function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
+
+        // TIMER
         let countdown;
-        let timeLeft = 60;
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function startTimer(seconds) {
+        let timeRemaining = 60;
+        function runTimer(sec) {
             clearInterval(countdown);
-            timeLeft = seconds;
-            updateTimerDisplay();
-
+            timeRemaining = sec;
+            const display = document.getElementById('timer-display');
             countdown = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-
-                if (timeLeft <= 0) {
+                timeRemaining--;
+                const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+                const s = (timeRemaining % 60).toString().padStart(2, '0');
+                display.textContent = `${m}:${s}`;
+                if(timeRemaining <= 0) {
                     clearInterval(countdown);
-                    document.getElementById('timer').textContent = "TREINAR!";
-                    
-                    // Alerta sonoro básico via Web Audio API
-                    if (window.AudioContext || window.webkitAudioContext) {
-                        let ctx = new (window.AudioContext || window.webkitAudioContext)();
-                        let osc = ctx.createOscillator();
-                        osc.connect(ctx.destination);
-                        osc.start();
-                        osc.stop(ctx.currentTime + 0.3);
-                    }
+                    display.textContent = "GO!";
                 }
             }, 1000);
         }
-
-        function resetTimer() {
-            clearInterval(countdown);
-            timeLeft = 60;
-            updateTimerDisplay();
-        }
+        function clearTimer() { clearInterval(countdown); document.getElementById('timer-display').textContent = "01:00"; }
     </script>
 </body>
 </html>

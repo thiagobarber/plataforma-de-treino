@@ -149,7 +149,7 @@
             font-weight: 700;
         }
 
-        /* CARDS DE EXERCÍCIO COM IMAGEM COGNITIVA */
+        /* CARDS DE EXERCÍCIO */
         .exercise-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -165,16 +165,27 @@
             align-items: center;
         }
 
-        /* CONTAINER DA IMAGEM GERADA EM REAL-TIME */
-        .exercise-visual-img {
-            width: 85px;
-            height: 85px;
+        /* AVATAR VETORIAL DO BONECO MUDADO EM REAL-TIME VIA SVG */
+        .exercise-visual-box {
+            width: 75px;
+            height: 75px;
             background-color: var(--bg-main);
             border-radius: 12px;
             flex-shrink: 0;
             border: 1px solid var(--border);
-            object-fit: cover;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .exercise-visual-box svg {
+            width: 45px;
+            height: 45px;
+            fill: none;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .exercise-detail { flex: 1; }
@@ -227,6 +238,26 @@
             max-width: 450px;
             max-height: 90vh;
             overflow-y: auto;
+        }
+
+        .modal-preview-icon {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-main);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        .modal-preview-icon svg {
+            width: 70px;
+            height: 70px;
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
         }
 
         .ai-guide-box {
@@ -306,7 +337,6 @@
 <body>
 
     <div class="container">
-        <!-- TELA SETUP -->
         <div id="screen-setup" class="setup-card">
             <div class="brand-logo">Hybrid<span>Fitness</span></div>
             <form onsubmit="initApp(event)">
@@ -335,7 +365,6 @@
             </form>
         </div>
 
-        <!-- APP PRINCIPAL -->
         <div id="screen-app">
             <div class="profile-widget">
                 <div>
@@ -345,7 +374,6 @@
                 <div class="badge-goal" id="user-goal">Objetivo</div>
             </div>
 
-            <!-- Seleção de Ficha (A, B, C) -->
             <div class="abc-tabs">
                 <button class="abc-btn active" id="btn-A" onclick="changeDay('A')">TREINO A</button>
                 <button class="abc-btn" id="btn-B" onclick="changeDay('B')">TREINO B</button>
@@ -353,10 +381,8 @@
             </div>
 
             <div id="workout-container">
-                <!-- Injetado dinamicamente via JS -->
-            </div>
+                </div>
 
-            <!-- CRONÔMETRO -->
             <div class="hub-timer">
                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Recuperação</span>
                 <div class="timer-val" id="timer-display">01:00</div>
@@ -369,7 +395,6 @@
         </div>
     </div>
 
-    <!-- NAVEGAÇÃO INTERNA AMBIENTE -->
     <div class="bottom-nav" id="app-nav" style="display: none;">
         <button class="nav-item active" id="nav-casa" onclick="changeEnvironment('casa')">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Casa
@@ -379,11 +404,11 @@
         </button>
     </div>
 
-    <!-- MODAL DE INSTRUTOR INTELIGENTE IA -->
     <div class="modal" id="guide-modal">
         <div class="modal-content">
             <h3 id="guide-title" style="color: var(--primary); margin-bottom: 10px;">Execução</h3>
-            <img id="guide-img" src="" style="width:100%; height:180px; object-fit:cover; border-radius:10px; margin-bottom:15px; border:1px solid var(--border);">
+            <div class="modal-preview-icon" id="guide-vector-container">
+                </div>
             
             <div class="ai-guide-box">
                 <h5>1. Posição Inicial</h5>
@@ -401,7 +426,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DE EXERCÍCIO -->
     <div class="modal" id="edit-modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; color: var(--primary);">Substituir Exercício</h3>
@@ -421,28 +445,31 @@
     </div>
 
     <script>
-        // BANCO DE DADOS INTEGRADO COM METADADOS DE GUIA DE IA E LINKS VISUAIS
+        // BANCO DE DESIGN DE VETORES INTEGRADAS (BONECOS MINIMALISTAS EM SVG)
+        const bonecoVectors = {
+            push: `<svg viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
+            pull: `<svg viewBox="0 0 24 24"><path d="M12 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-5 4h10v2H7zm2 4h6v6H9zM3 19h18"/></svg>`,
+            legs: `<svg viewBox="0 0 24 24"><path d="M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3 5h6v4H9zm-1 6h3v5H8zm5 0h3v5h-3z"/></svg>`
+        };
+
         const exerciseBank = {
             push: [
-                { name: "Flexão de Braço Padrão", desc: "Mantenha o corpo reto e desça até o peito quase tocar o chão.", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&auto=format&fit=crop", step1: "Mãos no chão alinhadas com o peitoral, pés juntos e abdômen totalmente contraído.", step2: "Desça flexionando os cotovelos para trás (em ângulo de 45°), até o queixo se aproximar do solo, empurrando firmemente.", step3: "Deixar o quadril cair ou relaxar o abdômen durante a execução." },
-                { name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre com força explosiva.", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&auto=format&fit=crop", step1: "Deitado no banco, escápulas totalmente aduzidas (fechadas atrás), pés firmes empurrando o chão.", step2: "Retire a barra, desça controladamente até tocar levemente a linha dos mamilos e suba estendendo os braços.", step3: "Retirar as costas do banco e bater a barra com impacto contra o peito." },
-                { name: "Supino Inclinado com Halteres", desc: "Foco na porção superior do peito. Angulação de 30 a 45 graus.", img: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&auto=format&fit=crop", step1: "Banco inclinado a 30°. Halteres posicionados nas laterais do peitoral superior.", step2: "Empurre os halteres verticalmente aproximando-os no topo sem bater os pesos. Controle a descida.", step3: "Inclinar demais o banco (acima de 45°), jogando toda a força nos ombros anteriores." },
-                { name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça estendendo os braços.", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&auto=format&fit=crop", step1: "Sentado com a coluna totalmente apoiada. Halteres na altura das orelhas, cotovelos abaixo deles.", step2: "Suba os pesos em linha reta até quase estender os braços, mantendo o controle total da trajetória.", step3: "Arquear excessivamente a lombar para tentar compensar o excesso de peso." },
-                { name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros focando na lateral do deltoide.", img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&auto=format&fit=crop", step1: "Postura ereta, joelhos levemente flexionados, halteres posicionados ao lado das coxas.", step2: "Eleve os braços lateralmente até a altura dos ombros, liderando o movimento com os cotovelos.", step3: "Lançar o corpo para trás usando impulso ou subir os pesos acima da linha da cabeça." },
-                { name: "Tríceps Testa", desc: "Deitado, flexione apenas os cotovelos trazendo a barra até a testa.", img: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=200&auto=format&fit=crop", step1: "Deitado no banco, braços estendidos apontando para o teto segurando a barra ou halteres.", step2: "Flexione apenas os cotovelos trazendo a carga em direção à testa, mantendo os braços fixos no lugar.", step3: "Abrir demais os cotovelos para as laterais durante a descida, dividindo o esforço." },
-                { name: "Flexão Diamante (Casa)", desc: "Mãos juntas formando um diamante, foco total no tríceps.", img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&auto=format&fit=crop", step1: "Posição de flexão, porém aproximando as duas mãos até que indicadores e polegares se toquem.", step2: "Desça direcionando o peito ao centro das mãos, mantendo os cotovelos raspando nas costelas.", step3: "Deixar os cotovelos abrirem demais para fora tirando o foco do tríceps." },
-                { name: "Mergulho no Banco", desc: "Apoie as mãos em uma cadeira e desça o quadril flexionando os cotovelos.", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&auto=format&fit=crop", step1: "Mãos apoiadas na borda do banco, pernas estendidas à frente e quadril bem rente ao assento.", step2: "Flexione os cotovelos descendo o quadril verticalmente até formar 90 graus nos braços, empurre para subir.", step3: "Afastar o quadril para longe do banco, sobrecarregando a articulação dos ombros." }
+                { name: "Flexão de Braço Padrão", desc: "Mantenha o corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push, step1: "Mãos no chão alinhadas com o peitoral, pés juntos e abdômen totalmente contraído.", step2: "Desça flexionando os cotovelos para trás (em ângulo de 45°), até o queixo se aproximar do solo.", step3: "Deixar o quadril cair ou relaxar o abdômen durante a execução." },
+                { name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre com força explosiva.", vector: bonecoVectors.push, step1: "Deitado no banco, escápulas totalmente aduzidas (fechadas atrás), pés firmes empurrando o chão.", step2: "Retire a barra, desça controladamente até tocar levemente a linha dos mamilos e suba estendendo os braços.", step3: "Retirar as costas do banco e bater a barra com impacto contra o peito." },
+                { name: "Supino Inclinado com Halteres", desc: "Foco na porção superior do peito. Angulação de 30 a 45 graus.", vector: bonecoVectors.push, step1: "Banco inclinado a 30°. Halteres posicionados nas laterais do peitoral superior.", step2: "Empurre os halteres verticalmente aproximando-os no topo sem bater os pesos. Controle a descida.", step3: "Inclinar demais o banco (acima de 45°), jogando toda a força nos ombros anteriores." },
+                { name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça estendendo os braços.", vector: bonecoVectors.push, step1: "Sentado com a coluna totalmente apoiada. Halteres na altura das orelhas.", step2: "Suba os pesos em linha reta até quase estender os braços, mantendo o controle total da trajetória.", step3: "Arquear excessivamente a lombar para tentar compensar o excesso de peso." },
+                { name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros focando na lateral do deltoide.", vector: bonecoVectors.push, step1: "Postura ereta, joelhos levemente flexionados, halteres posicionados ao lado das coxas.", step2: "Eleve os braços lateralmente até a altura dos ombros, liderando o movimento com os cotovelos.", step3: "Lançar o corpo para trás usando impulso ou subir os pesos acima da linha da cabeça." }
             ],
             pull: [
-                { name: "Barra Fixa Pronada", desc: "Puxe o corpo para cima até o queixo passar a linha da barra.", img: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=200&auto=format&fit=crop", step1: "Segure a barra com as palmas para a frente, braços totalmente estendidos pendurado.", step2: "Puxe o corpo para cima direcionando o peito para a barra e fechando as escápulas atrás.", step3: "Ficar balançando as pernas (chute) para subir sem usar a força das costas." },
-                { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&auto=format&fit=crop", step1: "Sentado com as pernas firmes sob o suporte. Pegada aberta na barra pronada.", step2: "Incline o tronco minimamente para trás e puxe a barra até a altura do peito, esmagando as dorsais.", step3: "Descer a barra até o abdômen jogando o peso usando o momentum do corpo inteiro." },
-                { name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga em direção ao abdômen.", img: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&auto=format&fit=crop", step1: "Pés apoiados, joelhos semicoflexionados, coluna perfeitamente alinhada segurando o triângulo.", step2: "Puxe o peso em direção ao umbigo direcionando os cotovelos bem rente ao corpo.", step3: "Arredondar a coluna inteira durante a fase de alongamento do cabo." },
-                { name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra trabalhando toda a dorsal.", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&auto=format&fit=crop", step1: "Pés na largura dos ombros, incline o tronco à frente mantendo a coluna retilínea estável.", step2: "Puxe a barra em direção à boca do estômago apontando os cotovelos para o teto.", step3: "Subir o tronco durante o movimento transformando o exercício em um encolhimento de ombro." }
+                { name: "Barra Fixa Pronada", desc: "Puxe o corpo para cima até o queixo passar a linha da barra.", vector: bonecoVectors.pull, step1: "Segure a barra com as palmas para a frente, braços totalmente estendidos pendurado.", step2: "Puxe o corpo para cima direcionando o peito para a barra e fechando as escápulas atrás.", step3: "Ficar balançando as pernas (chute) para subir sem usar a força das costas." },
+                { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", vector: bonecoVectors.pull, step1: "Sentado com as pernas firmes sob o suporte. Pegada aberta na barra pronada.", step2: "Incline o tronco minimamente para trás e puxe a barra até a altura do peito.", step3: "Descer a barra até o abdômen jogando o peso usando o momentum do corpo inteiro." },
+                { name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga em direção ao abdômen.", vector: bonecoVectors.pull, step1: "Pés apoiados, joelhos semicoflexionados, coluna perfeitamente alinhada segurando o triângulo.", step2: "Puxe o peso em direção ao umbigo direcionando os cotovelos bem rente ao corpo.", step3: "Arredondar a coluna inteira durante a fase de alongamento do cabo." },
+                { name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra trabalhando toda a dorsal.", vector: bonecoVectors.pull, step1: "Pés na largura dos ombros, incline o tronco à frente mantendo a coluna retilínea estável.", step2: "Puxe a barra em direção à boca do estômago apontando os cotovelos para o teto.", step3: "Subir o tronco durante o movimento transformando o exercício em um encolhimento de ombro." }
             ],
             legs: [
-                { name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=200&auto=format&fit=crop", step1: "Barra firme sobre o trapézio, pés afastados na largura dos ombros com pontas levemente para fora.", step2: "Inicie projetando o quadril para trás como se fosse sentar, descendo de forma profunda.", step3: "Deixar os joelhos convergirem para dentro (valgo dinâmico) ou tirar os calcanhares do chão." },
-                { name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás. Desça verticalmente concentrando a força na perna da frente.", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&auto=format&fit=crop", step1: "Um pé firme à frente e o outro apoiado atrás sobre um banco ou ponto elevado estável.", step2: "Desça o joelho de trás verticalmente em direção ao chão até que a coxa da frente fique paralela ao solo.", step3: "Projetar o joelho da frente muito além da linha dos dedos gerando estresse excessivo." },
-                { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada no banco.", img: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=200&auto=format&fit=crop", step1: "Sentado com a lombar e o quadril totalmente colados no encosto, pés bem distribuídos na plataforma.", step2: "Destrave a carga e desça trazendo os joelhos em direção ao peito de forma controlada, empurre.", step3: "Estender totalmente as pernas no final travando a articulação dos joelhos (hiperestensão)." }
+                { name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs, step1: "Barra firme sobre o trapézio, pés afastados na largura dos ombros com pontas levemente para fora.", step2: "Inicie projetando o quadril para trás como se fosse sentar, descendo de forma profunda.", step3: "Deixar os joelhos convergirem para dentro ou tirar os calcanhares do chão." },
+                { name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás. Desça verticalmente concentrando a força na perna da frente.", vector: bonecoVectors.legs, step1: "Um pé firme à frente e o outro apoiado atrás sobre um banco ou ponto elevado estável.", step2: "Desça o joelho de trás verticalmente em direção ao chão até que a coxa da frente fique paralela ao solo.", step3: "Projetar o joelho da frente muito além da linha dos dedos gerando estresse excessivo." },
+                { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada no banco.", vector: bonecoVectors.legs, step1: "Sentado com a lombar e o quadril totalmente colados no encosto, pés bem distribuídos na plataforma.", step2: "Destrave a carga e desça trazendo os joelhos em direção ao peito de forma controlada, empurre.", step3: "Estender totalmente as pernas no final travando a articulação dos joelhos." }
             ]
         };
 
@@ -454,17 +481,17 @@
             casa: {
                 A: [
                     { ...exerciseBank.push[0], meta: "4 SÉRIES x FALHA" },
-                    { ...exerciseBank.push[6], meta: "3 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.push[4], meta: "3 SÉRIES x 12 REPS" },
                     { ...exerciseBank.pull[0], meta: "4 SÉRIES x 8-12 REPS" },
-                    { ...exerciseBank.push[7], meta: "3 SÉRIES x 15 REPS" }
+                    { ...exerciseBank.pull[3], meta: "3 SÉRIES x 15 REPS" }
                 ],
                 B: [
                     { ...exerciseBank.legs[1], meta: "4 SÉRIES x 12 REPS" },
                     { ...exerciseBank.legs[0], meta: "4 SÉRIES x 20 REPS" },
-                    { ...exerciseBank.legs[1], meta: "3 SÉRIES x 20 PASSOS" }
+                    { ...exerciseBank.legs[2], meta: "3 SÉRIES x 15 REPS" }
                 ],
                 C: [
-                    { name: "Polichinelos HIIT", desc: "Mantenha o ritmo acelerado para queima de gordura.", img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&auto=format&fit=crop", step1: "Pés juntos, braços colados na lateral da coxa.", step2: "Salte abrindo as pernas e batendo as mãos acima da cabeça de forma contínua.", step3: "Executar o movimento sem amortecer a queda com a ponta dos pés.", meta: "4 SÉRIES x 45 SEG" },
+                    { name: "Abdominal Remador", desc: "Estique o corpo e suba flexionando o tronco e abraçando os joelhos.", vector: bonecoVectors.pull, step1: "Deitado de costas no chão com braços e pernas totalmente estendidos.", step2: "Suba o tronco soltando o ar e flexionando os joelhos até alinhar com o peito.", step3: "Forçar excessivamente o pescoço para a frente ao invés de usar a força do core.", meta: "4 SÉRIES x 20 REPS" },
                     { ...exerciseBank.push[0], meta: "4 SÉRIES x 15 REPS" }
                 ]
             },
@@ -510,7 +537,7 @@
                 card.className = "exercise-card";
                 card.innerHTML = `
                     <div class="exercise-hero">
-                        <img class="exercise-visual-img" src="${ex.img || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200'}" alt="${ex.name}">
+                        <div class="exercise-visual-box">${ex.vector || bonecoVectors.push}</div>
                         <div class="exercise-detail">
                             <h4>${index + 1}. ${ex.name}</h4>
                             <p>${ex.desc}</p>
@@ -519,7 +546,7 @@
                     <div class="exercise-footer">
                         <span class="meta-tag">${ex.meta}</span>
                         <div class="action-buttons">
-                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal(${index})">📖 Ver Execução</button>
+                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal(${index})">📖 Execução</button>
                             <button class="btn-action-ex" style="color:var(--text-muted)" onclick="openEditModal(${index})">⚙️ Mudar</button>
                         </div>
                     </div>
@@ -528,14 +555,13 @@
             });
         }
 
-        // MODAL GUIA DE EXECUÇÃO IA INTELEGENTE
         function openGuideModal(index) {
             const ex = userRoutine[currentEnvironment][currentDay][index];
             document.getElementById('guide-title').textContent = ex.name;
-            document.getElementById('guide-img').src = ex.img || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400';
-            document.getElementById('guide-step1').textContent = ex.step1 || "Posicione o corpo de forma anatômica e confortável mantendo o alinhamento da coluna.";
-            document.getElementById('guide-step2').textContent = ex.step2 || "Execute a contração muscular máxima de forma cadenciada, segurando 1s no pico do movimento.";
-            document.getElementById('guide-step3').textContent = ex.step3 || "Evite movimentação brusca ou uso excessivo de momentum (embalos).";
+            document.getElementById('guide-vector-container').innerHTML = ex.vector || bonecoVectors.push;
+            document.getElementById('guide-step1').textContent = ex.step1 || "Posicione o corpo de forma anatômica mantendo o alinhamento da coluna.";
+            document.getElementById('guide-step2').textContent = ex.step2 || "Execute a contração muscular máxima de forma cadenciada.";
+            document.getElementById('guide-step3').textContent = ex.step3 || "Evite usar embalos corporais para realizar o movimento.";
             
             document.getElementById('guide-modal').style.display = 'flex';
         }
@@ -545,7 +571,6 @@
         function changeDay(day) {
             currentDay = day;
             document.querySelectorAll('.abc-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${day}`).add;
             document.getElementById(`btn-${day}`).classList.add('active');
             renderWorkout();
         }

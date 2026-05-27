@@ -140,15 +140,6 @@
             border-color: var(--primary);
         }
 
-        .section-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 15px 0;
-            font-weight: 700;
-        }
-
         /* CARDS DE EXERCÍCIO */
         .exercise-card {
             background: var(--bg-card);
@@ -165,7 +156,6 @@
             align-items: center;
         }
 
-        /* AVATAR VETORIAL DO BONECO MUDADO EM REAL-TIME VIA SVG */
         .exercise-visual-box {
             width: 75px;
             height: 75px;
@@ -407,8 +397,7 @@
     <div class="modal" id="guide-modal">
         <div class="modal-content">
             <h3 id="guide-title" style="color: var(--primary); margin-bottom: 10px;">Execução</h3>
-            <div class="modal-preview-icon" id="guide-vector-container">
-                </div>
+            <div class="modal-preview-icon" id="guide-vector-container"></div>
             
             <div class="ai-guide-box">
                 <h5>1. Posição Inicial</h5>
@@ -445,31 +434,37 @@
     </div>
 
     <script>
-        // BANCO DE DESIGN DE VETORES INTEGRADAS (BONECOS MINIMALISTAS EM SVG)
+        // ICONOGRAFIA ANATÔMICA DOS BONECOS VETORIAIS
         const bonecoVectors = {
             push: `<svg viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
             pull: `<svg viewBox="0 0 24 24"><path d="M12 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-5 4h10v2H7zm2 4h6v6H9zM3 19h18"/></svg>`,
             legs: `<svg viewBox="0 0 24 24"><path d="M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3 5h6v4H9zm-1 6h3v5H8zm5 0h3v5h-3z"/></svg>`
         };
 
+        // GLOBAL BANCO DE DADOS CADASTRE EXERCÍCIOS PARA EDIÇÃO
         const exerciseBank = {
             push: [
-                { name: "Flexão de Braço Padrão", desc: "Mantenha o corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push, step1: "Mãos no chão alinhadas com o peitoral, pés juntos e abdômen totalmente contraído.", step2: "Desça flexionando os cotovelos para trás (em ângulo de 45°), até o queixo se aproximar do solo.", step3: "Deixar o quadril cair ou relaxar o abdômen durante a execução." },
-                { name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre com força explosiva.", vector: bonecoVectors.push, step1: "Deitado no banco, escápulas totalmente aduzidas (fechadas atrás), pés firmes empurrando o chão.", step2: "Retire a barra, desça controladamente até tocar levemente a linha dos mamilos e suba estendendo os braços.", step3: "Retirar as costas do banco e bater a barra com impacto contra o peito." },
-                { name: "Supino Inclinado com Halteres", desc: "Foco na porção superior do peito. Angulação de 30 a 45 graus.", vector: bonecoVectors.push, step1: "Banco inclinado a 30°. Halteres posicionados nas laterais do peitoral superior.", step2: "Empurre os halteres verticalmente aproximando-os no topo sem bater os pesos. Controle a descida.", step3: "Inclinar demais o banco (acima de 45°), jogando toda a força nos ombros anteriores." },
-                { name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça estendendo os braços.", vector: bonecoVectors.push, step1: "Sentado com a coluna totalmente apoiada. Halteres na altura das orelhas.", step2: "Suba os pesos em linha reta até quase estender os braços, mantendo o controle total da trajetória.", step3: "Arquear excessivamente a lombar para tentar compensar o excesso de peso." },
-                { name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros focando na lateral do deltoide.", vector: bonecoVectors.push, step1: "Postura ereta, joelhos levemente flexionados, halteres posicionados ao lado das coxas.", step2: "Eleve os braços lateralmente até a altura dos ombros, liderando o movimento com os cotovelos.", step3: "Lançar o corpo para trás usando impulso ou subir os pesos acima da linha da cabeça." }
+                { name: "Flexão de Braço Padrão", desc: "Mantenha o corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push, step1: "Mãos no chão alinhadas com o peitoral, pés juntos.", step2: "Desça flexionando os cotovelos para trás em um ângulo de 45°.", step3: "Deixar o quadril cair ou relaxar o abdômen." },
+                { name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre com força.", vector: bonecoVectors.push, step1: "Deitado no banco, escápulas fechadas atrás, pés firmes no chão.", step2: "Desça controladamente até tocar levemente a linha dos mamilos.", step3: "Bater a barra com impacto contra o peitoral." },
+                { name: "Supino Inclinado com Halteres", desc: "Foco na porção superior do peito.", vector: bonecoVectors.push, step1: "Banco inclinado a 30° ou 45°.", step2: "Empurre os halteres verticalmente aproximando-os no topo.", step3: "Inclinar demais o banco jogando a força nos ombros." },
+                { name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça.", vector: bonecoVectors.push, step1: "Sentado com a coluna apoiada, halteres na altura das orelhas.", step2: "Suba os pesos em linha reta sem travar totalmente os cotovelos.", step3: "Arquear excessivamente a lombar para compensar a carga." },
+                { name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros focando no deltoide.", vector: bonecoVectors.push, step1: "Postura ereta, joelhos levemente flexionados.", step2: "Eleve os braços lateralmente liderando com os cotovelos.", step3: "Usar impulso exagerado com o tronco para subir." },
+                { name: "Flexão Diamante", desc: "Mãos juntas formando um triângulo, foco total no tríceps.", vector: bonecoVectors.push, step1: "Mãos unidas no solo abaixo do centro do peito.", step2: "Desça mantendo os cotovelos raspando nas costelas.", step3: "Abrir os cotovelos para fora perdendo o foco muscular." },
+                { name: "Mergulho no Banco", desc: "Apoie as mãos em uma cadeira e desça o quadril.", vector: bonecoVectors.push, step1: "Mãos na borda da cadeira, quadril bem rente ao assento.", step2: "Flexione os cotovelos descendo o quadril verticalmente.", step3: "Afastar o corpo para frente sobrecarregando a articulação." }
             ],
             pull: [
-                { name: "Barra Fixa Pronada", desc: "Puxe o corpo para cima até o queixo passar a linha da barra.", vector: bonecoVectors.pull, step1: "Segure a barra com as palmas para a frente, braços totalmente estendidos pendurado.", step2: "Puxe o corpo para cima direcionando o peito para a barra e fechando as escápulas atrás.", step3: "Ficar balançando as pernas (chute) para subir sem usar a força das costas." },
-                { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", vector: bonecoVectors.pull, step1: "Sentado com as pernas firmes sob o suporte. Pegada aberta na barra pronada.", step2: "Incline o tronco minimamente para trás e puxe a barra até a altura do peito.", step3: "Descer a barra até o abdômen jogando o peso usando o momentum do corpo inteiro." },
-                { name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga em direção ao abdômen.", vector: bonecoVectors.pull, step1: "Pés apoiados, joelhos semicoflexionados, coluna perfeitamente alinhada segurando o triângulo.", step2: "Puxe o peso em direção ao umbigo direcionando os cotovelos bem rente ao corpo.", step3: "Arredondar a coluna inteira durante a fase de alongamento do cabo." },
-                { name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra trabalhando toda a dorsal.", vector: bonecoVectors.pull, step1: "Pés na largura dos ombros, incline o tronco à frente mantendo a coluna retilínea estável.", step2: "Puxe a barra em direção à boca do estômago apontando os cotovelos para o teto.", step3: "Subir o tronco durante o movimento transformando o exercício em um encolhimento de ombro." }
+                { name: "Barra Fixa", desc: "Puxe o corpo para cima até o queixo passar a linha da barra.", vector: bonecoVectors.pull, step1: "Segure a barra com as palmas para a frente, braços estendidos.", step2: "Puxe o corpo direcionando o peito para cima, fechando as costas.", step3: "Ficar balançando as pernas para subir sem força dorsal." },
+                { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", vector: bonecoVectors.pull, step1: "Sentado com os joelhos travados no suporte.", step2: "Puxe a barra até a altura do peito inclinando o tronco levemente.", step3: "Puxar usando o peso do corpo todo jogado para trás." },
+                { name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga.", vector: bonecoVectors.pull, step1: "Pés apoiados, coluna perfeitamente alinhada.", step2: "Puxe o triângulo na direção do umbigo raspando os cotovelos.", step3: "Arredondar a coluna inteira durante o alongamento." },
+                { name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra.", vector: bonecoVectors.pull, step1: "Tronco inclinado para a frente com a lombar firme e travada.", step2: "Puxe a barra na direção da boca do estômago.", step3: "Ficar em pé durante o movimento perdendo o ângulo das costas." },
+                { name: "Rosca Direta", desc: "Flexão de braços isolando o bíceps.", vector: bonecoVectors.pull, step1: "Braços estendidos segurando a barra, cotovelos colados no tronco.", step2: "Suba a barra flexionando os braços sem mexer os ombros.", step3: "Jogar os cotovelos para frente ou balançar o corpo." }
             ],
             legs: [
-                { name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs, step1: "Barra firme sobre o trapézio, pés afastados na largura dos ombros com pontas levemente para fora.", step2: "Inicie projetando o quadril para trás como se fosse sentar, descendo de forma profunda.", step3: "Deixar os joelhos convergirem para dentro ou tirar os calcanhares do chão." },
-                { name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás. Desça verticalmente concentrando a força na perna da frente.", vector: bonecoVectors.legs, step1: "Um pé firme à frente e o outro apoiado atrás sobre um banco ou ponto elevado estável.", step2: "Desça o joelho de trás verticalmente em direção ao chão até que a coxa da frente fique paralela ao solo.", step3: "Projetar o joelho da frente muito além da linha dos dedos gerando estresse excessivo." },
-                { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada no banco.", vector: bonecoVectors.legs, step1: "Sentado com a lombar e o quadril totalmente colados no encosto, pés bem distribuídos na plataforma.", step2: "Destrave a carga e desça trazendo os joelhos em direção ao peito de forma controlada, empurre.", step3: "Estender totalmente as pernas no final travando a articulação dos joelhos." }
+                { name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs, step1: "Pés afastados na largura dos ombros.", step2: "Agache projetando o quadril para trás como se fosse sentar.", step3: "Deixar os joelhos entrarem para dentro (valgo)." },
+                { name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás. Desça verticalmente.", vector: bonecoVectors.legs, step1: "Um pé firme à frente e o outro apoiado atrás em uma cadeira/banco.", step2: "Desça o joelho de trás verticalmente em direção ao solo.", step3: "Inclinar demais o tronco à frente de forma instável." },
+                { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada.", vector: bonecoVectors.legs, step1: "Quadril e lombar totalmente colados no banco.", step2: "Desça aproximando os joelhos do peito de forma controlada.", step3: "Estender totalmente as pernas estalando ou travando os joelhos." },
+                { name: "Afundo Caminhando", desc: "Passadas contínuas descendo o quadril.", vector: bonecoVectors.legs, step1: "Postura ereta, mãos na cintura ou segurando carga.", step2: "Dê um passo longo e desça o joelho de trás até quase tocar o chão.", step3: "Dar passos muito curtos sobrecarregando o joelho anterior." },
+                { name: "Gêmeos em Pé", desc: "Extensão completa para panturrilhas.", vector: bonecoVectors.legs, step1: "Ponta dos pés apoiadas em um degrau ou base firme.", step2: "Suba o máximo possível contraindo as panturrilhas e desça bem.", step3: "Fazer o movimento rápido demais sem usar a amplitude." }
             ]
         };
 
@@ -477,22 +472,27 @@
         let currentDay = "A";
         let currentEditingIndex = null;
 
+        // ROTINA COMPLETA: GARANTIDO DE 4 A 6 EXERCÍCIOS POR DIA
         let userRoutine = {
             casa: {
                 A: [
                     { ...exerciseBank.push[0], meta: "4 SÉRIES x FALHA" },
-                    { ...exerciseBank.push[4], meta: "3 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.push[5], meta: "3 SÉRIES x 12 REPS" },
                     { ...exerciseBank.pull[0], meta: "4 SÉRIES x 8-12 REPS" },
-                    { ...exerciseBank.pull[3], meta: "3 SÉRIES x 15 REPS" }
+                    { ...exerciseBank.push[6], meta: "3 SÉRIES x 15 REPS" },
+                    { ...exerciseBank.push[4], meta: "3 SÉRIES x 12 REPS" }
                 ],
                 B: [
-                    { ...exerciseBank.legs[1], meta: "4 SÉRIES x 12 REPS" },
                     { ...exerciseBank.legs[0], meta: "4 SÉRIES x 20 REPS" },
-                    { ...exerciseBank.legs[2], meta: "3 SÉRIES x 15 REPS" }
+                    { ...exerciseBank.legs[1], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.legs[3], meta: "3 SÉRIES x 20 PASSOS" },
+                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 20 REPS" }
                 ],
                 C: [
-                    { name: "Abdominal Remador", desc: "Estique o corpo e suba flexionando o tronco e abraçando os joelhos.", vector: bonecoVectors.pull, step1: "Deitado de costas no chão com braços e pernas totalmente estendidos.", step2: "Suba o tronco soltando o ar e flexionando os joelhos até alinhar com o peito.", step3: "Forçar excessivamente o pescoço para a frente ao invés de usar a força do core.", meta: "4 SÉRIES x 20 REPS" },
-                    { ...exerciseBank.push[0], meta: "4 SÉRIES x 15 REPS" }
+                    { name: "Abdominal Remador", desc: "Flexão completa de tronco abraçando os joelhos.", vector: bonecoVectors.pull, step1: "Deitado esticado no solo.", step2: "Suba o corpo rápido abraçando as duas pernas juntas.", step3: "Puxar o pescoço com força.", meta: "4 SÉRIES x 20 REPS" },
+                    { name: "Burpees Adaptados", desc: "Exercício cardíaco de alta intensidade.", vector: bonecoVectors.push, step1: "Fique em pé, agache e jogue os pés para trás em prancha.", step2: "Volte os pés para a posição de agachamento e salte.", step3: "Bater os joelhos com força no chão.", meta: "3 SÉRIES x 10 REPS" },
+                    { name: "Prancha Abdominal Isométrica", desc: "Fortalecimento do core abdominal.", vector: bonecoVectors.push, step1: "Apoie os antebraços e pontas dos pés no chão.", step2: "Mantenha o corpo reto e alinhado como uma tábua.", step3: "Deixar o quadril cair em direção ao chão.", meta: "3 SÉRIES x 45 SEG" },
+                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 25 REPS" }
                 ]
             },
             academia: {
@@ -500,16 +500,21 @@
                     { ...exerciseBank.push[1], meta: "4 SÉRIES x 10 REPS" },
                     { ...exerciseBank.push[2], meta: "3 SÉRIES x 12 REPS" },
                     { ...exerciseBank.push[3], meta: "4 SÉRIES x 10 REPS" },
-                    { ...exerciseBank.push[4], meta: "4 SÉRIES x 12 REPS" }
+                    { ...exerciseBank.push[4], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.push[6], meta: "3 SÉRIES x 12 REPS" }
                 ],
                 B: [
                     { ...exerciseBank.pull[1], meta: "4 SÉRIES x 10 REPS" },
                     { ...exerciseBank.pull[2], meta: "4 SÉRIES x 12 REPS" },
-                    { ...exerciseBank.pull[3], meta: "3 SÉRIES x 10 REPS" }
+                    { ...exerciseBank.pull[3], meta: "3 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.pull[4], meta: "4 SÉRIES x 12 REPS" }
                 ],
                 C: [
                     { ...exerciseBank.legs[0], meta: "4 SÉRIES x 8-10 REPS" },
-                    { ...exerciseBank.legs[2], meta: "4 SÉRIES x 12 REPS" }
+                    { ...exerciseBank.legs[2], meta: "4 SÉRIES x 12 REPS" },
+                    { ...exerciseBank.legs[1], meta: "3 SÉRIES x 10 REPS" },
+                    { ...exerciseBank.legs[3], meta: "3 SÉRIES x 24 PASSOS" },
+                    { ...exerciseBank.legs[4], meta: "4 SÉRIES x 20 REPS" }
                 ]
             }
         };
@@ -621,7 +626,7 @@
 
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
 
-        // TIMER
+        // TIMER INTEGRADO
         let countdown;
         let timeRemaining = 60;
         function runTimer(sec) {

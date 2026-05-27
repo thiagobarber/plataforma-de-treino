@@ -15,6 +15,7 @@
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --border: #222834;
+            --success: #2ed573;
         }
 
         * {
@@ -99,11 +100,15 @@
             background: linear-gradient(135deg, #1e2430, #141821);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 15px 20px;
+            padding: 20px;
             margin-bottom: 20px;
+        }
+
+        .profile-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
         }
 
         .badge-goal {
@@ -113,6 +118,39 @@
             border-radius: 30px;
             font-size: 0.8rem;
             font-weight: 700;
+        }
+
+        /* CARD DE BIOIMPEDÂNCIA / IMC */
+        .bio-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .bio-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .bio-item span {
+            color: var(--text-muted);
+            display: block;
+            font-size: 0.75rem;
         }
 
         /* SUB-MENU ABC */
@@ -174,13 +212,23 @@
             fill: none;
             stroke: var(--text-muted);
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
 
         .exercise-detail { flex: 1; }
         .exercise-detail h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
         .exercise-detail p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
+
+        /* PAINEL DE CARGA LOGADA */
+        .progress-log-zone {
+            background: rgba(46, 213, 115, 0.05);
+            border-top: 1px dashed var(--border);
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            color: var(--success);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
         .exercise-footer {
             background: rgba(0, 0, 0, 0.15);
@@ -281,8 +329,21 @@
             margin-top: 25px;
         }
 
-        .timer-val { font-size: 2.5rem; font-weight: 800; font-family: monospace; margin: 5px 0; }
-        .timer-actions { display: flex; gap: 8px; justify-content: center; }
+        .timer-val { 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            font-family: monospace; 
+            margin: 5px auto; 
+            background: var(--bg-main);
+            border: 1px dashed var(--border);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 10px;
+            width: fit-content;
+            cursor: pointer;
+        }
+
+        .timer-actions { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
 
         .btn-sec {
             background: var(--bg-main);
@@ -344,12 +405,21 @@
                         <input type="number" id="in-height" step="0.01" required placeholder="1.64">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Objetivo</label>
-                    <select id="in-goal">
-                        <option value="Hipertrofia">💪 Hipertrofia Acelerada</option>
-                        <option value="Definição">🔥 Queima & Definição</option>
-                    </select>
+                <div style="display: flex; gap: 12px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Gênero</label>
+                        <select id="in-gender">
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Objetivo</label>
+                        <select id="in-goal">
+                            <option value="Hipertrofia">💪 Hipertrofia</option>
+                            <option value="Definição">🔥 Queima & Definição</option>
+                        </select>
+                    </div>
                 </div>
                 <button type="submit" class="btn-primary">Montar Painel de Treino</button>
             </form>
@@ -357,11 +427,22 @@
 
         <div id="screen-app">
             <div class="profile-widget">
-                <div>
-                    <h3 id="user-name">Atleta</h3>
-                    <p id="user-stats">00kg | 0.00m</p>
+                <div class="profile-header">
+                    <div>
+                        <h3 id="user-name">Atleta</h3>
+                        <p id="user-stats">00kg | 0.00m | M</p>
+                    </div>
+                    <div class="badge-goal" id="user-goal">Objetivo</div>
                 </div>
-                <div class="badge-goal" id="user-goal">Objetivo</div>
+                
+                <div class="bio-panel">
+                    <div class="bio-title">📊 Pré-Bioimpedância & Diagnóstico</div>
+                    <div class="bio-grid">
+                        <div class="bio-item"><span id="lbl-imc-val">IMC: --</span><strong id="lbl-imc-status">Calculando...</strong></div>
+                        <div class="bio-item"><span>Meta Corporal:</span><strong id="lbl-meta-corp">Definindo...</strong></div>
+                        <div class="bio-item" style="grid-column: span 2;"><span>Diretriz de Alimentação:</span><p id="lbl-feed-advice" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 3px;"></p></div>
+                    </div>
+                </div>
             </div>
 
             <div class="abc-tabs">
@@ -374,12 +455,13 @@
                 </div>
 
             <div class="hub-timer">
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase;">Recuperação</span>
-                <div class="timer-val" id="timer-display">01:00</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;">⏱️ Descanso (Toque para Editar)</span>
+                <div class="timer-val" id="timer-display" onclick="editTime()">01:00</div>
                 <div class="timer-actions">
-                    <button class="btn-sec" onclick="runTimer(60)">60s</button>
-                    <button class="btn-sec" onclick="runTimer(90)">90s</button>
-                    <button class="btn-sec" style="color: var(--primary)" onclick="clearTimer()">Reset</button>
+                    <button class="btn-sec" id="btn-start-toggle" onclick="toggleTimer()" style="background: var(--primary); font-weight:700;">Iniciar</button>
+                    <button class="btn-sec" onclick="setQuickTimer(60)">60s</button>
+                    <button class="btn-sec" onclick="setQuickTimer(90)">90s</button>
+                    <button class="btn-sec" style="color: var(--text-muted)" onclick="resetTimer()">Reset</button>
                 </div>
             </div>
         </div>
@@ -434,45 +516,45 @@
     </div>
 
     <script>
-        // ICONOGRAFIA ANATÔMICA DOS BONECOS VETORIAIS
         const bonecoVectors = {
             push: `<svg viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
             pull: `<svg viewBox="0 0 24 24"><path d="M12 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-5 4h10v2H7zm2 4h6v6H9zM3 19h18"/></svg>`,
             legs: `<svg viewBox="0 0 24 24"><path d="M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3 5h6v4H9zm-1 6h3v5H8zm5 0h3v5h-3z"/></svg>`
         };
 
-        // GLOBAL BANCO DE DADOS CADASTRE EXERCÍCIOS PARA EDIÇÃO
         const exerciseBank = {
             push: [
-                { name: "Flexão de Braço Padrão", desc: "Mantenha o corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push, step1: "Mãos no chão alinhadas com o peitoral, pés juntos.", step2: "Desça flexionando os cotovelos para trás em um ângulo de 45°.", step3: "Deixar o quadril cair ou relaxar o abdômen." },
-                { name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre com força.", vector: bonecoVectors.push, step1: "Deitado no banco, escápulas fechadas atrás, pés firmes no chão.", step2: "Desça controladamente até tocar levemente a linha dos mamilos.", step3: "Bater a barra com impacto contra o peitoral." },
-                { name: "Supino Inclinado com Halteres", desc: "Foco na porção superior do peito.", vector: bonecoVectors.push, step1: "Banco inclinado a 30° ou 45°.", step2: "Empurre os halteres verticalmente aproximando-os no topo.", step3: "Inclinar demais o banco jogando a força nos ombros." },
-                { name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça.", vector: bonecoVectors.push, step1: "Sentado com a coluna apoiada, halteres na altura das orelhas.", step2: "Suba os pesos em linha reta sem travar totalmente os cotovelos.", step3: "Arquear excessivamente a lombar para compensar a carga." },
-                { name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros focando no deltoide.", vector: bonecoVectors.push, step1: "Postura ereta, joelhos levemente flexionados.", step2: "Eleve os braços lateralmente liderando com os cotovelos.", step3: "Usar impulso exagerado com o tronco para subir." },
-                { name: "Flexão Diamante", desc: "Mãos juntas formando um triângulo, foco total no tríceps.", vector: bonecoVectors.push, step1: "Mãos unidas no solo abaixo do centro do peito.", step2: "Desça mantendo os cotovelos raspando nas costelas.", step3: "Abrir os cotovelos para fora perdendo o foco muscular." },
-                { name: "Mergulho no Banco", desc: "Apoie as mãos em uma cadeira e desça o quadril.", vector: bonecoVectors.push, step1: "Mãos na borda da cadeira, quadril bem rente ao assento.", step2: "Flexione os cotovelos descendo o quadril verticalmente.", step3: "Afastar o corpo para frente sobrecarregando a articulação." }
+                { id: "flexao", name: "Flexão de Braço Padrão", desc: "Corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push },
+                { id: "supino_reto", name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito e empurre.", vector: bonecoVectors.push },
+                { id: "supino_inc", name: "Supino Inclinado Halteres", desc: "Foco na porção superior do peito.", vector: bonecoVectors.push },
+                { id: "desenvolvimento", name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça.", vector: bonecoVectors.push },
+                { id: "elev_lateral", name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros.", vector: bonecoVectors.push },
+                { id: "diamante", name: "Flexão Diamante", desc: "Mãos juntas em triângulo, foco no tríceps.", vector: bonecoVectors.push },
+                { id: "mergulho", name: "Mergulho no Banco", desc: "Apoie as mãos em uma cadeira estável e desça.", vector: bonecoVectors.push }
             ],
             pull: [
-                { name: "Barra Fixa", desc: "Puxe o corpo para cima até o queixo passar a linha da barra.", vector: bonecoVectors.pull, step1: "Segure a barra com as palmas para a frente, braços estendidos.", step2: "Puxe o corpo direcionando o peito para cima, fechando as costas.", step3: "Ficar balançando as pernas para subir sem força dorsal." },
-                { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", vector: bonecoVectors.pull, step1: "Sentado com os joelhos travados no suporte.", step2: "Puxe a barra até a altura do peito inclinando o tronco levemente.", step3: "Puxar usando o peso do corpo todo jogado para trás." },
-                { name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga.", vector: bonecoVectors.pull, step1: "Pés apoiados, coluna perfeitamente alinhada.", step2: "Puxe o triângulo na direção do umbigo raspando os cotovelos.", step3: "Arredondar a coluna inteira durante o alongamento." },
-                { name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra.", vector: bonecoVectors.pull, step1: "Tronco inclinado para a frente com a lombar firme e travada.", step2: "Puxe a barra na direção da boca do estômago.", step3: "Ficar em pé durante o movimento perdendo o ângulo das costas." },
-                { name: "Rosca Direta", desc: "Flexão de braços isolando o bíceps.", vector: bonecoVectors.pull, step1: "Braços estendidos segurando a barra, cotovelos colados no tronco.", step2: "Suba a barra flexionando os braços sem mexer os ombros.", step3: "Jogar os cotovelos para frente ou balançar o corpo." }
+                { id: "barra_fixa", name: "Barra Fixa", desc: "Puxe o corpo para cima até passar o queixo.", vector: bonecoVectors.pull },
+                { id: "pulley_alto", name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", vector: bonecoVectors.pull },
+                { id: "remada_tri", name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga.", vector: bonecoVectors.pull },
+                { id: "remada_curv", name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra.", vector: bonecoVectors.pull },
+                { id: "rosca_direta", name: "Rosca Direta", desc: "Flexão de braços isolando o bíceps.", vector: bonecoVectors.pull }
             ],
             legs: [
-                { name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs, step1: "Pés afastados na largura dos ombros.", step2: "Agache projetando o quadril para trás como se fosse sentar.", step3: "Deixar os joelhos entrarem para dentro (valgo)." },
-                { name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás. Desça verticalmente.", vector: bonecoVectors.legs, step1: "Um pé firme à frente e o outro apoiado atrás em uma cadeira/banco.", step2: "Desça o joelho de trás verticalmente em direção ao solo.", step3: "Inclinar demais o tronco à frente de forma instável." },
-                { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada.", vector: bonecoVectors.legs, step1: "Quadril e lombar totalmente colados no banco.", step2: "Desça aproximando os joelhos do peito de forma controlada.", step3: "Estender totalmente as pernas estalando ou travando os joelhos." },
-                { name: "Afundo Caminhando", desc: "Passadas contínuas descendo o quadril.", vector: bonecoVectors.legs, step1: "Postura ereta, mãos na cintura ou segurando carga.", step2: "Dê um passo longo e desça o joelho de trás até quase tocar o chão.", step3: "Dar passos muito curtos sobrecarregando o joelho anterior." },
-                { name: "Gêmeos em Pé", desc: "Extensão completa para panturrilhas.", vector: bonecoVectors.legs, step1: "Ponta dos pés apoiadas em um degrau ou base firme.", step2: "Suba o máximo possível contraindo as panturrilhas e desça bem.", step3: "Fazer o movimento rápido demais sem usar a amplitude." }
+                { id: "agachamento", name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs },
+                { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás em banco. Desça verticalmente.", vector: bonecoVectors.legs },
+                { id: "leg_press", name: "Leg Press 45°", desc: "Empurre a plataforma com a lombar totalmente apoiada.", vector: bonecoVectors.legs },
+                { id: "afundo", name: "Afundo Caminhando", desc: "Passadas contínuas descendo o quadril.", vector: bonecoVectors.legs },
+                { id: "panturrilha", name: "Gêmeos em Pé", desc: "Extensão completa para panturrilhas.", vector: bonecoVectors.legs }
             ]
         };
 
         let currentEnvironment = "casa";
         let currentDay = "A";
         let currentEditingIndex = null;
+        
+        // Memória local de progresso (Carga / Avanço de peso de cada exercício)
+        let trackingProgress = {}; 
 
-        // ROTINA COMPLETA: GARANTIDO DE 4 A 6 EXERCÍCIOS POR DIA
         let userRoutine = {
             casa: {
                 A: [
@@ -489,9 +571,9 @@
                     { ...exerciseBank.legs[4], meta: "4 SÉRIES x 20 REPS" }
                 ],
                 C: [
-                    { name: "Abdominal Remador", desc: "Flexão completa de tronco abraçando os joelhos.", vector: bonecoVectors.pull, step1: "Deitado esticado no solo.", step2: "Suba o corpo rápido abraçando as duas pernas juntas.", step3: "Puxar o pescoço com força.", meta: "4 SÉRIES x 20 REPS" },
-                    { name: "Burpees Adaptados", desc: "Exercício cardíaco de alta intensidade.", vector: bonecoVectors.push, step1: "Fique em pé, agache e jogue os pés para trás em prancha.", step2: "Volte os pés para a posição de agachamento e salte.", step3: "Bater os joelhos com força no chão.", meta: "3 SÉRIES x 10 REPS" },
-                    { name: "Prancha Abdominal Isométrica", desc: "Fortalecimento do core abdominal.", vector: bonecoVectors.push, step1: "Apoie os antebraços e pontas dos pés no chão.", step2: "Mantenha o corpo reto e alinhado como uma tábua.", step3: "Deixar o quadril cair em direção ao chão.", meta: "3 SÉRIES x 45 SEG" },
+                    { id: "abs_remador", name: "Abdominal Remador", desc: "Flexão de tronco abraçando os joelhos.", vector: bonecoVectors.pull, meta: "4 SÉRIES x 20 REPS" },
+                    { id: "burpee", name: "Burpees Adaptados", desc: "Exercício metabólico de alta intensidade.", vector: bonecoVectors.push, meta: "3 SÉRIES x 10 REPS" },
+                    { id: "prancha", name: "Prancha Isométrica", desc: "Fortalecimento do core abdominal.", vector: bonecoVectors.push, meta: "3 SÉRIES x 45 SEG" },
                     { ...exerciseBank.legs[4], meta: "4 SÉRIES x 25 REPS" }
                 ]
             },
@@ -521,9 +603,45 @@
 
         function initApp(e) {
             e.preventDefault();
-            document.getElementById('user-name').textContent = document.getElementById('in-name').value;
-            document.getElementById('user-stats').textContent = `${document.getElementById('in-weight').value} kg | ${document.getElementById('in-height').value} m`;
-            document.getElementById('user-goal').textContent = document.getElementById('in-goal').value;
+            const name = document.getElementById('in-name').value;
+            const weight = parseFloat(document.getElementById('in-weight').value);
+            const height = parseFloat(document.getElementById('in-height').value);
+            const gender = document.getElementById('in-gender').value;
+            const goal = document.getElementById('in-goal').value;
+
+            document.getElementById('user-name').textContent = name;
+            document.getElementById('user-stats').textContent = `${weight} kg | ${height} m | Gênero: ${gender}`;
+            document.getElementById('user-goal').textContent = goal;
+
+            // PROCESSAMENTO DA PRÉ BIOIMPEDÂNCIA / IMC
+            const imc = weight / (height * height);
+            document.getElementById('lbl-imc-val').textContent = `IMC: ${imc.toFixed(1)}`;
+            
+            let status = "";
+            let metaCorp = "";
+            let advice = "";
+
+            if (imc < 18.5) {
+                status = "Abaixo do peso ideal";
+                metaCorp = "Ganhar Massa Magra Limpa";
+                advice = "Superávit calórico. Foque em carboidratos complexos (arroz, batata doce), proteínas pesadas (frango, ovos) e gorduras boas. Evite aeróbicos excessivos.";
+            } else if (imc >= 18.5 && imc < 25) {
+                status = "Peso Saudável / Normal";
+                metaCorp = "Recomposição Corporal (Trocar gordura por músculo)";
+                advice = "Dieta normocalórica. Alta ingestão proteica (2g/kg), controle de carboidratos nos dias de descanso. Alimentos limpos e hidratação forte.";
+            } else if (imc >= 25 && imc < 30) {
+                status = "Sobrepeso Leve";
+                metaCorp = "Definição Muscular & Redução de Gordura";
+                advice = "Déficit calórico estratégico. Reduza açúcares e farinhas brancas. Mantenha as proteínas no topo para não perder massa e acelere o cárdio pós-treino.";
+            } else {
+                status = "Obesidade / Foco em Saúde";
+                metaCorp = "Emagrecimento / Perder Gordura Visceral";
+                advice = "Déficit calórico rigoroso. Corte total de ultraprocessados. Priorize vegetais crus, carnes magras e treinos intensos focando na queima diária.";
+            }
+
+            document.getElementById('lbl-imc-status').textContent = status;
+            document.getElementById('lbl-meta-corp').textContent = metaCorp;
+            document.getElementById('lbl-feed-advice').textContent = advice;
 
             document.getElementById('screen-setup').style.display = 'none';
             document.getElementById('screen-app').style.display = 'block';
@@ -538,6 +656,10 @@
             const list = userRoutine[currentEnvironment][currentDay];
             
             list.forEach((ex, index) => {
+                // Chave única para rastrear o progresso do exercício
+                const progKey = `${currentEnvironment}_${currentDay}_${ex.id || index}`;
+                const loggedProg = trackingProgress[progKey] ? `🔥 Peso Atual: <strong>${trackingProgress[progKey]}</strong>` : `⚡ Sem registro de carga hoje.`;
+
                 const card = document.createElement('div');
                 card.className = "exercise-card";
                 card.innerHTML = `
@@ -548,9 +670,13 @@
                             <p>${ex.desc}</p>
                         </div>
                     </div>
+                    <div class="progress-log-zone" id="log-${progKey}">
+                        <span>${loggedProg}</span>
+                    </div>
                     <div class="exercise-footer">
                         <span class="meta-tag">${ex.meta}</span>
                         <div class="action-buttons">
+                            <button class="btn-action-ex" style="color:var(--success)" onclick="logProgress('${progKey}')">📈 Carga</button>
                             <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal(${index})">📖 Execução</button>
                             <button class="btn-action-ex" style="color:var(--text-muted)" onclick="openEditModal(${index})">⚙️ Mudar</button>
                         </div>
@@ -558,6 +684,16 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // SISTEMA DE PROGRESSÃO DE TREINO
+        function logProgress(progKey) {
+            let currentVal = trackingProgress[progKey] || "";
+            let newLoad = prompt("Registre sua carga ou repetições para este exercício (Ex: 24kg cada lado / 15 Reps corpo livre):", currentVal);
+            if (newLoad !== null) {
+                trackingProgress[progKey] = newLoad;
+                renderWorkout(); // Recarrega os blocos exibindo o progresso atualizado
+            }
         }
 
         function openGuideModal(index) {
@@ -626,25 +762,83 @@
 
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
 
-        // TIMER INTEGRADO
-        let countdown;
-        let timeRemaining = 60;
-        function runTimer(sec) {
-            clearInterval(countdown);
-            timeRemaining = sec;
-            const display = document.getElementById('timer-display');
-            countdown = setInterval(() => {
-                timeRemaining--;
-                const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
-                const s = (timeRemaining % 60).toString().padStart(2, '0');
-                display.textContent = `${m}:${s}`;
-                if(timeRemaining <= 0) {
-                    clearInterval(countdown);
-                    display.textContent = "GO!";
-                }
-            }, 1000);
+        // SISTEMA DE CRONÔMETRO EDITÁVEL
+        let countdown = null;
+        let timeRemaining = 60; 
+        let isTimerRunning = false;
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const s = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').textContent = `${m}:${s}`;
         }
-        function clearTimer() { clearInterval(countdown); document.getElementById('timer-display').textContent = "01:00"; }
+
+        function toggleTimer() {
+            const btn = document.getElementById('btn-start-toggle');
+            if (isTimerRunning) {
+                clearInterval(countdown);
+                isTimerRunning = false;
+                btn.textContent = "Iniciar";
+                btn.style.background = "var(--primary)";
+            } else {
+                isTimerRunning = true;
+                btn.textContent = "Pausar";
+                btn.style.background = "#eccc68";
+                
+                countdown = setInterval(() => {
+                    if (timeRemaining > 0) {
+                        timeRemaining--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(countdown);
+                        isTimerRunning = false;
+                        document.getElementById('timer-display').textContent = "GO!";
+                        btn.textContent = "Iniciar";
+                        btn.style.background = "var(--primary)";
+                    }
+                }, 1000);
+            }
+        }
+
+        function setQuickTimer(sec) {
+            clearInterval(countdown);
+            isTimerRunning = false;
+            timeRemaining = sec;
+            updateTimerDisplay();
+            document.getElementById('btn-start-toggle').textContent = "Iniciar";
+            document.getElementById('btn-start-toggle').style.background = "var(--primary)";
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            isTimerRunning = false;
+            timeRemaining = 60;
+            updateTimerDisplay();
+            document.getElementById('btn-start-toggle').textContent = "Iniciar";
+            document.getElementById('btn-start-toggle').style.background = "var(--primary)";
+        }
+
+        function editTime() {
+            clearInterval(countdown);
+            isTimerRunning = false;
+            document.getElementById('btn-start-toggle').textContent = "Iniciar";
+            document.getElementById('btn-start-toggle').style.background = "var(--primary)";
+
+            let userPrompt = prompt("Defina o tempo de descanso (MM:SS):", "01:00");
+            if (userPrompt) {
+                let parts = userPrompt.split(':');
+                if (parts.length === 2) {
+                    let min = parseInt(parts[0], 10);
+                    let sec = parseInt(parts[1], 10);
+                    if (!isNaN(min) && !isNaN(sec) && sec < 60) {
+                        timeRemaining = (min * 60) + sec;
+                        updateTimerDisplay();
+                        return;
+                    }
+                }
+                alert("Formato inválido! Use o padrão minutos:segundos (Ex: 01:30).");
+            }
+        }
     </script>
 </body>
 </html>

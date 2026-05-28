@@ -125,8 +125,8 @@
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
-        // Inicializa o cliente do Supabase Corretamente usando a biblioteca global
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inicializa usando o método correto da biblioteca global (sem conflito de referência)
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Elementos das Telas
         const authScreen = document.getElementById('auth-screen');
@@ -140,14 +140,14 @@
         const authPassword = document.getElementById('auth-password');
         const authSubmitBtn = document.getElementById('auth-submit-btn');
         const toggleAuthMode = document.getElementById('toggle-auth-mode');
-        
+
         const setupForm = document.getElementById('setup-form');
 
         // Estado do app (Login ou Cadastro)
         let isSignUpMode = false;
         let currentUser = null;
 
-        // Alternar modo de autenticação corrigido (Previnindo o comportamento padrão)
+        // Alternar modo de autenticação (Login <-> Cadastro) sem recarregar
         toggleAuthMode.addEventListener('click', (e) => {
             e.preventDefault(); 
             isSignUpMode = !isSignUpMode;
@@ -162,36 +162,57 @@
             }
         });
 
-        // Gerenciar Envio de Login/Cadastro
+        // Gerenciar Envio de Login/Cadastro com tratamento de erros visível
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const email = authEmail.value.trim();
             const password = authPassword.value;
 
-            if (isSignUpMode) {
-                // Fluxo de Cadastro
-                authSubmitBtn.innerText = "Cadastrando...";
-                const { data, error } = await supabase.auth.signUp({ email, password });
-                if (error) {
-                    alert("Erro ao cadastrar: " + error.message);
-                    authSubmitBtn.innerText = "Cadastrar";
+            if (!email || !password) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            try {
+                if (isSignUpMode) {
+                    authSubmitBtn.innerText = "Cadastrando...";
+                    authSubmitBtn.disabled = true;
+
+                    const { data, error } = await supabase.auth.signUp({ email, password });
+                    
+                    if (error) {
+                        alert("Erro do Supabase ao cadastrar: " + error.message);
+                    } else if (data?.user) {
+                        alert("Cadastro realizado com sucesso! Agora digite sua senha novamente e clique em Entrar para configurar seu perfil.");
+                        isSignUpMode = false;
+                        authTitle.innerText = "Entrar no Hybrid Training";
+                        authSubmitBtn.innerText = "Entrar";
+                        toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
+                        authPassword.value = "";
+                    } else {
+                        alert("Ocorreu um comportamento inesperado. Verifique os dados.");
+                    }
                 } else {
-                    alert("Cadastro realizado com sucesso! Agora insira seus dados novamente e clique em Entrar.");
-                    isSignUpMode = false;
-                    authTitle.innerText = "Entrar no Hybrid Training";
-                    authSubmitBtn.innerText = "Entrar";
-                    toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
-                    authPassword.value = "";
+                    authSubmitBtn.innerText = "Entrando...";
+                    authSubmitBtn.disabled = true;
+
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    
+                    if (error) {
+                        alert("Erro ao entrar: " + error.message);
+                    } else {
+                        await checkUserSession();
+                    }
                 }
-            } else {
-                // Fluxo de Login
-                authSubmitBtn.innerText = "Entrando...";
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) {
-                    alert("Dados incorretos ou erro: " + error.message);
+            } catch (err) {
+                alert("Erro crítico no sistema: " + err.message);
+            } finally {
+                authSubmitBtn.disabled = false;
+                if (!isSignUpMode) {
                     authSubmitBtn.innerText = "Entrar";
                 } else {
-                    checkUserSession();
+                    authSubmitBtn.innerText = "Cadastrar";
                 }
             }
         });
@@ -236,7 +257,6 @@
             if (session) {
                 currentUser = session.user;
                 
-                // Buscar dados do perfil na tabela atleta_perfil
                 const { data: perfil, error } = await supabase
                     .from('atleta_perfil')
                     .select('*')
@@ -244,23 +264,20 @@
                     .single();
 
                 if (error || !perfil) {
-                    // Se a conta existe mas o perfil não foi criado, abre a tela de setup
                     authScreen.classList.add('hidden');
                     setupScreen.classList.remove('hidden');
                     appScreen.classList.add('hidden');
                 } else {
-                    // Se o perfil existe, vai direto pro app principal
                     showAppLayout(perfil);
                 }
             } else {
-                // Se não tem login ativo, mostra tela de login
                 authScreen.classList.remove('hidden');
                 setupScreen.classList.add('hidden');
                 appScreen.classList.add('hidden');
             }
         }
 
-        // Atualizar interface do app principal com os dados do banco
+        // Atualizar interface do app principal
         function showAppLayout(perfil) {
             authScreen.classList.add('hidden');
             setupScreen.classList.add('hidden');
@@ -273,7 +290,7 @@
             document.getElementById('card-goal').innerText = perfil.goal;
         }
 
-        // Executa automaticamente ao carregar a página para ver se o usuário já estava logado
+        // Executa automaticamente ao carregar a página
         checkUserSession();
     </script>
 </body>

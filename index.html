@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Training - Foco & Evolução</title>
-    <!-- Tailwind CSS para um visual moderno -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Biblioteca Oficial do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .hidden { display: none; }
@@ -14,7 +12,6 @@
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
     <div id="auth-screen" class="max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-green-400">Entrar no Hybrid Training</h2>
         
@@ -39,7 +36,6 @@
         </div>
     </div>
 
-    <!-- TELA DE CONFIGURAÇÃO INICIAL DO PERFIL (SÓ APARECE NO PRIMEIRO ACESSO) -->
     <div id="setup-screen" class="hidden max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 class="text-2xl font-bold text-center mb-6 text-green-400">Configure seu Perfil</h2>
         <form id="setup-form" class="space-y-4">
@@ -81,7 +77,6 @@
         </form>
     </div>
 
-    <!-- TELA PRINCIPAL DO APLICATIVO (PAINEL DE TREINOS) -->
     <div id="app-screen" class="hidden flex-1 w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
         <header class="flex justify-between items-center border-b border-gray-800 pb-4">
             <div>
@@ -93,7 +88,6 @@
             </button>
         </header>
 
-        <!-- Informações Físicas Atuais -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-800/50 p-4 rounded-lg border border-gray-800">
             <div class="text-center">
                 <span class="block text-xs text-gray-400 uppercase tracking-wider">Peso</span>
@@ -113,7 +107,6 @@
             </div>
         </section>
 
-        <!-- Área Central de Treinos -->
         <main class="bg-gray-800 rounded-lg p-6 border border-gray-700 text-center">
             <p class="text-gray-400">Seu painel de treinos diários e gerenciador de séries está pronto para ser customizado.</p>
             <div class="mt-6 p-8 border-2 border-dashed border-gray-700 rounded-lg text-gray-500">
@@ -122,20 +115,18 @@
         </main>
     </div>
 
-    <!-- Rodapé básico -->
     <footer class="text-center py-4 text-xs text-gray-600 border-t border-gray-800 mt-6">
         Hybrid Training &copy; 2026 - Conectado ao Cloud Supabase
     </footer>
 
 
-    <!-- LOGICA DE PROGRAMAÇÃO E INTEGRAÇÃO -->
     <script>
         // CONFIGURAÇÕES DO SEU SUPABASE INDIVIDUAL
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
-        // Inicializa o cliente do Supabase globalmente
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inicializa o cliente do Supabase Corretamente usando a biblioteca global
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Elementos das Telas
         const authScreen = document.getElementById('auth-screen');
@@ -156,8 +147,9 @@
         let isSignUpMode = false;
         let currentUser = null;
 
-        // Alternar modo de autenticação (Login <-> Cadastro)
-        toggleAuthMode.addEventListener('click', () => {
+        // Alternar modo de autenticação corrigido (Previnindo o comportamento padrão)
+        toggleAuthMode.addEventListener('click', (e) => {
+            e.preventDefault(); 
             isSignUpMode = !isSignUpMode;
             if (isSignUpMode) {
                 authTitle.innerText = "Criar Nova Conta";
@@ -173,16 +165,18 @@
         // Gerenciar Envio de Login/Cadastro
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = authEmail.value;
+            const email = authEmail.value.trim();
             const password = authPassword.value;
 
             if (isSignUpMode) {
                 // Fluxo de Cadastro
+                authSubmitBtn.innerText = "Cadastrando...";
                 const { data, error } = await supabase.auth.signUp({ email, password });
                 if (error) {
                     alert("Erro ao cadastrar: " + error.message);
+                    authSubmitBtn.innerText = "Cadastrar";
                 } else {
-                    alert("Cadastro realizado com sucesso! Agora faça o login para continuar.");
+                    alert("Cadastro realizado com sucesso! Agora insira seus dados novamente e clique em Entrar.");
                     isSignUpMode = false;
                     authTitle.innerText = "Entrar no Hybrid Training";
                     authSubmitBtn.innerText = "Entrar";
@@ -191,9 +185,11 @@
                 }
             } else {
                 // Fluxo de Login
+                authSubmitBtn.innerText = "Entrando...";
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) {
                     alert("Dados incorretos ou erro: " + error.message);
+                    authSubmitBtn.innerText = "Entrar";
                 } else {
                     checkUserSession();
                 }

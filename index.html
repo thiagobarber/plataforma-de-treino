@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Fitness Pro Ultimate</title>
     
-    <!-- Tailwind CSS para estilização moderna -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-    <!-- Ícones para os botões -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Biblioteca do Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
     <style>
@@ -93,7 +90,7 @@
             animation: pulseIA 2s infinite;
         }
         @keyframes pulseIA {
-            0% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
+            0 { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
             50% { transform: scale(1.06); box-shadow: 0 4px 25px rgba(0, 210, 211, 0.6); }
             100% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
         }
@@ -124,7 +121,6 @@
 
     <div class="w-full max-w-xl mx-auto p-4 md:p-6 flex-1 flex flex-col justify-center">
         
-        <!-- TELA DE AUTENTICAÇÃO -->
         <div id="auth-screen" class="auth-card p-8 w-full">
             <div class="brand-logo text-center text-3xl mb-6 tracking-wider">Hybrid<span>Fitness</span></div>
             <form id="auth-form" class="space-y-4">
@@ -142,10 +138,8 @@
             </form>
         </div>
 
-        <!-- TELA PRINCIPAL DO APP -->
         <div id="app-screen" class="hidden w-full space-y-4">
             
-            <!-- Painel Superior de Perfil -->
             <div class="p-5 rounded-2xl border border-gray-800" style="background: linear-gradient(135deg, #1e2430, #141821);">
                 <div class="flex justify-between items-start mb-4">
                     <div>
@@ -162,7 +156,6 @@
                     </div>
                 </div>
 
-                <!-- Bloco de Diagnóstico Corporal -->
                 <div class="p-4 bg-black bg-opacity-25 border border-gray-800 rounded-xl space-y-2">
                     <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">📊 Diagnóstico Corporal & Progresso</div>
                     <div class="grid grid-cols-2 gap-2 text-xs">
@@ -178,16 +171,13 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DAS ABAS DE TREINO (CASA E ACADEMIA) -->
             <div id="workout-content-area" class="space-y-4">
-                <!-- Seletores de Treino ABC -->
                 <div class="flex gap-2.5">
                     <button class="abc-btn active flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')">Treino A</button>
                     <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-B" onclick="changeDay('B')">Treino B</button>
                     <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-C" onclick="changeDay('C')">Treino C</button>
                 </div>
 
-                <!-- Barra de Progresso Diária Dinâmica -->
                 <div class="p-3 bg-gray-800 rounded-xl border border-gray-700 space-y-1.5">
                     <div class="flex justify-between text-xs font-bold uppercase tracking-wider">
                         <span class="text-gray-400">Progresso do Treino</span>
@@ -198,16 +188,13 @@
                     </div>
                 </div>
 
-                <!-- Indicador de exercícios -->
                 <div class="flex justify-between items-center px-1">
                     <span class="text-xs uppercase font-bold text-gray-400 tracking-wider">Exercícios do Dia</span>
                     <span id="category-counter" class="text-xs px-2.5 py-1 bg-gray-800 border border-gray-700 text-gray-300 rounded-full font-bold">0 Exercícios</span>
                 </div>
 
-                <!-- Listagem Dinâmica dos Exercícios -->
                 <div id="workout-container" class="space-y-3"></div>
 
-                <!-- Módulo de Descanso / Cronômetro -->
                 <div class="p-4 bg-gray-800 rounded-2xl border border-gray-800 text-center">
                     <span class="text-xs text-gray-400 font-bold uppercase tracking-widest block mb-1">⏱️ Descanso</span>
                     <div class="timer-val text-4xl font-extrabold px-6 py-2 rounded-xl w-max mx-auto border mb-3 select-none cursor-pointer" id="timer-display">01:00</div>
@@ -220,7 +207,6 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DA ABA DE PROGRESSO (HISTÓRICO) -->
             <div id="progress-content-area" class="hidden space-y-4">
                 <div class="p-4 bg-gray-800 border border-gray-700 rounded-xl">
                     <h4 class="text-sm font-bold text-white mb-3 uppercase tracking-wider">📈 Histórico de Cargas & Evolução</h4>
@@ -244,7 +230,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DE EXERCÍCIO -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -278,7 +263,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE ATUALIZAÇÃO DE PESO -->
     <div id="weight-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -295,19 +279,17 @@
         </div>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DA IA -->
     <button class="ai-floating-btn fixed bottom-24 right-5 w-14 h-14 rounded-full border border-white border-opacity-20 flex justify-center items-center z-40 focus:outline-none" id="ai-btn" style="display: none;">
         <i class="fas fa-robot text-white text-xl"></i>
     </button>
 
-    <!-- BOX DE CONVERSA DA IA -->
     <div class="fixed inset-x-4 bottom-24 md:inset-x-auto md:bottom-40 md:right-5 md:w-96 bg-gray-900 border border-gray-800 z-50 flex flex-col hidden rounded-2xl overflow-hidden shadow-2xl" id="ai-chat" style="height: 450px; max-height: 60vh;">
         <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div>
-                    <h4 class="text-sm font-bold text-white">Hybrid Coach IA</h4>
-                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Coach Ativo</span>
+                    <h4 class="text-sm font-bold text-white">Hybrid Gemini Coach</h4>
+                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">API Oficial Ativa</span>
                 </div>
             </div>
             <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl focus:outline-none">
@@ -317,17 +299,16 @@
         
         <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm flex flex-col" id="ai-chat-messages">
             <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200">
-                Fala Thiago! Sou sua IA de treino. Posso ajustar, trocar ou montar fichas de Casa ou Academia completas. O que vamos treinar hoje?
+                Fala Thiago! Agora sou o seu motor oficial Gemini. Posso reestruturar totalmente suas fichas, calcular volumes perfeitos ou tirar dúvidas de execução. O que vamos ajustar hoje?
             </div>
         </div>
         
         <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
-            <input type="text" id="ai-chat-input" placeholder="Monte um treino focado em..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
+            <input type="text" id="ai-chat-input" placeholder="Diga ao Gemini o que mudar no seu treino..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
             <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm transition hover:bg-cyan-400">Enviar</button>
         </div>
     </div>
 
-    <!-- ABA DE NAVEGAÇÃO INFERIOR COMPLETA -->
     <div class="bottom-nav fixed bottom-0 left-0 right-0 h-20 flex justify-around items-center z-30" id="app-nav" style="display: none;">
         <button class="nav-item active flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-casa" onclick="changeTab('casa')">
             <i class="fas fa-home text-lg"></i>Treino Casa
@@ -341,9 +322,8 @@
     </div>
 
     <script>
-        const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // CONFIGURAÇÕES CHAVE: Insira sua chave obtida no Google AI Studio abaixo:
+        const GEMINI_API_KEY = "SUA_API_KEY_DO_GEMINI_AQUI"; 
 
         // Perfil do Usuário Mutável
         let userProfile = {
@@ -409,11 +389,8 @@
         const chatInput = document.getElementById('ai-chat-input');
         const sendChatBtn = document.getElementById('btn-send-chat');
 
-        // Atualização e Cálculo do IMC e Regras de Peso
         function updateProfileUI() {
             document.getElementById('user-stats').innerText = `${userProfile.weight.toFixed(1)}kg | ${userProfile.height}m | ${userProfile.age} anos`;
-            
-            // Cálculo do IMC
             const imc = userProfile.weight / (userProfile.height * userProfile.height);
             let classf = "";
             if (imc < 18.5) classf = "Abaixo do peso";
@@ -423,7 +400,6 @@
             
             document.getElementById('lbl-imc-val').innerText = `${imc.toFixed(1)} (${classf})`;
 
-            // Atualiza status de evolução com base na perda/ganho de peso
             const diff = userProfile.weight - userProfile.initialWeight;
             const lblEvolucao = document.getElementById('lbl-evolucao-status');
             if(diff < 0) {
@@ -456,7 +432,6 @@
                 closeWeightModal();
                 renderWorkout();
                 
-                // Salva log de alteração na listagem de progresso
                 const historyList = document.getElementById('progress-history-list');
                 const log = document.createElement('div');
                 log.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between";
@@ -465,10 +440,8 @@
             }
         }
 
-        // Altera automaticamente o texto dos treinos de peso corporal se a pessoa emagrecer ou engordar
         function adaptExercisesToWeight() {
             const diff = userProfile.weight - userProfile.initialWeight;
-            // Varre os exercícios de casa para recalcular o impacto relativo
             routineData.casa.A.forEach(ex => {
                 if(ex.name.includes("Flexão") || ex.name.includes("Tríceps Banco")) {
                     ex.stats = diff === 0 ? "Peso Corporal" : `Peso Corp. (${userProfile.weight.toFixed(1)}kg)`;
@@ -476,7 +449,6 @@
             });
         }
 
-        // Gerenciamento Geral de Abas (Menu Inferior + Controle de Telas)
         function changeTab(tab) {
             document.getElementById('nav-casa').classList.remove('active');
             document.getElementById('nav-academia').classList.remove('active');
@@ -504,13 +476,11 @@
             renderWorkout();
         }
 
-        // Alternador do Status de Conclusão (Checkbox)
         function toggleExerciseDone(idx) {
             routineData[currentEnvironment][currentDay][idx].done = !routineData[currentEnvironment][currentDay][idx].done;
             renderWorkout();
         }
 
-        // Calcula a Barra de Progresso do Dia
         function updateProgressBar() {
             const list = routineData[currentEnvironment][currentDay] || [];
             if(list.length === 0) {
@@ -529,7 +499,6 @@
             }
         }
 
-        // Função para deletar o exercício da lista
         function deleteExercise(idx) {
             if(confirm("Deseja realmente excluir este exercício?")) {
                 routineData[currentEnvironment][currentDay].splice(idx, 1);
@@ -537,13 +506,12 @@
             }
         }
 
-        // Renderizador dos cards com Checkbox e Barra de Progresso
         function renderWorkout() {
             const container = document.getElementById('workout-container');
             const list = routineData[currentEnvironment][currentDay];
             
             if(!list || list.length === 0) {
-                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-sm text-gray-400">Nenhum exercício listado para hoje. Peça à IA para montar seu treino!</div>`;
+                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-sm text-gray-400">Nenhum exercício listado para hoje. Peça ao Gemini para montar seu treino!</div>`;
                 document.getElementById('category-counter').innerText = "0 Exercícios";
                 updateProgressBar();
                 return;
@@ -557,7 +525,6 @@
                 card.className = `exercise-card p-4 rounded-xl flex justify-between items-center ${ex.done ? 'completed' : ''}`;
                 card.innerHTML = `
                     <div class="flex items-center gap-3 flex-1">
-                        <!-- Checkbox customizado para marcar progresso -->
                         <div onclick="toggleExerciseDone(${idx})" class="custom-checkbox ${ex.done ? 'checked' : ''}">
                             ${ex.done ? '<i class="fas fa-check text-xs"></i>' : ''}
                         </div>
@@ -567,11 +534,9 @@
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <!-- Botão de Editar -->
                         <button onclick="openEditModal(${idx}, '${ex.name}', '${ex.stats}', '${ex.reps}')" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-cyan-500 rounded-lg flex justify-center items-center text-gray-400 hover:text-white transition">
                             <i class="fas fa-edit text-xs"></i>
                         </button>
-                        <!-- Botão de Excluir -->
                         <button onclick="deleteExercise(${idx})" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-red-500 rounded-lg flex justify-center items-center text-red-500 hover:bg-red-950 transition">
                             <i class="fas fa-trash-alt text-xs"></i>
                         </button>
@@ -619,7 +584,6 @@
             renderWorkout();
         }
 
-        // Controle da Janela de Chat da IA
         aiBtn.addEventListener('click', () => {
             chatBox.classList.toggle('hidden');
             scrollToBottomIA();
@@ -630,10 +594,18 @@
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         }
 
+        // ================= CONEXÃO COM O GEMINI GOOGLE API REAIS =================
         async function enviarMensagemParaIA() {
             const text = chatInput.value.trim();
             if(!text) return;
 
+            // Se você esquecer de trocar a API Key, ele avisa
+            if(GEMINI_API_KEY === "SUA_API_KEY_DO_GEMINI_AQUI") {
+                alert("Por favor, gere e adicione sua chave de API do Gemini na linha 257 do script!");
+                return;
+            }
+
+            // Exibe mensagem do usuário
             const userDiv = document.createElement('div');
             userDiv.className = "chat-bubble user p-3.5 rounded-2xl max-w-[85%] self-end text-sm";
             userDiv.innerText = text;
@@ -641,35 +613,64 @@
             chatInput.value = '';
             scrollToBottomIA();
 
+            // Exibe balão de carregamento do Gemini
             const aiDiv = document.createElement('div');
             aiDiv.className = "chat-bubble ai p-3.5 rounded-2xl max-w-[85%] self-start text-sm text-gray-300";
-            aiDiv.innerText = "Analisando seu pedido e ajustando rotina...";
+            aiDiv.innerText = "Gemini pensando...";
             chatMessages.appendChild(aiDiv);
             scrollToBottomIA();
 
+            // Engenharia de Prompt: Instruções estruturadas pro Gemini responder de forma limpa
+            const systemInstructions = `Você é o Hybrid Gemini Coach, o treinador pessoal de IA do ${userProfile.name}.
+            Métricas dele: Altura ${userProfile.height}m, Peso atual ${userProfile.weight}kg, Objetivo principal: Hipertrofia híbrida.
+            Abas de treino disponíveis no sistema: "casa" e "academia". Dias de treino: "A", "B", "C".
+            Ele está interagindo agora na aba de treino de "${currentEnvironment.toUpperCase()}" no treino "${currentDay}".
+            A rotina completa atual salva no formato JSON é essa: ${JSON.stringify(routineData)}.
+
+            Instrução estrita: Se o usuário pedir para mudar ou reestruturar o treino, altere o JSON correspondente. Sua resposta DEVE conter um texto motivador e focado de no máximo 3 linhas, seguido OBRIGATORIAMENTE por uma estrutura JSON válida envolvida pelas tags [ROUTINE_JSON] e [/ROUTINE_JSON] se houver modificação nos exercícios. Não mude a formatação estrutural do objeto. Exemplo caso mude:
+            Parabéns Thiago, ajustei seu treino A com o foco em peito solicitado!
+            [ROUTINE_JSON]
+            ...objeto rotina completo atualizado...
+            [/ROUTINE_JSON]`;
+
             try {
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/hybrid-coach-ai`, {
+                // Chamada oficial à API do Gemini 1.5 Flash da Google
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+                
+                const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: text,
-                        userStats: { environment: currentEnvironment, day: currentDay, currentWeight: userProfile.weight }
+                        contents: [{
+                            parts: [{ text: `${systemInstructions}\n\nPedido do usuário: ${text}` }]
+                        }]
                     })
                 });
-                
+
                 const data = await response.json();
-                aiDiv.innerText = data.reply || "Treino processado! Alterações aplicadas na sua ficha.";
-                if(data.newRoutine) {
-                    routineData = data.newRoutine;
-                    renderWorkout();
+                const geminiReply = data.candidates[0].content.parts[0].text;
+
+                // Processa a resposta textual limpa do Gemini separando do bloco JSON de comandos se houver
+                let textToDisplay = geminiReply;
+                if (geminiReply.includes("[ROUTINE_JSON]")) {
+                    const partes = geminiReply.split("[ROUTINE_JSON]");
+                    textToDisplay = partes[0].trim();
+                    
+                    const jsonContent = partes[1].split坚[/ROUTINE_JSON]坚[0] || partes[1].split("[/ROUTINE_JSON]")[0];
+                    try {
+                        const parsedRoutine = JSON.parse(jsonContent.trim());
+                        if (parsedRoutine.casa || parsedRoutine.academia) {
+                            routineData = parsedRoutine;
+                            renderWorkout();
+                        }
+                    } catch(e) { console.log("Erro ao interpretar JSON gerado pelo Gemini.", e); }
                 }
+
+                aiDiv.innerText = textToDisplay;
+
             } catch (err) {
-                setTimeout(() => {
-                    aiDiv.innerText = `Entendido Thiago! Como seu treinador IA, registrei seu peso atual de ${userProfile.weight}kg e adaptei suas métricas de esforço para as séries de hoje.`;
-                }, 1000);
+                console.error(err);
+                aiDiv.innerText = "Houve um erro de conexão com a API do Gemini. Verifique sua chave de acesso ou status de rede.";
             }
             scrollToBottomIA();
         }
@@ -726,7 +727,7 @@
         document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
             authScreen.classList.add('hidden');
-            appScreen.removeProperty ? appScreen.removeProperty('display') : appScreen.classList.remove('hidden');
+            appScreen.classList.remove('hidden');
             appNav.style.display = 'flex';
             aiBtn.style.display = 'flex';
             updateProfileUI();

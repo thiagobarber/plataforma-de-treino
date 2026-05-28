@@ -114,13 +114,11 @@
 
     <div class="w-full max-w-md mx-auto px-4 pt-3 flex-1 flex flex-col min-h-0 overflow-hidden pb-20">
         
-        <!-- TELA DE AUTENTICAÇÃO -->
         <div id="auth-screen" class="auth-card p-5 w-full my-auto flex-none max-h-full overflow-y-auto scrollable-content">
             <div class="brand-logo text-center text-2xl mb-4 tracking-wider">Hybrid<span>Fitness</span></div>
             <h2 id="auth-title" class="text-lg font-bold text-center text-white mb-3">Acessar Painel</h2>
             
             <form id="auth-form" class="space-y-3">
-                <!-- Campos Exclusivos do Cadastro -->
                 <div id="register-fields" class="hidden space-y-3">
                     <div>
                         <label class="block text-xxs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
@@ -162,7 +160,6 @@
                     </div>
                 </div>
 
-                <!-- Campos Padrão -->
                 <div>
                     <label class="block text-xxs uppercase font-semibold text-gray-400 mb-1 tracking-wider">E-mail do Atleta</label>
                     <input type="email" id="auth-email" required placeholder="atleta@email.com" class="w-full p-2.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-base">
@@ -182,7 +179,6 @@
             </div>
         </div>
 
-        <!-- TELA PRINCIPAL DO APLICATIVO -->
         <div id="app-screen" class="hidden w-full flex-1 flex flex-col min-h-0 justify-start space-y-3">
             
             <div class="p-3.5 rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-800 to-gray-900 flex-none">
@@ -190,7 +186,6 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h3 id="user-name" class="text-lg font-bold text-white leading-tight">Thiago</h3>
-                            <!-- BOTÃO DE SAIR DA CONTA -->
                             <button onclick="logoutAccount()" class="text-gray-400 hover:text-red-500 transition text-sm" title="Sair da Conta">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
@@ -220,7 +215,6 @@
                 </div>
             </div>
 
-            <!-- ÁREA DINÂMICA DE EXERCÍCIOS -->
             <div id="workout-content-area" class="hidden flex-1 flex flex-col min-h-0 justify-between space-y-2.5">
                 <div class="flex gap-2 flex-none">
                     <button class="abc-btn active flex-1 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')">Treino A</button>
@@ -252,7 +246,6 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DA ABA DE PROGRESSO -->
             <div id="progress-content-area" class="hidden flex-1 flex flex-col min-h-0 justify-start">
                 <div class="p-3.5 bg-gray-800 border border-gray-700 rounded-xl flex-1 flex flex-col min-h-0">
                     <h4 class="text-xs font-bold text-white mb-2 uppercase tracking-wider flex-none">📈 Histórico de Cargas & Evolução</h4>
@@ -263,7 +256,6 @@
         </div>
     </div>
 
-    <!-- MODAIS -->
     <div id="exec-modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl flex flex-col space-y-4">
             <div class="flex justify-between items-start border-b border-gray-800 pb-2">
@@ -286,7 +278,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDITAR EXERCÍCIO COM LISTA GLOBAL INTEGRADA -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl space-y-3">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -296,8 +287,7 @@
                 <div>
                     <label class="block text-xxs uppercase font-semibold text-gray-400 mb-1">Selecione o Novo Exercício</label>
                     <select id="modal-exercise-select" onchange="onGlobalExerciseSelect()" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
-                        <!-- Preenchido via JS -->
-                    </select>
+                        </select>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -338,7 +328,6 @@
         </div>
     </div>
 
-    <!-- ABA DE NAVEGAÇÃO INFERIOR -->
     <div class="bottom-nav fixed bottom-0 left-0 right-0 h-16 flex justify-around items-center z-30" id="app-nav" style="display: none;">
         <button class="nav-item active flex flex-col items-center gap-0.5 text-xs font-bold focus:outline-none" id="nav-casa" onclick="changeTab('casa')">
             <i class="fas fa-home text-lg"></i><span>Treino Casa</span>
@@ -356,7 +345,7 @@
         let userProfile = { name: "Thiago", weight: 78.0, height: 1.64, age: 30, gender: "Masculino", goal: "Hipertrofia", initialWeight: 78.0 };
         let editingIndex = null;
 
-        // BANCO GLOBAL DE EXERCÍCIOS DO MUNDO PARA ALTERAÇÃO
+        // BANCO GLOBAL DE EXERCÍCIOS CORRIGIDO (SOFÁ ALTERADO PARA COUCH)
         const globalExercisesDatabase = [
             // PEITO
             { name: "Supino Reto com Barra", exec: "Deitado no banco, faça a adução das escápulas. Desça a barra controladamente até tocar o peito.", target: "Peitoral Maior, Tríceps e Deltoide Anterior." },
@@ -379,7 +368,7 @@
             { name: "Cadeira Extensora", exec: "Sente-se com as costas apoiadas. Estenda as pernas completamente, segurando 1 segundo no topo.", target: "Isolamento do Quadríceps." },
             { name: "Mesa Flexora", exec: "Deitado de bruços, flexione os joelhos trazendo o rolo em direção ao glúteo com cadência.", target: "Isquiotibiais (Posteriores de Coxa)." },
             { name: "Afundo / Passada com Halteres", exec: "Dê um passo à frente e desça o quadril de forma vertical até o joelho traseiro quase tocar o chão.", target: "Quadríceps e Glúteos." },
-            { name: "Elevação Pélvica", exec: "Apoie as costas em um banco, suba o quadril contraindo o glúteo ao máximo no topo.", target: "Glúteo Máximo." },
+            { name: "Elevação Pélvica (Couch / Bench)", exec: "Apoie as costas em um banco ou Couch, suba o quadril contraindo o glúteo ao máximo no topo.", target: "Glúteo Máximo." },
 
             // BRAÇOS (BÍCEPS/TRÍCEPS)
             { name: "Rosca Direta na Barra W", exec: "Segure a barra W. Flexione os braços mantendo os cotovelos imóveis do lado do corpo.", target: "Bíceps Braquial." },
@@ -397,12 +386,12 @@
             { name: "Prancha Isométrica", exec: "Apoie os antebraços e pontas dos pés. Mantenha todo o corpo alinhado e abdômen contraído.", target: "Core Integro e Transverso do Abdômen." }
         ];
 
-        // ROTINA CORRIGIDA - MÍNIMO DE 4 A 5 EXERCÍCIOS POR DIA
+        // ROTINA CORRIGIDA - TERMOS EM INGLÊS REVISADOS RIGOROSAMENTE (SOFÁ -> COUCH)
         let routineData = { 
             casa: { 
                 A: [
                     { name_pt: "Flexão de Braço (Solo)", stats_pt: "Peso Corporal", reps: "4x12", exec_pt: "Afaste as mãos um pouco além dos ombros. Desça de forma controlada levando 2 segundos até o peito quase tocar o chão.", target_display: "Peitoral, Core e Tríceps.", done: false },
-                    { name_pt: "Flexão Inclinada (Sofá)", stats_pt: "Peso Corporal", reps: "3x15", exec_pt: "Apoie as mãos firmemente no sofá. Mantenha o abdômen travado e o corpo reto.", target_display: "Porção Inferior do Peito.", done: false },
+                    { name_pt: "Flexão Inclinada (Couch / Bench)", stats_pt: "Peso Corporal", reps: "3x15", exec_pt: "Apoie as mãos firmemente no Couch. Mantenha o abdômen travado e o corpo reto.", target_display: "Porção Inferior do Peito.", done: false },
                     { name_pt: "Tríceps Banco (Cadeira)", stats_pt: "Peso Corporal", reps: "4x12", exec_pt: "Posicione as mãos na borda da cadeira, mantenha as costas rente ao assento. Desça flexionando os cotovelos para trás.", target_display: "Tríceps e Deltoide Anterior.", done: false },
                     { name_pt: "Prancha Isométrica", stats_pt: "3 Séries", reps: "45 segundos", exec_pt: "Apoie os antebraços e pontas dos pés. Mantenha todo o corpo alinhado e abdômen contraído.", target_display: "Core Integro e Transverso do Abdômen.", done: false },
                     { name_pt: "Abdominal Supra", stats_pt: "Sem Carga", reps: "4x20", exec_pt: "Deitado de costas, flexione os joelhos. Suba o tronco contraindo o abdômen e soltando todo o ar.", target_display: "Reto Abdominal.", done: false }
@@ -416,7 +405,7 @@
                 C: [
                     { name_pt: "Agachamento Livre", stats_pt: "Peso Corporal", reps: "4x20", exec_pt: "Afaste os pés na largura dos ombros. Flexione os joelhos jogando o quadril para trás.", target_display: "Quadríceps, Glúteos e Core.", done: false },
                     { name_pt: "Afundo Passada", stats_pt: "Sem Carga", reps: "3x12 passadas", exec_pt: "Dê um passo à frente e desça o quadril até que o joelho de trás quase toque o chão.", target_display: "Quadríceps e Glúteos.", done: false },
-                    { name_pt: "Elevação Pélvica (Sofá)", stats_pt: "Peso Corporal", reps: "4x15", exec_pt: "Apoie as costas no sofá e eleve o quadril contraindo os glúteos no topo.", target_display: "Glúteo Máximo.", done: false },
+                    { name_pt: "Elevação Pélvica (Couch)", stats_pt: "Peso Corporal", reps: "4x15", exec_pt: "Apoie as costas no Couch e eleve o quadril contraindo os glúteos no topo.", target_display: "Glúteo Máximo.", done: false },
                     { name_pt: "Elevação Lateral com Garrafa", stats_pt: "2kg cada lado", reps: "4x15", exec_pt: "Erga as garrafas lateralmente até a altura dos ombros, mantendo uma leve flexão nos cotovelos.", target_display: "Deltoide Lateral.", done: false }
                 ] 
             }, 
@@ -485,7 +474,6 @@
             document.getElementById('lbl-evolucao-status').innerText = diff < 0 ? `Perdeu ${Math.abs(diff).toFixed(1)} kg!` : diff > 0 ? `Ganhou ${diff.toFixed(1)} kg.` : "Estável.";
         }
 
-        // POPULAR O SELECT DO MODAL COM A LISTA GLOBAL DE EXERCÍCIOS
         function buildGlobalExerciseSelect() {
             const select = document.getElementById('modal-exercise-select');
             select.innerHTML = '<option value="">-- Escolha um exercício para substituir --</option>';
@@ -537,7 +525,6 @@
             }
         }
 
-        // FUNÇÃO DE LOGOUT / SAIR DA CONTA
         function logoutAccount() {
             if(confirm("Deseja realmente sair da conta?")) {
                 document.getElementById('app-screen').classList.add('hidden');
@@ -656,7 +643,6 @@
             }
         }
 
-        // Cronômetro de Descanso
         let timerInterval = null, timeRemaining = 60, isTimerRunning = false;
         function updateTimerDisplay() {
             document.getElementById('timer-display').innerText = `${Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;

@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Training - Foco & Evolução</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Mudança para versão estável e ultra-compatível do Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.0-alpha.4"></script>
+    
+    <!-- Mudança para a distribuição oficial e direta do Supabase JS -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
+    
     <style>
         .hidden { display: none; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
+    <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
     <div id="auth-screen" class="max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-green-400">Entrar no Hybrid Training</h2>
         
@@ -36,6 +42,7 @@
         </div>
     </div>
 
+    <!-- TELA DE CONFIGURAÇÃO INICIAL DO PERFIL -->
     <div id="setup-screen" class="hidden max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 class="text-2xl font-bold text-center mb-6 text-green-400">Configure seu Perfil</h2>
         <form id="setup-form" class="space-y-4">
@@ -77,6 +84,7 @@
         </form>
     </div>
 
+    <!-- TELA PRINCIPAL DO APLICATIVO -->
     <div id="app-screen" class="hidden flex-1 w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
         <header class="flex justify-between items-center border-b border-gray-800 pb-4">
             <div>
@@ -115,25 +123,35 @@
         </main>
     </div>
 
+    <!-- Rodapé básico -->
     <footer class="text-center py-4 text-xs text-gray-600 border-t border-gray-800 mt-6">
         Hybrid Training &copy; 2026 - Conectado ao Cloud Supabase
     </footer>
 
-
+    <!-- LOGICA DE PROGRAMAÇÃO E INTEGRAÇÃO -->
     <script>
-        // CONFIGURAÇÕES DO SEU SUPABASE INDIVIDUAL
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
-        // Inicializa usando o método correto da biblioteca global (sem conflito de referência)
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase;
 
-        // Elementos das Telas
+        // Bloco de teste de inicialização crítica para capturar erros de link externo
+        try {
+            if (typeof supabase !== 'undefined' && supabase.createClient) {
+                supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else if (typeof window.supabase !== 'undefined') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                alert("Erro grave: A biblioteca externa do Supabase falhou ao carregar no seu navegador. Verifique sua conexão ou tente usar outro navegador.");
+            }
+        } catch (e) {
+            alert("Falha na inicialização do script: " + e.message);
+        }
+
         const authScreen = document.getElementById('auth-screen');
         const setupScreen = document.getElementById('setup-screen');
         const appScreen = document.getElementById('app-screen');
 
-        // Formulários e Inputs
         const authForm = document.getElementById('auth-form');
         const authTitle = document.getElementById('auth-title');
         const authEmail = document.getElementById('auth-email');
@@ -143,11 +161,9 @@
 
         const setupForm = document.getElementById('setup-form');
 
-        // Estado do app (Login ou Cadastro)
         let isSignUpMode = false;
         let currentUser = null;
 
-        // Alternar modo de autenticação (Login <-> Cadastro) sem recarregar
         toggleAuthMode.addEventListener('click', (e) => {
             e.preventDefault(); 
             isSignUpMode = !isSignUpMode;
@@ -162,15 +178,14 @@
             }
         });
 
-        // Gerenciar Envio de Login/Cadastro com tratamento de erros visível
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = authEmail.value.trim();
             const password = authPassword.value;
 
-            if (!email || !password) {
-                alert("Por favor, preencha todos os campos.");
+            if (!supabase) {
+                alert("O sistema de banco de dados não está respondendo. Não tente enviar o formulário.");
                 return;
             }
 
@@ -182,16 +197,14 @@
                     const { data, error } = await supabase.auth.signUp({ email, password });
                     
                     if (error) {
-                        alert("Erro do Supabase ao cadastrar: " + error.message);
+                        alert("Erro no cadastro: " + error.message);
                     } else if (data?.user) {
-                        alert("Cadastro realizado com sucesso! Agora digite sua senha novamente e clique em Entrar para configurar seu perfil.");
+                        alert("Cadastro feito com sucesso! Agora digite seus dados e entre.");
                         isSignUpMode = false;
                         authTitle.innerText = "Entrar no Hybrid Training";
                         authSubmitBtn.innerText = "Entrar";
                         toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
                         authPassword.value = "";
-                    } else {
-                        alert("Ocorreu um comportamento inesperado. Verifique os dados.");
                     }
                 } else {
                     authSubmitBtn.innerText = "Entrando...";
@@ -200,24 +213,19 @@
                     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                     
                     if (error) {
-                        alert("Erro ao entrar: " + error.message);
+                        alert("Erro no login: " + error.message);
                     } else {
                         await checkUserSession();
                     }
                 }
             } catch (err) {
-                alert("Erro crítico no sistema: " + err.message);
+                alert("Erro interno capturado: " + err.message);
             } finally {
                 authSubmitBtn.disabled = false;
-                if (!isSignUpMode) {
-                    authSubmitBtn.innerText = "Entrar";
-                } else {
-                    authSubmitBtn.innerText = "Cadastrar";
-                }
+                authSubmitBtn.innerText = isSignUpMode ? "Cadastrar" : "Entrar";
             }
         });
 
-        // Fluxo para salvar Perfil Inicial
         setupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return;
@@ -241,17 +249,16 @@
             }
         });
 
-        // Botão de Logout
         document.getElementById('logout-btn').addEventListener('click', async () => {
-            await supabase.auth.signOut();
+            if(supabase) await supabase.auth.signOut();
             authScreen.classList.remove('hidden');
             setupScreen.classList.add('hidden');
             appScreen.classList.add('hidden');
             authForm.reset();
         });
 
-        // Checar persistência da sessão do usuário
         async function checkUserSession() {
+            if (!supabase) return;
             const { data: { session } } = await supabase.auth.getSession();
             
             if (session) {
@@ -277,7 +284,6 @@
             }
         }
 
-        // Atualizar interface do app principal
         function showAppLayout(perfil) {
             authScreen.classList.add('hidden');
             setupScreen.classList.add('hidden');
@@ -290,7 +296,6 @@
             document.getElementById('card-goal').innerText = perfil.goal;
         }
 
-        // Executa automaticamente ao carregar a página
         checkUserSession();
     </script>
 </body>

@@ -247,43 +247,27 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome da Máquina ou Exercício</label>
-                    <!-- Input conectado à lista global através do atributo list -->
                     <input type="text" id="modal-exercise-name" list="global-exercises-list" placeholder="Digite para buscar qualquer máquina..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
                     
-                    <!-- ENCICPÉDIA GLOBAL DE MOVIMENTOS, PESOS E MÁQUINAS -->
                     <datalist id="global-exercises-list">
                         <!-- PEITO & MÁQUINAS -->
                         <option value="Supino Reto com Barra"></option>
                         <option value="Supino Reto com Halteres"></option>
                         <option value="Supino Inclinado com Barra"></option>
                         <option value="Supino Inclinado com Halteres"></option>
-                        <option value="Supino Declinado com Barra"></option>
                         <option value="Supino Articulado na Máquina (Chest Press)"></option>
                         <option value="Peck Deck (Voador)"></option>
-                        <option value="Crucifixo Reto com Halteres"></option>
-                        <option value="Crucifixo Inclinado com Halteres"></option>
                         <option value="Crucifixo na Polia Alta (Crossover)"></option>
-                        <option value="Crucifixo na Polia Baixa"></option>
                         <option value="Flexão de Braço Padrão"></option>
-                        <option value="Flexão Diamante"></option>
-                        <option value="Flexão Declinada (Pés Elevados)"></option>
-                        <option value="Flexão Aberta (Foco Peitoral)"></option>
                         
                         <!-- COSTAS & POLIAS -->
                         <option value="Puxada Alta no Pulley (Frente)"></option>
-                        <option value="Puxada Alta Supinada (Foco Bíceps/Dorsal)"></option>
                         <option value="Puxada no Pulley Triângulo"></option>
                         <option value="Remada Curvada com Barra"></option>
-                        <option value="Remada Cavalinho (T-Bar Row)"></option>
                         <option value="Remada Baixa Sentada com Triângulo"></option>
                         <option value="Remada Unilateral com Halter (Serrote)"></option>
-                        <option value="Remada Máquina Articulada"></option>
-                        <option value="Pull Down na Polia Alta com Barra"></option>
                         <option value="Pull Down na Polia Alta com Corda"></option>
-                        <option value="Levantamento Terra (Deadlift)"></option>
                         <option value="Barra Fixa Pronada (Pull-up)"></option>
-                        <option value="Barra Fixa Supinada (Chin-up)"></option>
-                        <option value="Remada Invertida na Mesa / Barra Baixa"></option>
 
                         <!-- PERNAS, HACK & LEG PRESS -->
                         <option value="Agachamento Livre com Barra"></option>
@@ -291,50 +275,31 @@
                         <option value="Agachamento Smith Machine"></option>
                         <option value="Agachamento Búlgaro com Halteres"></option>
                         <option value="Leg Press 45 Graus"></option>
-                        <option value="Leg Press Horizontal"></option>
                         <option value="Cadeira Extensora (Leg Extension)"></option>
                         <option value="Mesa Flexora (Lying Leg Curl)"></option>
                         <option value="Cadeira Flexora Seated"></option>
-                        <option value="Cadeira Adutora"></option>
-                        <option value="Cadeira Abdutora"></option>
-                        <option value="Afundo com Halteres (Passada)"></option>
-                        <option value="Stiff com Barra / Halteres"></option>
-                        <option value="Elevação Pélvica na Máquina (Hip Thrust)"></option>
-                        <option value="Elevação Pélvica Solo com Carga"></option>
-                        <option value="Gêmeos Sentado (Panturrilha Máquina)"></option>
-                        <option value="Gêmeos em Pé (Panturrilha)"></option>
 
                         <!-- OMBROS & TRAPÉZIO -->
                         <option value="Desenvolvimento com Halteres (Shoulder Press)"></option>
                         <option value="Desenvolvimento com Barra (Militar)"></option>
-                        <option value="Desenvolvimento na Máquina Articulada"></option>
                         <option value="Elevação Lateral com Halteres"></option>
                         <option value="Elevação Lateral na Polia (Cabo)"></option>
-                        <option value="Elevação Frontal com Halteres"></option>
-                        <option value="Crucifixo Invertido com Halteres (Posterior)"></option>
-                        <option value="Crucifixo Invertido no Voador (Peck Deck Invertido)"></option>
-                        <option value="Encolhimento com Halteres (Trapézio)"></option>
+                        <option value="Crucifixo Invertido no Voador"></option>
 
                         <!-- BRAÇOS (BÍCEPS & TRÍCEPS) -->
                         <option value="Rosca Direta com Barra W"></option>
-                        <option value="Rosca Direta com Barra Reta"></option>
                         <option value="Rosca Direta com Halteres (Alternada)"></option>
-                        <option value="Rosca Direta na Polia (Cabo)"></option>
                         <option value="Rosca Martelo com Halteres"></option>
                         <option value="Rosca Scott com Barra W / Máquina"></option>
-                        <option value="Rosca Concentrada com Halter"></option>
                         <option value="Tríceps Pulley Barra Reta / W"></option>
                         <option value="Tríceps Pulley com Corda"></option>
-                        <option value="Tríceps Testa com Barra W / Halteres"></option>
-                        <option value="Tríceps Coice com Halter / Polia"></option>
-                        <option value="Tríceps Francês com Halter"></option>
-                        <option value="Mergulho em Bancos (Dips)"></option>
+                        <option value="Tríceps Testa com Barra W"></option>
                     </datalist>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Carga (Peso Livre/Placas)</label>
-                        <input type="text" id="modal-exercise-weight" placeholder="Ex: 50kg, 6 placas, Corpo" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Carga</label>
+                        <input type="text" id="modal-exercise-weight" placeholder="Ex: 50kg, 6 placas" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
                     </div>
                     <div>
                         <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Séries e Metas</label>
@@ -354,32 +319,35 @@
         <i class="fas fa-robot text-white text-xl"></i>
     </button>
 
-    <!-- BOX DE CONVERSA DA IA REAL / COACH -->
+    <!-- BOX DE CONVERSA DA IA REAL / COACH (CORRIGIDO: BOTÃO FECHAR REAL NO TOPO) -->
     <div class="fixed inset-0 md:inset-auto md:bottom-40 md:right-5 md:w-96 md:h-[500px] bg-gray-900 border border-gray-800 z-50 flex flex-col hidden rounded-2xl overflow-hidden shadow-2xl" id="ai-chat">
         <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div>
                     <h4 class="text-sm font-bold text-white">Hybrid Coach IA</h4>
-                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Análise Autônoma Conectada</span>
+                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Montador Oficial Ativo</span>
                 </div>
             </div>
-            <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
+            <!-- Botão funcional para fechar o Chat -->
+            <button id="close-ai-chat" class="text-gray-400 hover:text-white text-2xl font-bold bg-transparent border-0 cursor-pointer focus:outline-none p-1 transition">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm" id="ai-chat-messages">
             <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200" id="ai-initial-welcome">
-                Monitorei seu painel! Liberei o catálogo universal de maquinários no botão de edição.
+                Fala campeão! Agora além de sugerir, eu posso **montar o seu treino profissional** do zero na hora. 
                 <br><br>
-                Qualquer máquina ou peso livre que você escolher, eu vou analisar os vetores de força e te dar a estratégia ideal. Pode testar!
+                Basta me pedir algo como: *"monte um treino de hipertrofia focado em braços"* que eu altero as fichas da tela imediatamente!
             </div>
         </div>
         <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
-            <input type="text" id="ai-chat-input" placeholder="Mudei a máquina, qual a dica de postura?..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
+            <input type="text" id="ai-chat-input" placeholder="Monte um treino profissional de..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
             <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm">Enviar</button>
         </div>
     </div>
 
-    <!-- ABA DE NAVEGAÇÃO INFERIOR (MUDANÇA DE AMBIENTE) -->
+    <!-- ABA DE NAVEGAÇÃO INFERIOR -->
     <div class="bottom-nav fixed bottom-0 left-0 right-0 h-20 flex justify-around items-center z-30" id="app-nav" style="display: none;">
         <button class="nav-item active flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-casa">
             <i class="fas fa-home text-lg"></i>
@@ -391,64 +359,63 @@
         </button>
     </div>
 
-    <!-- PROGRAMAÇÃO PRINCIPAL, CONTROLE DE MÍNIMOS E COMPORTAMENTO INTELIGENTE -->
+    <!-- PROGRAMAÇÃO PRINCIPAL -->
     <script>
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // BANCO DE DADOS INICIAL - 5 DISPOSTOS EM CARGA E REPETIÇÕES ISOLADAS
+        // BANCO DE DADOS ATUALIZADO COM DETALHES DE EXECUÇÃO EM CADA EXERCÍCIO
         let routineData = {
             casa: {
                 A: [
-                    { id: 101, name: "Flexão de Braço Padrão", weight: "Peso Corporal", reps: "4x20" },
-                    { id: 102, name: "Flexão Diamante", weight: "Peso Corporal", reps: "3x12" },
-                    { id: 103, name: "Mergulho no Banco", weight: "Peso Corporal", reps: "3x15" },
-                    { id: 104, name: "Flexão Aberta (Foco Peitoral)", weight: "Peso Corporal", reps: "3x15" },
-                    { id: 105, name: "Flexão Declinada (Pés no Sofá)", weight: "Peso Corporal", reps: "4x10" }
+                    { id: 101, name: "Flexão de Braço Padrão", weight: "Peso Corporal", reps: "4x20", execution: "Mantenha o abdômen travado, cotovelos apontando a 45° para trás. Desça até o peito quase tocar o chão e suba explodindo." },
+                    { id: 102, name: "Flexão Diamante", weight: "Peso Corporal", reps: "3x12", execution: "Junte as mãos formando um triângulo no chão abaixo do peito. Foco total na extensão completa dos cotovelos para esmagar o tríceps." },
+                    { id: 103, name: "Mergulho no Banco", weight: "Peso Corporal", reps: "3x15", execution: "Apoie as mãos em uma cadeira estável. Desça o quadril rente ao banco mantendo os ombros encaixados, sem abrir os cotovelos." },
+                    { id: 104, name: "Flexão Aberta (Foco Peitoral)", weight: "Peso Corporal", reps: "3x15", execution: "Afaste as mãos além da largura dos ombros. Foque em alongar bem as fibras do peitoral na descida lenta." },
+                    { id: 105, name: "Flexão Declinada", weight: "Peso Corporal", reps: "4x10", execution: "Coloque os pés em cima do sofá ou cadeira. Faça a flexão focando o esforço na porção superior (clavicular) do peito." }
                 ],
                 B: [
-                    { id: 106, name: "Barra Fixa Pronada", weight: "Peso Corporal", reps: "4x Falha" },
-                    { id: 107, name: "Barra Fixa Supinada", weight: "Peso Corporal", reps: "3x8" },
-                    { id: 108, name: "Remada Invertida na Mesa", weight: "Peso Corporal", reps: "4x12" },
-                    { id: 109, name: "Rosca Direta com Galão", weight: "10kg", reps: "3x15" },
-                    { id: 110, name: "Remada Unilateral com Carga", weight: "15kg", reps: "4x12" }
+                    { id: 106, name: "Barra Fixa Pronada", weight: "Peso Corporal", reps: "4x Falha", execution: "Pegada aberta com as palmas voltadas para fora. Puxe o corpo trazendo o peito em direção à barra, sem chutar as pernas." },
+                    { id: 107, name: "Barra Fixa Supinada", weight: "Peso Corporal", reps: "3x8", execution: "Palmas voltadas para você. Puxe focando a força no bíceps e esmague a dorsal no topo por 1 segundo." },
+                    { id: 108, name: "Remada Invertida na Mesa", weight: "Peso Corporal", reps: "4x12", execution: "Deite embaixo da mesa, segure na borda de forma segura e puxe o tronco para cima mantendo o corpo totalmente alinhado como uma prancha." },
+                    { id: 109, name: "Rosca Direta com Galão", weight: "10kg", reps: "3x15", execution: "Segure a alça do galão firme, flexione os cotovelos sem mover os ombros para frente. Segure a descida de forma controlada." },
+                    { id: 110, name: "Remada Unilateral com Carga", weight: "15kg", reps: "4x12", execution: "Incline o tronco à frente apoiando uma das mãos. Puxe a carga direcionando o cotovelo para o bolso de trás da calça." }
                 ],
                 C: [
-                    { id: 111, name: "Agachamento Livre", weight: "Peso Corporal", reps: "4x25" },
-                    { id: 112, name: "Agachamento Búlgaro", weight: "Peso Corporal", reps: "4x12" },
-                    { id: 113, name: "Elevação Pélvica Solo", weight: "Peso Corporal", reps: "3x20" },
-                    { id: 114, name: "Passada Estática (Afundo)", weight: "Peso Corporal", reps: "3x15" },
-                    { id: 115, name: "Panturrilhas Degrau Unilateral", weight: "Peso Corporal", reps: "4x20" }
+                    { id: 111, name: "Agachamento Livre", weight: "Peso Corporal", reps: "4x25", execution: "Pés na largura dos ombros. Jogue o quadril para trás como se fosse sentar em uma cadeira, descendo abaixo da linha dos joelhos." },
+                    { id: 112, name: "Agachamento Búlgaro", weight: "Peso Corporal", reps: "4x12", execution: "Um pé apoiado atrás na cadeira. O joelho da frente desce formando um ângulo de 90 graus. Mantenha o tronco levemente inclinado à frente." },
+                    { id: 113, name: "Elevação Pélvica Solo", weight: "Peso Corporal", reps: "3x20", execution: "Deitado de costas, empurre o calcanhar contra o chão e suba o quadril ao máximo, contraindo os glúteos fortemente no topo." },
+                    { id: 114, name: "Passada Estática (Afundo)", weight: "Peso Corporal", reps: "3x15", execution: "Dê um passo largo à frente. Desça o joelho de trás em direção ao chão sem deixar o joelho da frente ultrapassar a linha da ponta do pé." },
+                    { id: 115, name: "Panturrilhas Degrau Unilateral", weight: "Peso Corporal", reps: "4x20", execution: "Na ponta de um degrau, desça o calcanhar ao máximo para alongar e suba estendendo tudo até o ponto mais alto." }
                 ]
             },
             academia: {
                 A: [
-                    { id: 201, name: "Supino Reto com Barra", weight: "40kg total", reps: "4x10" },
-                    { id: 202, name: "Supino Inclinado com Halteres", weight: "16kg cada", reps: "4x12" },
-                    { id: 203, name: "Crucifixo na Polia (Crossover)", weight: "20kg", reps: "3x15" },
-                    { id: 204, name: "Tríceps Pulley Barra W", weight: "30kg", reps: "4x12" },
-                    { id: 205, name: "Tríceps Testa com Halteres", weight: "10kg cada", reps: "3x12" }
+                    { id: 201, name: "Supino Reto com Barra", weight: "40kg total", reps: "4x10", execution: "Escápulas retraídas no banco, tire a barra, desça tocando a linha dos mamilos e empurre verticalmente mantendo os cotovelos sob a barra." },
+                    { id: 202, name: "Supino Inclinado com Halteres", weight: "16kg cada", reps: "4x12", execution: "Banco inclinado a 30° ou 45°. Desça os halteres alongando a parte superior do peito e suba sem deixar os halteres se chocarem no topo." },
+                    { id: 203, name: "Crucifixo na Polia (Crossover)", weight: "20kg", reps: "3x15", execution: "Tronco inclinado para frente, braços semi-flexionados. Junte as mãos à frente do corpo esmagando o miolo do peito." },
+                    { id: 204, name: "Tríceps Pulley Barra W", weight: "30kg", reps: "4x12", execution: "Cotovelos colados nas costelas. Estenda os braços completamente para baixo espremendo o tríceps e retorne até o ângulo de 90°." },
+                    { id: 205, name: "Tríceps Testa com Halteres", weight: "10kg cada", reps: "3x12", execution: "Deitado no banco, braços estendidos para o teto. Flexione apenas os cotovelos trazendo os halteres ao lado da testa, sem abrir os cotovelos para os lados." }
                 ],
                 B: [
-                    { id: 206, name: "Puxada Alta no Pulley", weight: "45kg", reps: "4x12" },
-                    { id: 207, name: "Remada Baixa Sentada V", weight: "40kg", reps: "4x10" },
-                    { id: 208, name: "Remada Curvada com Barra", weight: "30kg total", reps: "3x12" },
-                    { id: 209, name: "Rosca Direta na Polia", weight: "25kg", reps: "4x12" },
-                    { id: 210, name: "Rosca Martelo com Halteres", weight: "12kg cada", reps: "3x12" }
+                    { id: 206, name: "Puxada Alta no Pulley", weight: "45kg", reps: "4x12", execution: "Incline o tronco levemente para trás. Puxe a barra em direção ao peito puxando primeiro com os cotovelos, ativando a asa das costas." },
+                    { id: 207, name: "Remada Baixa Sentada V", weight: "40kg", reps: "4x10", execution: "Coluna ereta, pernas semi-flexionadas. Puxe o triângulo na altura do umbigo apertando as costas e abrindo o peito." },
+                    { id: 208, name: "Remada Curvada com Barra", weight: "30kg total", reps: "3x12", execution: "Incline o tronco a 45°, joelhos levemente dobrados. Puxe a barra raspando nas coxas até tocar a linha da cintura." },
+                    { id: 209, name: "Rosca Direta na Polia", weight: "25kg", reps: "4x12", execution: "Mantenha o corpo estável. Flexione o antebraço contra o braço de forma isolada, controlando a força na descida." },
+                    { id: 210, name: "Rosca Martelo com Halteres", weight: "12kg cada", reps: "3x12", execution: "Pegada neutra (palmas viradas uma para a outra). Suba os halteres alternadamente focando no braquiorradial e braquial." }
                 ],
                 C: [
-                    { id: 211, name: "Leg Press 45°", weight: "120kg", reps: "4x12" },
-                    { id: 212, name: "Agachamento no Hack", weight: "40kg total", reps: "4x10" },
-                    { id: 213, name: "Cadeira Extensora", weight: "35kg", reps: "3x15" },
-                    { id: 214, name: "Mesa Flexora", weight: "25kg", reps: "4x12" },
-                    { id: 215, name: "Gêmeos Sentado (Panturrilha)", weight: "30kg", reps: "4x20" }
+                    { id: 211, name: "Leg Press 45°", weight: "120kg", reps: "4x12", execution: "Pés na largura dos ombros na plataforma. Destrave e desça controlando o peso até os joelhos formarem 90°, sem tirar a lombar do banco." },
+                    { id: 212, name: "Agachamento no Hack", weight: "40kg total", reps: "4x10", execution: "Apoie bem as costas no encosto. Desça agachando de forma profunda e suba empurrando a plataforma com a força dos calcanhares." },
+                    { id: 213, name: "Cadeira Extensora", weight: "35kg", reps: "3x15", execution: "Sente-se bem atrás no banco. Suba estendendo totalmente as pernas e contraia o quadríceps no topo por 1 segundo antes de descer." },
+                    { id: 214, name: "Mesa Flexora", weight: "25kg", reps: "4x12", execution: "Deitado de bruços, alinhe o joelho com o eixo da máquina. Flexione as pernas trazendo o rolo em direção ao glúteo." },
+                    { id: 215, name: "Gêmeos Sentado (Panturrilha)", weight: "30kg", reps: "4x20", execution: "Apoie a almofada sobre as coxas. Desça o calcanhar ao limite máximo e suba empurrando bem a ponta dos pés para contrair a panturrilha." }
                 ]
             }
         };
 
-        // Estados Globais
         let currentEnvironment = "casa";
         let currentDay = "A";
         let currentUser = null;
@@ -458,13 +425,13 @@
         let isSignUpMode = false;
         let selectedExerciseForEdit = null;
 
-        // Elementos DOM
         const authScreen = document.getElementById('auth-screen');
         const setupScreen = document.getElementById('setup-screen');
         const appScreen = document.getElementById('app-screen');
         const appNav = document.getElementById('app-nav');
         const aiBtn = document.getElementById('ai-btn');
         const editModal = document.getElementById('edit-modal');
+        const chatBox = document.getElementById('ai-chat');
 
         // Alternadores de Autenticação
         document.getElementById('tab-login').addEventListener('click', () => setAuthMode(false));
@@ -505,7 +472,6 @@
             btn.disabled = false;
         });
 
-        // Configuração de Perfil Inicial
         document.getElementById('setup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return;
@@ -530,7 +496,7 @@
             location.reload();
         });
 
-        // Seletores de Abas ABC
+        // Alternadores de Abas ABC
         ['A', 'B', 'C'].forEach(day => {
             document.getElementById(`btn-${day}`).addEventListener('click', () => {
                 ['A', 'B', 'C'].forEach(d => document.getElementById(`btn-${d}`).classList.remove('active'));
@@ -540,7 +506,6 @@
             });
         });
 
-        // Alternadores de Ambiente
         document.getElementById('nav-casa').addEventListener('click', () => switchEnvironment('casa'));
         document.getElementById('nav-academia').addEventListener('click', () => switchEnvironment('academia'));
 
@@ -550,11 +515,22 @@
             document.getElementById('nav-academia').classList.remove('active');
             document.getElementById(`nav-${env}`).classList.add('active');
             renderWorkout();
-            
-            triggerAiVoice(`Modo **${env.toUpperCase()}** ativado com sucesso.`);
         }
 
-        // Renderização Dinâmica com Exibição Isolada de Carga e Repetições
+        // ALTERNADOR DO DETALHE DA EXECUÇÃO DO TREINO
+        function toggleExecutionDetail(id) {
+            const detailDiv = document.getElementById(`exec-detail-${id}`);
+            const icon = document.getElementById(`exec-icon-${id}`);
+            if(detailDiv.classList.contains('hidden')) {
+                detailDiv.classList.remove('hidden');
+                icon.className = "fas fa-chevron-up text-xs ml-1";
+            } else {
+                detailDiv.classList.add('hidden');
+                icon.className = "fas fa-chevron-down text-xs ml-1";
+            }
+        }
+
+        // RENDERIZADOR DOS EXERCÍCIOS COM ATUALIZAÇÃO IMEDIATA E DETALHE DE EXECUÇÃO
         function renderWorkout() {
             const container = document.getElementById('workout-container');
             const counter = document.getElementById('category-counter');
@@ -570,21 +546,21 @@
             }
 
             if(list.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Vazio. Edite para inserir exercícios.</p>`;
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Nenhum treino gerado. Peça para a IA montar ou adicione um!</p>`;
                 return;
             }
 
             list.forEach(ex => {
                 const card = document.createElement('div');
-                card.className = "exercise-card rounded-xl overflow-hidden flex flex-col";
+                card.className = "exercise-card rounded-xl overflow-hidden flex flex-col p-4 border border-gray-800 mb-2";
                 card.innerHTML = `
-                    <div class="flex p-4 gap-4 items-center">
-                        <div class="exercise-visual-box w-12 h-12 rounded-xl flex items-center justify-center text-gray-400 text-lg">
+                    <div class="flex gap-4 items-center w-full">
+                        <div class="exercise-visual-box w-12 h-12 rounded-xl flex items-center justify-center text-gray-400 text-lg flex-shrink-0">
                             <i class="fas ${currentEnvironment === 'casa' ? 'fa-home' : 'fa-dumbbell'} text-gray-500"></i>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold text-white">${ex.name}</h4>
-                            <div class="flex gap-3 mt-1">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-bold text-white truncate">${ex.name}</h4>
+                            <div class="flex gap-3 mt-1 flex-wrap">
                                 <span class="text-xs bg-gray-900 border border-gray-800 text-gray-400 px-2 py-0.5 rounded-md">
                                     <i class="fas fa-weight-hanging text-cyan-400 mr-1 text-[10px]"></i>${ex.weight || 'Corpo'}
                                 </span>
@@ -593,7 +569,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="flex gap-1.5">
+                        <div class="flex gap-1.5 flex-shrink-0">
                             <button onclick="openEditModal(${ex.id})" class="w-8 h-8 rounded-lg bg-gray-800 border border-gray-700 hover:text-green-400 text-gray-400 transition flex items-center justify-center text-xs">
                                 <i class="fas fa-pen"></i>
                             </button>
@@ -602,12 +578,22 @@
                             </button>
                         </div>
                     </div>
+                    
+                    <!-- Botão para Expandir Detalhe de Execução -->
+                    <div class="mt-3 border-t border-gray-800 pt-2 flex flex-col">
+                        <button onclick="toggleExecutionDetail(${ex.id})" class="text-[11px] font-bold text-cyan-400 text-left uppercase tracking-wider flex items-center focus:outline-none">
+                            <i class="fas fa-info-circle mr-1"></i> Ver Execução <i id="exec-icon-${ex.id}" class="fas fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div id="exec-detail-${ex.id}" class="hidden text-xs text-gray-400 mt-2 bg-gray-900 p-2.5 rounded-lg border border-gray-800 leading-relaxed">
+                            ${ex.execution || "Execute com cadência controlada focando na contração máxima muscular."}
+                        </div>
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // ABERTURA DO MODAL ATUALIZADO
+        // MODAL DE EDIÇÃO
         function openEditModal(id) {
             const list = routineData[currentEnvironment][currentDay];
             const item = list.find(ex => ex.id === id);
@@ -625,19 +611,20 @@
             selectedExerciseForEdit = null;
         }
 
+        // Ação de Salvar: Atualiza e renderiza logo em seguida!
         function saveExerciseEdit() {
             if(!selectedExerciseForEdit) return;
 
-            const oldName = selectedExerciseForEdit.name;
             selectedExerciseForEdit.name = document.getElementById('modal-exercise-name').value;
             selectedExerciseForEdit.weight = document.getElementById('modal-exercise-weight').value;
             selectedExerciseForEdit.reps = document.getElementById('modal-exercise-reps').value;
+            // Gera um detalhe genérico para a nova máquina adicionada
+            selectedExerciseForEdit.execution = `Execução recomendada para ${selectedExerciseForEdit.name}: Cadência controlada 2s na descida, evite momentum ou impulsos e force a falha mecânica nas repetições finais.`;
 
             closeEditModal();
-            renderWorkout();
+            renderWorkout(); // Aparece logo em seguida!
 
-            // Mensagem dinâmica no Chat da IA
-            triggerAiVoice(`🔄 **Substituição Concluída:** Mudamos de _"${oldName}"_ para o novo exercício **"${selectedExerciseForEdit.name}"** configurado com a carga **[${selectedExerciseForEdit.weight}]**. Mapeei a mudança no banco de dados!`);
+            triggerAiVoice(`🔄 **Alterado com Sucesso:** Modificado para **"${selectedExerciseForEdit.name}"** (${selectedExerciseForEdit.weight}). O guia de execução profissional já foi injetado abaixo do card!`);
         }
 
         function deleteExercise(id) {
@@ -645,8 +632,7 @@
             const index = list.findIndex(ex => ex.id === id);
             if(index === -1) return;
 
-            const targetName = list[index].name;
-            if(confirm(`Remover "${targetName}"?`)) {
+            if(confirm(`Remover este exercício?`)) {
                 list.splice(index, 1);
                 renderWorkout();
             }
@@ -698,10 +684,14 @@
         document.getElementById('btn-quick-90').addEventListener('click', () => { timeRemaining = 90; updateTimerDisplay(); });
         document.getElementById('btn-reset-timer').addEventListener('click', resetTimer);
 
-        // INTEGRAÇÃO DE COMPORTAMENTO RESTRITO COGNITIVO - SIMULAÇÃO DE IA REAL
-        const chatBox = document.getElementById('ai-chat');
-        document.getElementById('ai-btn').addEventListener('click', () => chatBox.classList.remove('hidden'));
-        document.getElementById('close-ai-chat').addEventListener('click', () => chatBox.classList.add('hidden'));
+        // CONTROLE DO CHAT DA IA (CORRIGIDO: ABRE E FECHA TOTALMENTE)
+        document.getElementById('ai-btn').addEventListener('click', () => {
+            chatBox.classList.remove('hidden');
+        });
+        
+        document.getElementById('close-ai-chat').addEventListener('click', () => {
+            chatBox.classList.add('hidden'); // Fecha com precisão agora!
+        });
 
         document.getElementById('btn-send-chat').addEventListener('click', sendChat);
         document.getElementById('ai-chat-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChat(); });
@@ -715,6 +705,7 @@
             msgContainer.scrollTop = msgContainer.scrollHeight;
         }
 
+        // MOTOR REVOLUCIONÁRIO: IA MONTA O TREINO PROFISSIONAL AUTOMATICAMENTE SE FOR PEDIDO
         function sendChat() {
             const input = document.getElementById('ai-chat-input');
             const txt = input.value.trim();
@@ -727,26 +718,53 @@
             msgContainer.appendChild(userBubble);
             input.value = "";
 
-            // Simulação avançada de processamento contextual da IA
             setTimeout(() => {
                 const lowerTxt = txt.toLowerCase();
                 let aiResponse = "";
 
-                if (lowerTxt.includes("postura") || lowerTxt.includes("como fazer") || lowerTxt.includes("execução")) {
-                    aiResponse = `📐 **Análise Cinesiologia de IA:** Para qualquer máquina do catálogo ou peso livre que você incluiu no seu **Treino ${currentDay}**, mantenha o core sempre contraído e evite usar o balanço da coluna (ombros fixos) para isolar o grupo muscular primário.`;
+                // DETECTOR DE SOLICITAÇÃO DE TREINO PROFISSIONAL
+                if (lowerTxt.includes("monte") || lowerTxt.includes("montar") || lowerTxt.includes("crie") || lowerTxt.includes("treino profissional")) {
+                    
+                    // REESCREVE O BANCO DE DADOS DE ACORDO COM O AMBIENTE ATUAL
+                    if(currentEnvironment === "academia") {
+                        routineData.academia.A = [
+                            { id: 301, name: "Supino Inclinado Articulado", weight: "12 placas", reps: "4x10 (Falha)", execution: "Mantenha os ombros colados atrás. Empurre focando na contração da parte superior do peito." },
+                            { id: 302, name: "Crucifixo Reto com Halteres", weight: "20kg cada", reps: "3x12", execution: "Abra os braços controlando a gravidade para rasgar as fibras. Não bata os pesos em cima." },
+                            { id: 303, name: "Desenvolvimento Ombro Máquina", weight: "40kg total", reps: "4x10", execution: "Suba estendendo os braços, mantendo a postura ereta e a cabeça firme." },
+                            { id: 304, name: "Tríceps Pulley com Corda", weight: "35kg", reps: "4x12", execution: "Abra a corda na parte final do movimento para contrair a cabeça lateral do tríceps." },
+                            { id: 305, name: "Tríceps Francês na Polia", weight: "25kg", reps: "3x15", execution: "De costas para a polia, puxe o cabo por cima da cabeça estendendo totalmente os antebraços." }
+                        ];
+                        routineData.academia.B = [
+                            { id: 306, name: "Puxada Aberta no Pulley", weight: "50kg", reps: "4x12", execution: "Puxe a barra esmagando o meio das costas. Esqueça a força nos braços, use os cotovelos." },
+                            { id: 307, name: "Remada Cavalinho", weight: "45kg", reps: "4x10", execution: "Puxe firme trazendo a barra em direção ao abdômen, mantendo a espinha reta." },
+                            { id: 308, name: "Crucifixo Invertido Voador", weight: "30kg", reps: "3x15", execution: "Foco no posterior de ombro. Afaste os braços para trás sem contrair o trapézio." },
+                            { id: 309, name: "Rosca Scott na Máquina", weight: "20kg", reps: "4x10", execution: "Apoie totalmente os braços no estofado. Estenda quase até o final e suba espremendo o bíceps." },
+                            { id: 310, name: "Rosca Direta Halter Banco 45°", weight: "12kg cada", reps: "3x12", execution: "Deitado no banco inclinado, deixe os braços alongarem totalmente para trás antes de flexionar." }
+                        ];
+                    } else {
+                        // Se estiver no modo Casa
+                        routineData.casa.A = [
+                            { id: 401, name: "Flexão Arqueiro Pro", weight: "Peso Corporal", reps: "4x12", execution: "Incline o corpo para um lado de cada vez, jogando toda a carga em um peitoral isolado." },
+                            { id: 402, name: "Flexão de Braço Explosiva", weight: "Peso Corporal", reps: "3x10", execution: "Suba empurrando o chão com o máximo de força explosiva que conseguir." },
+                            { id: 403, name: "Tríceps de Joelhos na Parede", weight: "Peso Corporal", reps: "4x12", execution: "Apoie as mãos na parede na altura da cabeça e dobre os cotovelos jogando o peso no tríceps." },
+                            { id: 404, name: "Mergulho em Cadeiras Paralelas", weight: "Peso Corporal", reps: "3x Falha", execution: "Use duas cadeiras firmes lado a lado e suspenda o corpo fazendo o movimento de paralelas." }
+                        ];
+                    }
+
+                    // Força atualização em tempo real
+                    renderWorkout();
+
+                    aiResponse = `💪🔥 **SISTEMA ATUALIZADO!** Entendido chefe! Montei uma **Ficha de Treino Profissional Avançada** focada em máxima Hipertrofia. Substituí os exercícios antigos e injetei as novas técnicas na sua tela agora mesmo. Confira a lista e clique em **"Ver Execução"** para ver as regras de ouro de cada um!`;
                 } 
-                else if (lowerTxt.includes("peso") || lowerTxt.includes("placas") || lowerTxt.includes("carga")) {
-                    aiResponse = `🏋️ **Cálculo de Carga Inteligente:** Percebi que você gerencia suas metas de peso de forma isolada agora. Anote suas cargas máximas no card! Se conseguir realizar as repetições com facilidade, suba 2kg ou 1 placa no próximo treino para manter o estímulo metabólico progressivo.`;
-                } 
-                else if (lowerTxt.includes("trocar") || lowerTxt.includes("máquina") || lowerTxt.includes("exercicio")) {
-                    aiResponse = `🔄 **Motor de Catálogo Ativo:** O sistema está integrado com a enciclopédia mundial de aparelhos (Hack, Leg 45, Smith, Crossover, Polias). Você pode alterar livremente na lista suspensa sempre que quiser mudar o estímulo anatômico do dia!`;
+                else if (lowerTxt.includes("postura") || lowerTxt.includes("execução")) {
+                    aiResponse = `📐 **Dica de Treinador:** Agora você pode ver a postura perfeita de cada exercício clicando direto no botão **"Ver Execução"** ali no card da tela principal!`;
                 } 
                 else {
-                    aiResponse = `🧠 **Coach IA Conectado:** Li sua mensagem. Analisando seu painel atual do modo **${currentEnvironment.toUpperCase()}**, recomendo executar as séries com cadência controlada (2 segundos na descida) para aumentar o dano miofibrilar. Qual máquina você quer ajustar agora?`;
+                    aiResponse = `🧠 **Coach Conectado:** Estou pronto para agir. Se você quer trocar um exercício rápido, use o botão de Lápis ✏️ no card. Se quer que eu refaça a planilha toda, peça: _"monte um treino de hipertrofia profissional"_!`;
                 }
 
                 triggerAiVoice(aiResponse);
-            }, 700);
+            }, 600);
         }
 
         // Validação da Sessão Supabase

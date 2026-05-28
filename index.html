@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- user-scalable=no impede o zoom automático indesejado no mobile ao focar nos inputs -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hybrid Fitness Pro Ultimate</title>
     
+    <!-- Tailwind CSS para estilização moderna -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <!-- Ícones para os botões -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Biblioteca do Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
     <style>
@@ -15,24 +19,25 @@
             --bg-card: #181c24;
             --bg-nav: #12141c;
             --primary: #ff3838;
-            --primary-glow: rgba(255, 56, 56, 0.2);
             --accent: #00d2d3;
-            --accent-glow: rgba(0, 210, 211, 0.3);
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --border: #222834;
             --success: #2ed573;
         }
 
-        body {
+        html, body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            overflow: hidden; /* Remove completamente qualquer tipo de scroll global */
+            overflow: hidden; /* Trava qualquer rolagem indesejada na tela principal */
+            height: 100%;
+            width: 100%;
+            position: fixed; /* Evita o efeito "elástico" de puxar a tela no iOS */
         }
 
         .hidden { display: none !important; }
 
-        .auth-card, .setup-card {
+        .auth-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -78,16 +83,16 @@
         .bottom-nav {
             background: var(--bg-nav);
             border-top: 1px solid var(--border);
+            height: 64px;
         }
         .nav-item {
             color: var(--text-muted);
         }
         .nav-item.active { color: var(--primary); }
         
-        /* Custom Checkbox */
         .custom-checkbox {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border: 2px solid var(--border);
             border-radius: 6px;
             display: flex;
@@ -101,116 +106,157 @@
             border-color: var(--success);
             color: white;
         }
+
+        /* Área de scroll interna otimizada e suave apenas para a lista de treinos */
+        .scrollable-content {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .scrollable-content::-webkit-scrollbar {
+            display: none; /* Deixa o visual limpo no mobile */
+        }
     </style>
 </head>
-<body class="font-sans h-screen w-screen flex flex-col justify-between select-none">
+<body class="font-sans flex flex-col justify-between antialiased">
 
-    <div class="w-full max-w-xl mx-auto px-4 pt-4 flex-1 flex flex-col justify-start overflow-hidden">
+    <!-- CONTAINER CENTRAL (Ocupa o espaço correto sem estourar e sem gerar scroll global) -->
+    <div class="w-full max-w-md mx-auto px-4 pt-3 flex-1 flex flex-col min-h-0 overflow-hidden pb-20">
         
-        <div id="auth-screen" class="auth-card p-6 w-full my-auto">
+        <!-- TELA DE AUTENTICAÇÃO -->
+        <div id="auth-screen" class="auth-card p-6 w-full my-auto flex-none">
             <div class="brand-logo text-center text-3xl mb-5 tracking-wider">Hybrid<span>Fitness</span></div>
-            
             <h2 id="auth-title" data-i18n="authTitleLogin" class="text-xl font-bold text-center text-white mb-4">Acessar Painel</h2>
             
             <form id="auth-form" class="space-y-3">
                 <div id="name-field" class="hidden">
                     <label data-i18n="lblFullName" class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
-                    <input type="text" id="auth-name" data-i18n-holder="placeName" placeholder="Seu nome" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-sm">
+                    <!-- text-base previne zoom automático no iOS/Android -->
+                    <input type="text" id="auth-name" data-i18n-holder="placeName" placeholder="Seu nome" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-base">
                 </div>
-
                 <div>
                     <label data-i18n="lblEmail" class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">E-mail do Atleta</label>
-                    <input type="email" id="auth-email" required data-i18n-holder="placeEmail" placeholder="atleta@email.com" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-sm">
+                    <input type="email" id="auth-email" required data-i18n-holder="placeEmail" placeholder="atleta@email.com" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-base">
                 </div>
                 <div>
                     <label data-i18n="lblPassword" class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Senha</label>
-                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-sm">
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full p-3 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none text-base">
                 </div>
                 
-                <button type="submit" id="btn-auth-submit" data-i18n="btnAuthLogin" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition shadow-lg mt-2">
+                <button type="submit" id="btn-auth-submit" data-i18n="btnAuthLogin" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl text-sm uppercase tracking-widest transition shadow-lg mt-2">
                     Acessar Painel
                 </button>
             </form>
-
             <div class="text-center mt-4 text-xs text-gray-400">
                 <span id="auth-toggle-text" data-i18n="toggleTextLogin">Novo por aqui?</span> 
                 <button onclick="toggleAuthMode()" id="btn-auth-toggle" data-i18n="btnToggleLogin" class="text-red-500 font-semibold hover:underline ml-1">Criar uma conta</button>
             </div>
         </div>
 
-        <div id="app-screen" class="hidden w-full flex-1 flex flex-col justify-between overflow-hidden space-y-3">
+        <!-- TELA PRINCIPAL DO APLICATIVO -->
+        <div id="app-screen" class="hidden w-full flex-1 flex flex-col min-h-0 justify-start space-y-3">
             
-            <div class="p-4 rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-800 to-gray-900 flex-none">
+            <!-- Painel Superior de Perfil (Fixo) -->
+            <div class="p-3.5 rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-800 to-gray-900 flex-none">
                 <div class="flex justify-between items-start mb-2">
                     <div>
                         <h3 id="user-name" class="text-lg font-bold text-white leading-tight">Thiago</h3>
                         <div class="flex items-center gap-1.5 mt-0.5">
                             <p id="user-stats" class="text-xs text-gray-400">78.0kg | 1.64m | 30 anos</p>
-                            <button onclick="openWeightModal()" class="text-xxs text-cyan-400 hover:text-cyan-300 ml-0.5" title="Atualizar Peso">
-                                <i class="fas fa-weight-scale"></i> <span data-i18n="btnChangeWeight">Mudar Peso</span>
+                            <button onclick="openWeightModal()" class="text-xs text-cyan-400 hover:text-cyan-300 ml-0.5 font-medium" title="Atualizar Peso">
+                                <i class="fas fa-weight-scale text-xxs"></i> <span data-i18n="btnChangeWeight">Mudar Peso</span>
                             </button>
                         </div>
                     </div>
-                    <div id="user-goal" data-i18n="userGoalText" class="text-xxs font-bold px-2 py-1 rounded-full text-cyan-400 bg-cyan-950 border border-cyan-800">
+                    <div id="user-goal" data-i18n="userGoalText" class="text-xs font-bold px-2 py-1 rounded-full text-cyan-400 bg-cyan-950 border border-cyan-800">
                         Hipertrofia
                     </div>
                 </div>
-
-                <div class="p-2.5 bg-black bg-opacity-25 border border-gray-800 rounded-xl space-y-1">
-                    <div class="grid grid-cols-2 gap-2 text-xxs">
+                <!-- Diagnóstico Corporal Compacto -->
+                <div class="p-2 bg-black bg-opacity-25 border border-gray-800 rounded-xl">
+                    <div class="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                            <span data-i18n="lblImc" class="text-gray-400 block">IMC Atual:</span>
-                            <strong id="lbl-imc-val" class="text-white">29.0 (Sobrepeso)</strong>
+                            <span data-i18n="lblImc" class="text-gray-400 block text-xxs uppercase tracking-wider">IMC Atual:</span>
+                            <strong id="lbl-imc-val" class="text-white">29.0</strong>
                         </div>
                         <div>
-                            <span data-i18n="lblEvolution" class="text-gray-400 block">Evolução Geral:</span>
-                            <strong class="text-green-400" id="lbl-evolucao-status">Carga padrão estável</strong>
+                            <span data-i18n="lblEvolution" class="text-gray-400 block text-xxs uppercase tracking-wider">Evolução Geral:</span>
+                            <strong class="text-green-400 truncate block" id="lbl-evolucao-status">Estável</strong>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="workout-content-area" class="flex-1 flex flex-col justify-between overflow-hidden space-y-2">
+            <!-- ÁREA DINÂMICA DE EXERCÍCIOS / CONTEÚDO -->
+            <div id="workout-content-area" class="flex-1 flex flex-col min-h-0 justify-between space-y-2.5">
+                <!-- Seletores ABC (Fixo) -->
                 <div class="flex gap-2 flex-none">
-                    <button class="abc-btn active flex-1 py-2.5 rounded-xl text-xxs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')"><span data-i18n="txtWorkout">Treino</span> A</button>
-                    <button class="abc-btn flex-1 py-2.5 rounded-xl text-xxs font-bold tracking-wider uppercase" id="btn-B" onclick="changeDay('B')"><span data-i18n="txtWorkout">Treino</span> B</button>
-                    <button class="abc-btn flex-1 py-2.5 rounded-xl text-xxs font-bold tracking-wider uppercase" id="btn-C" onclick="changeDay('C')"><span data-i18n="txtWorkout">Treino</span> C</button>
+                    <button class="abc-btn active flex-1 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')"><span data-i18n="txtWorkout">Treino</span> A</button>
+                    <button class="abc-btn flex-1 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-B" onclick="changeDay('B')"><span data-i18n="txtWorkout">Treino</span> B</button>
+                    <button class="abc-btn flex-1 py-2.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-C" onclick="changeDay('C')"><span data-i18n="txtWorkout">Treino</span> C</button>
                 </div>
 
+                <!-- Barra de Progresso Diária (Fixo) -->
                 <div class="p-2 bg-gray-800 rounded-xl border border-gray-700 flex-none flex items-center justify-between gap-3">
-                    <span data-i18n="workoutProgress" class="text-xxs font-bold uppercase tracking-wider text-gray-400 whitespace-nowrap">Progresso</span>
+                    <span data-i18n="workoutProgress" class="text-xs font-bold uppercase tracking-wider text-gray-400 whitespace-nowrap">Progresso</span>
                     <div class="flex-1 bg-gray-900 h-2 rounded-full overflow-hidden border border-gray-700">
                         <div id="progress-bar-fill" class="bg-green-500 h-full w-0 transition-all duration-300"></div>
                     </div>
-                    <span id="progress-percent" class="text-xxs font-bold text-green-400 whitespace-nowrap">0% Concluído</span>
+                    <span id="progress-percent" class="text-xs font-bold text-green-400 whitespace-nowrap">0%</span>
                 </div>
 
-                <div id="workout-container" class="flex-1 overflow-y-auto pr-0 space-y-2 max-h-56"></div>
+                <!-- CONTEÚDO LISTAGEM COM ROLAGEM ISOLADA SUAVE (Sem scroll global) -->
+                <div id="workout-container" class="flex-1 scrollable-content space-y-2 min-h-0"></div>
 
-                <div class="p-3 bg-gray-800 rounded-2xl border border-gray-800 text-center flex-none flex items-center justify-between gap-4">
+                <!-- Bloco do Cronômetro de Descanso (Fixo na Base) -->
+                <div class="p-3 bg-gray-800 rounded-2xl border border-gray-800 text-center flex-none flex items-center justify-between gap-3">
                     <div class="text-left">
                         <span data-i18n="lblRestTimer" class="text-xxs text-gray-400 font-bold uppercase tracking-widest block">⏱️ Descanso</span>
-                        <div class="timer-val text-2xl font-extrabold px-3 py-0.5 rounded-lg border mt-0.5 select-none" id="timer-display">01:00</div>
+                        <div class="timer-val text-xl font-extrabold px-2.5 py-0.5 rounded-lg border mt-0.5 select-none" id="timer-display">01:00</div>
                     </div>
-                    <div class="flex gap-1 text-xxs flex-1 justify-end">
-                        <button class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg uppercase tracking-wider" id="btn-start-toggle" onclick="toggleTimer()" data-i18n="btnTimerStart">Iniciar</button>
-                        <button class="px-2.5 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300" onclick="setTimerSeconds(60)">60s</button>
-                        <button class="px-2.5 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300" onclick="setTimerSeconds(90)">90s</button>
-                        <button class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-500" onclick="resetTimer()"><i class="fas fa-undo"></i></button>
+                    <div class="flex gap-1 text-xs flex-1 justify-end">
+                        <button class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg uppercase tracking-wider text-xxs" id="btn-start-toggle" onclick="toggleTimer()" data-i18n="btnTimerStart">Iniciar</button>
+                        <button class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300 text-xxs" onclick="setTimerSeconds(60)">60s</button>
+                        <button class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300 text-xxs" onclick="setTimerSeconds(90)">90s</button>
+                        <button class="px-2 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-500 text-xxs" onclick="resetTimer()"><i class="fas fa-undo"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div id="progress-content-area" class="hidden flex-1 flex flex-col justify-start overflow-hidden">
-                <div class="p-4 bg-gray-800 border border-gray-700 rounded-xl flex-1 overflow-hidden flex flex-col">
+            <!-- CONTEÚDO DA ABA DE PROGRESSO (HISTÓRICO) -->
+            <div id="progress-content-area" class="hidden flex-1 flex flex-col min-h-0 justify-start">
+                <div class="p-3.5 bg-gray-800 border border-gray-700 rounded-xl flex-1 flex flex-col min-h-0">
                     <h4 data-i18n="historyTitle" class="text-xs font-bold text-white mb-2 uppercase tracking-wider flex-none">📈 Histórico de Cargas & Evolução</h4>
-                    <div class="space-y-2 text-xxs overflow-y-auto flex-1 max-h-72" id="progress-history-list"></div>
+                    <div class="space-y-2 flex-1 scrollable-content min-h-0" id="progress-history-list"></div>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- NOUVEAU MODAL: VISUALIZAR INSTRUÇÕES COMPLETAS DE EXECUÇÃO -->
+    <div id="exec-modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl flex flex-col space-y-4">
+            <div class="flex justify-between items-start border-b border-gray-800 pb-2">
+                <h3 id="exec-modal-title" class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-lightbulb text-yellow-400"></i> Como Executar
+                </h3>
+                <button onclick="closeExecModal()" class="text-gray-400 hover:text-white text-sm px-1"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-3 text-sm text-gray-300 leading-relaxed max-h-60 overflow-y-auto pr-1">
+                <div>
+                    <span data-i18n="modalLabelExec" class="text-xxs uppercase tracking-wider text-red-400 block font-bold mb-0.5">Técnica e Cadência</span>
+                    <p id="exec-modal-text" class="bg-black bg-opacity-30 p-3 rounded-lg border border-gray-800 text-white font-medium"></p>
+                </div>
+                <div>
+                    <span data-i18n="modalLabelTarget" class="text-xxs uppercase tracking-wider text-cyan-400 block font-bold mb-0.5">Foco Muscular</span>
+                    <p id="exec-modal-target" class="text-xs text-gray-400"></p>
+                </div>
+            </div>
+            <button onclick="closeExecModal()" data-i18n="btnOk" class="w-full py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO DE EXERCÍCIO -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl space-y-3">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -218,54 +264,56 @@
             </h3>
             <div class="space-y-2.5">
                 <div>
-                    <input type="text" id="modal-exercise-name" list="global-exercises-list" onclick="this.select()" onfocus="this.select()" data-i18n-holder="placeModalName" placeholder="Nome do exercício..." class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-xs focus:outline-none">
+                    <input type="text" id="modal-exercise-name" list="global-exercises-list" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-base focus:outline-none">
                     <datalist id="global-exercises-list"></datalist>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="modal-exercise-weight" data-i18n-holder="placeModalWeight" placeholder="Carga" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-xs focus:outline-none">
-                    <input type="text" id="modal-exercise-reps" data-i18n-holder="placeModalReps" placeholder="Séries" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-xs focus:outline-none">
+                    <input type="text" id="modal-exercise-weight" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-base focus:outline-none">
+                    <input type="text" id="modal-exercise-reps" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-base focus:outline-none">
                 </div>
                 <div>
-                    <input type="text" id="modal-exercise-exec" data-i18n-holder="placeModalExec" placeholder="Execução / Cadência (Ex: 3s excêntrica)" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-xs focus:outline-none">
+                    <input type="text" id="modal-exercise-exec" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-base focus:outline-none">
                 </div>
             </div>
             <div class="flex gap-2 pt-1">
-                <button onclick="closeEditModal()" data-i18n="btnCancel" class="flex-1 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xxs font-bold uppercase">Cancelar</button>
-                <button onclick="saveExerciseEdit()" data-i18n="btnConfirm" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xxs font-bold uppercase">Confirmar</button>
+                <button onclick="closeEditModal()" data-i18n="btnCancel" class="flex-1 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold uppercase">Cancelar</button>
+                <button onclick="saveExerciseEdit()" data-i18n="btnConfirm" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase">Confirmar</button>
             </div>
         </div>
     </div>
 
+    <!-- MODAL DE ATUALIZAÇÃO DE PESO -->
     <div id="weight-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl space-y-3">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <i class="fas fa-weight-scale text-cyan-400"></i> <span data-i18n="modalWeightTitle">Atualizar Peso Corporal</span>
             </h3>
-            <p id="modal-weight-desc" data-i18n="modalWeightDesc" class="text-xxs text-gray-400">Insira seu peso atualizado em kg. Isso recalculará seu diagnóstico e adaptará sua evolução de treinos.</p>
+            <p id="modal-weight-desc" data-i18n="modalWeightDesc" class="text-xs text-gray-400">Insira seu peso atualizado em kg.</p>
             <div>
-                <input type="number" id="modal-new-weight" step="0.1" placeholder="Ex: 76.5" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm text-center font-bold focus:outline-none">
+                <input type="number" id="modal-new-weight" step="0.1" class="w-full p-2.5 rounded-lg bg-gray-800 border border-gray-700 text-white text-base text-center font-bold focus:outline-none">
             </div>
             <div class="flex gap-2 pt-1">
-                <button onclick="closeWeightModal()" data-i18n="btnCancel" class="flex-1 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xxs font-bold uppercase">Cancelar</button>
-                <button onclick="saveWeightUpdate()" data-i18n="btnSaveWeight" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-black rounded-xl text-xxs font-bold uppercase">Salvar Peso</button>
+                <button onclick="closeWeightModal()" data-i18n="btnCancel" class="flex-1 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold uppercase">Cancelar</button>
+                <button onclick="saveWeightUpdate()" data-i18n="btnSaveWeight" class="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-black rounded-xl text-xs font-bold uppercase">Salvar Peso</button>
             </div>
         </div>
     </div>
 
+    <!-- ABA DE NAVEGAÇÃO INFERIOR COMPLETA (Fixada perfeitamente sem quebrar o viewport mobile) -->
     <div class="bottom-nav fixed bottom-0 left-0 right-0 h-16 flex justify-around items-center z-30" id="app-nav" style="display: none;">
-        <button class="nav-item active flex flex-col items-center gap-0.5 text-xxs font-bold focus:outline-none" id="nav-casa" onclick="changeTab('casa')">
-            <i class="fas fa-home text-base"></i><span data-i18n="navHome">Treino Casa</span>
+        <button class="nav-item active flex flex-col items-center gap-0.5 text-xs font-bold focus:outline-none" id="nav-casa" onclick="changeTab('casa')">
+            <i class="fas fa-home text-lg"></i><span data-i18n="navHome">Treino Casa</span>
         </button>
-        <button class="nav-item flex flex-col items-center gap-0.5 text-xxs font-bold focus:outline-none" id="nav-academia" onclick="changeTab('academia')">
-            <i class="fas fa-dumbbell text-base"></i><span data-i18n="navGym">Academia</span>
+        <button class="nav-item flex flex-col items-center gap-0.5 text-xs font-bold focus:outline-none" id="nav-academia" onclick="changeTab('academia')">
+            <i class="fas fa-dumbbell text-lg"></i><span data-i18n="navGym">Academia</span>
         </button>
-        <button class="nav-item flex flex-col items-center gap-0.5 text-xxs font-bold focus:outline-none" id="nav-progresso" onclick="changeTab('progresso')">
-            <i class="fas fa-chart-line text-base"></i><span data-i18n="navProgress">Progresso</span>
+        <button class="nav-item flex flex-col items-center gap-0.5 text-xs font-bold focus:outline-none" id="nav-progresso" onclick="changeTab('progresso')">
+            <i class="fas fa-chart-line text-lg"></i><span data-i18n="navProgress">Progresso</span>
         </button>
     </div>
 
     <script>
-        // Dicionário de Idiomas
+        // Dicionário de Idiomas Amplo
         const traducoes = {
             pt: {
                 authTitleLogin: "Acessar Painel",
@@ -292,14 +340,10 @@
                 btnTimerPause: "Pausar",
                 historyTitle: "📈 Histórico de Cargas & Evolução",
                 modalEditTitle: "Trocar Exercício",
-                placeModalName: "Nome do exercício...",
-                placeModalWeight: "Carga",
-                placeModalReps: "Séries",
-                placeModalExec: "Detalhes de Execução (Ex: Cadência)",
                 btnCancel: "Cancelar",
                 btnConfirm: "Confirmar",
                 modalWeightTitle: "Atualizar Peso Corporal",
-                modalWeightDesc: "Insira seu peso atualizado em kg. Isso recalculará seu diagnóstico.",
+                modalWeightDesc: "Insira seu peso atualizado em kg. Isso recalculará seu diagnóstico automático.",
                 btnSaveWeight: "Salvar Peso",
                 navHome: "Treino Casa",
                 navGym: "Academia",
@@ -308,10 +352,8 @@
                 alertRegisterRedirect: "! Redirecionando...",
                 alertTimerFinish: "Hora de esmagar a próxima série!",
                 confirmDelete: "Deseja realmente excluir este exercício?",
-                lblCompletedText: "Concluído",
                 lblPaidWorkout: "🔥 Treino Pago!",
                 lblNoExercises: "Nenhum exercício para hoje.",
-                lblExercisesCounter: "Exercícios",
                 imcUnderweight: "Abaixo do peso",
                 imcIdeal: "Peso Ideal",
                 imcOverweight: "Sobrepeso",
@@ -321,10 +363,18 @@
                 evolGained: "Ganhou",
                 evolGainedTail: "kg. Peso gravitacional maior em Casa.",
                 evolStable: "Peso estável. Foco na progressão.",
-                historyLogWeight: "Peso Corporal Updated",
-                hist1_name: "Supino Reto com Barra", hist1_val: "Subiu para 20kg/lado",
-                hist2_name: "Leg Press 45 Graus", hist2_val: "Subiu para 120kg total",
-                hist3_name: "Remada Curvada com Galão", hist3_val: "Aumento de 2 reps"
+                historyLogWeight: "Peso Corporal Atualizado",
+                modalLabelExec: "Técnica e Cadência",
+                modalLabelTarget: "Foco Muscular",
+                btnOk: "Entendido",
+                execTitle: "Como Executar",
+                target_chest: "Peitoral Maior, Tríceps e Deltoide Anterior.",
+                target_triceps: "Tríceps Braquial (Foco na porção lateral e longa).",
+                target_abs: "Reto Abdominal e Core.",
+                target_back: "Grande Dorsal, Redondo Maior e Bíceps.",
+                target_biceps: "Bíceps Braquial e Braquiorradial.",
+                target_legs: "Quadríceps, Glúteo Máximo e Posteriores.",
+                target_delts: "Deltoide Lateral e Trapézio superior."
             },
             en: {
                 authTitleLogin: "Sign In",
@@ -351,10 +401,6 @@
                 btnTimerPause: "Pause",
                 historyTitle: "📈 Load History & Evolution",
                 modalEditTitle: "Change Exercise",
-                placeModalName: "Exercise name...",
-                placeModalWeight: "Load/Weight",
-                placeModalReps: "Sets/Reps",
-                placeModalExec: "Execution details (e.g. cadence)",
                 btnCancel: "Cancel",
                 btnConfirm: "Confirm",
                 modalWeightTitle: "Update Body Weight",
@@ -367,10 +413,8 @@
                 alertRegisterRedirect: "! Redirecting...",
                 alertTimerFinish: "Time to crush the next set!",
                 confirmDelete: "Do you really want to delete this exercise?",
-                lblCompletedText: "Completed",
                 lblPaidWorkout: "🔥 Workout Done!",
                 lblNoExercises: "No exercises for today.",
-                lblExercisesCounter: "Exercises",
                 imcUnderweight: "Underweight",
                 imcIdeal: "Ideal Weight",
                 imcOverweight: "Overweight",
@@ -381,121 +425,70 @@
                 evolGainedTail: "kg. Higher weight force at Home.",
                 evolStable: "Stable weight. Focus on progression.",
                 historyLogWeight: "Body Weight Updated",
-                hist1_name: "Barbell Bench Press", hist1_val: "Increased to 20kg/side",
-                hist2_name: "45 Degree Leg Press", hist2_val: "Increased to 120kg total",
-                hist3_name: "Gallon Bent-Over Row", hist3_val: "Increased by 2 reps"
+                modalLabelExec: "Technique and Cadence",
+                modalLabelTarget: "Target Muscle",
+                btnOk: "Got It",
+                execTitle: "How to Execute",
+                target_chest: "Pectoralis Major, Triceps, and Anterior Deltoid.",
+                target_triceps: "Triceps Brachii (Lateral and long head emphasis).",
+                target_abs: "Rectus Abdominis and Core Stability.",
+                target_back: "Latissimus Dorsi, Teres Major, and Biceps.",
+                target_biceps: "Biceps Brachii and Brachioradialis.",
+                target_legs: "Quadriceps, Gluteus Maximus, and Hamstrings.",
+                target_delts: "Lateral Deltoid and Upper Trapezius."
             }
         };
 
-        // Identifica dinamicamente a língua do usuário
         const appLanguage = navigator.language.startsWith('en') ? 'en' : 'pt';
-        // SOLUÇÃO ADICIONADA: Atualiza a tag html do navegador em tempo de execução
         document.documentElement.lang = appLanguage === 'en' ? 'en' : 'pt-BR';
 
         let authMode = 'login';
+        let userProfile = { name: "Thiago", weight: 78.0, height: 1.64, age: 30, initialWeight: 78.0 };
 
-        let userProfile = {
-            name: "Thiago",
-            weight: 78.0,
-            height: 1.64,
-            age: 30,
-            initialWeight: 78.0
-        };
-
+        // Estrutura de dados com execução completa separada para os modais bilaterais
         let routineData = { 
             casa: { 
                 A: [
-                    { name_pt: "Flexão de Braço (Solo)", name_en: "Push-ups (Floor)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x12", exec_pt: "Cadência 2s descida, explosão na subida", exec_en: "2s negative cadence, explosive push", done: false },
-                    { name_pt: "Flexão Inclinada (Sofá)", name_en: "Incline Push-ups (Sofa)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "3x15", exec_pt: "Pico de contração de 1s no topo", exec_en: "1s squeeze at the top", done: false },
-                    { name_pt: "Tríceps Banco (Cadeira)", name_en: "Bench Dips (Chair)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x12", exec_pt: "Cotovelos fechados, descida profunda", exec_en: "Keep elbows tucked, deep range", done: false },
-                    { name_pt: "Abdominal Supra", name_en: "Crunches", stats_pt: "Sem Carga", stats_en: "No Load", reps: "4x20", exec_pt: "Soltar o ar em cima esmagando o abdômen", exec_en: "Exhale completely at the peak", done: false }
+                    { name_pt: "Flexão de Braço (Solo)", name_en: "Push-ups (Floor)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x12", exec_pt: "Afaste as mãos um pouco além dos ombros. Desça de forma controlada levando 2 segundos até o peito quase tocar o chão, empurre o solo de forma explosiva contraindo o peitoral.", exec_en: "Place hands slightly wider than shoulders. Lower controlled taking 2 seconds until chest almost touches the floor, push the ground explosively engaging your chest.", target_key: "target_chest", done: false },
+                    { name_pt: "Flexão Inclinada (Sofá)", name_en: "Incline Push-ups (Sofa)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "3x15", exec_pt: "Apoie as mãos firmemente no sofá. Mantenha o abdômen travado e o corpo reto. Desça concentrado e faça uma pausa de 1 segundo esmagando o peitoral na subida.", exec_en: "Place hands firmly on the sofa. Keep your core tight and body straight. Lower smoothly and squeeze your chest for 1 second at the top of the movement.", target_key: "target_chest", done: false },
+                    { name_pt: "Tríceps Banco (Cadeira)", name_en: "Bench Dips (Chair)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x12", exec_pt: "Posicione as mãos na borda da cadeira, mantenha as costas rente ao assento. Desça profundamente flexionando os cotovelos para trás (nunca para os lados).", exec_en: "Position hands on the edge of the chair, keep your back close to the seat. Lower deeply by bending elbows backwards (never flare them to the sides).", target_key: "target_triceps", done: false },
+                    { name_pt: "Abdominal Supra", name_en: "Crunches", stats_pt: "Sem Carga", stats_en: "No Load", reps: "4x20", exec_pt: "Deitado de costas, flexione os joelhos. Suba o tronco contraindo o abdômen e soltando todo o ar dos pulmões no pico do movimento. Desça devagar.", exec_en: "Lie on your back with knees bent. Elevate your torso squeezing your abs, exhaling all air completely at the peak. Lower with control.", target_key: "target_abs", done: false }
                 ], 
                 B: [
-                    { name_pt: "Remada Curvada com Galão", name_en: "Gallon Bent-Over Row", stats_pt: "10kg cada lado", stats_en: "10kg each side", reps: "4x12", exec_pt: "Coluna reta, puxando em direção ao umbigo", exec_en: "Keep flat back, pull towards belly button", done: false },
-                    { name_pt: "Rosca Direta com Galão", name_en: "Gallon Biceps Curl", stats_pt: "5kg", stats_en: "5kg", reps: "4x12", exec_pt: "Sem mover os cotovelos para frente", exec_en: "Do not swing elbows forward", done: false },
-                    { name_pt: "Prancha Isométrica", name_en: "Plank", stats_pt: "Estático", stats_en: "Static", reps: "3x45s", exec_pt: "Abdômen e glúteos 100% contraídos", exec_en: "Keep core and glutes fully engaged", done: false }
+                    { name_pt: "Remada Curvada com Galão", name_en: "Gallon Bent-Over Row", stats_pt: "10kg cada lado", stats_en: "10kg each side", reps: "4x12", exec_pt: "Incline o tronco à frente mantendo a coluna perfeitamente reta. Puxe os galões direcionando os cotovelos para trás em direção ao quadril, esmagando as costas.", exec_en: "Hinge forward keeping your spine flat. Pull the gallons guiding your elbows back towards your hips, squeezing your shoulder blades together.", target_key: "target_back", done: false },
+                    { name_pt: "Rosca Direta com Galão", name_en: "Gallon Biceps Curl", stats_pt: "5kg", stats_en: "5kg", reps: "4x12", exec_pt: "Fique ereto, segure o galão e flexione o antebraço. Trave os cotovelos ao lado do corpo e não permita que eles balanceiem para a frente durante a subida.", exec_en: "Stand tall, hold the gallon and curl. Pin your elbows to your sides and do not allow them to swing forward during the upward phase.", target_key: "target_biceps", done: false }
                 ], 
                 C: [
-                    { name_pt: "Agachamento Livre", name_en: "Bodyweight Squat", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x20", exec_pt: "Passar dos 90 graus de descida", exec_en: "Go below parallel / 90 degrees", done: false },
-                    { name_pt: "Afundo Unilateral", name_en: "Lunges", stats_pt: "Sem Carga", stats_en: "No Load", reps: "3x12", exec_pt: "Tronco levemente inclinado para frente", exec_en: "Leaning torso slightly forward", done: false },
-                    { name_pt: "Elevação Lateral com Garrafas", name_en: "Bottle Lateral Raise", stats_pt: "2kg cada", stats_en: "2kg each", reps: "4x15", exec_pt: "Foco no ombro lateral, sem usar trapézio", exec_en: "Focus on side delts, don't shrug", done: false }
+                    { name_pt: "Agachamento Livre", name_en: "Bodyweight Squat", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x20", exec_pt: "Afaste os pés na largura dos ombros. Flexione os joelhos jogando o quadril para trás, descendo abaixo do ângulo de 90 graus (passar do paralelo).", exec_en: "Feet shoulder-width apart. Squat down driving your hips backward, lowering below parallel (90 degrees) while keeping your chest proud.", target_key: "target_legs", done: false }
                 ] 
             }, 
             academia: { 
                 A: [
-                    { name_pt: "Supino Reto com Barra", name_en: "Barbell Bench Press", stats_pt: "20kg de cada lado", stats_en: "20kg each side", reps: "4x10", exec_pt: "Adução de escápulas activa no banco", exec_en: "Keep scapulas retracted on the bench", done: false },
-                    { name_pt: "Supino Inclinado com Halteres", name_en: "Incline Dumbbell Press", stats_pt: "18kg por Halter", stats_en: "18kg per Dumbbell", reps: "4x12", exec_pt: "Ângulo de 45° nos cotovelos", exec_en: "45-degree elbow tuck angle", done: false },
-                    { name_pt: "Voador (Pec Deck)", name_en: "Chest Fly (Pec Deck)", stats_pt: "45kg", stats_en: "45kg", reps: "3x12", exec_pt: "Alongamento máximo controlado", exec_en: "Max controlled eccentric stretch", done: false },
-                    { name_pt: "Tríceps Pulley / Corda", name_en: "Triceps Rope Pushdown", stats_pt: "25kg", stats_en: "25kg", reps: "4x12", exec_pt: "Abrir a corda no final do movimento", exec_en: "Spread the rope at the bottom", done: false },
-                    { name_pt: "Desenvolvimento Ombros Máquina", name_en: "Machine Shoulder Press", stats_pt: "15kg de cada lado", stats_en: "15kg each side", reps: "4x10", exec_pt: "Subida controlada sem travar cotovelo", exec_en: "Don't completely lock out at top", done: false }
+                    { name_pt: "Supino Reto com Barra", name_en: "Barbell Bench Press", stats_pt: "20kg de cada lado", stats_en: "20kg each side", reps: "4x10", exec_pt: "Deitado no banco, faça a adução das escápulas (junte os ombros atrás). Desça a barra controladamente até tocar o meio do peito e empurre.", exec_en: "Lie on the bench, retract your scapulae firmly. Lower the bar under strict control until it touches mid-chest, then drive upwards powerfully.", target_key: "target_chest", done: false },
+                    { name_pt: "Supino Inclinado com Halteres", name_en: "Incline Dumbbell Press", stats_pt: "18kg por Halter", stats_en: "18kg per Dumbbell", reps: "4x12", exec_pt: "Ajuste o banco a 30° ou 45°. Desça os halteres alinhando os cotovelos a aproximadamente 45° em relação ao tronco, preservando a articulação do ombro.", exec_en: "Set bench to 30-45 degrees. Lower dumbbells keeping elbows tucked at a 45-degree angle relative to your torso to protect joint health.", target_key: "target_chest", done: false },
+                    { name_pt: "Tríceps Pulley / Corda", name_en: "Triceps Rope Pushdown", stats_pt: "25kg", stats_en: "25kg", reps: "4x12", exec_pt: "Mantenha o corpo levemente inclinado. Estenda os braços completamente para baixo e abra a corda no final do movimento para contração máxima.", exec_en: "Lean slightly forward. Extend your arms fully downward and spread the rope apart at the very bottom for maximum muscular contraction.", target_key: "target_triceps", done: false }
                 ], 
                 B: [
-                    { name_pt: "Puxada Alta no Pulley", name_en: "Lat Pulldown", stats_pt: "50kg", stats_en: "50kg", reps: "4x10", exec_pt: "Puxar esmagando o grande dorsal para trás", exec_en: "Pull with your elbows down and back", done: false },
-                    { name_pt: "Remada Baixa Sentado", name_en: "Seated Cable Row", stats_pt: "40kg", stats_en: "40kg", reps: "4x12", exec_pt: "Tronco firme, sem balançar a lombar", exec_en: "Keep torso steady, no lower back swing", done: false },
-                    { name_pt: "Rosca Direta com Barra W", name_en: "W-Bar Biceps Curl", stats_pt: "8kg de cada lado", stats_en: "8kg each side", reps: "4x10", exec_pt: "Extensão quase total do braço na descida", exec_en: "Full range of motion down", done: false },
-                    { name_pt: "Rosca Martelo com Halteres", name_en: "Hammer Curl", stats_pt: "12kg por Halter", stats_en: "12kg per Dumbbell", reps: "3x12", exec_pt: "Pegada neutra mantendo punho firme", exec_en: "Neutral grip, keep wrists completely straight", done: false }
+                    { name_pt: "Puxada Alta no Pulley", name_en: "Lat Pulldown", stats_pt: "50kg", stats_en: "50kg", reps: "4x10", exec_pt: "Sente-se firme no banco. Puxe a barra em direção ao peitoral superior, puxando com a força dos cotovelos para baixo e para trás, sem deitar o corpo.", exec_en: "Sit securely. Pull the bar down toward your upper chest, leading with your elbows down and back. Avoid excessive leaning.", target_key: "target_back", done: false }
                 ], 
                 C: [
-                    { name_pt: "Agachamento no Smith", name_en: "Smith Machine Squat", stats_pt: "15kg de cada lado", stats_en: "15kg each side", reps: "4x10", exec_pt: "Pés ligeiramente à frente da barra", exec_en: "Feet slightly forward from the bar", done: false },
-                    { name_pt: "Leg Press 45 Graus", name_en: "45-Degree Leg Press", stats_pt: "120kg Total", stats_en: "120kg Total", reps: "4x12", exec_pt: "Não deixar os joelhos entrarem (valgo)", exec_en: "Keep knees aligned, don't let them cave in", done: false },
-                    { name_pt: "Cadeira Extensora", name_en: "Leg Extension", stats_pt: "40kg", stats_en: "40kg", reps: "4x15", exec_pt: "Isometria de 2s a cada repetição", exec_en: "2-second hold at max extension", done: false },
-                    { name_pt: "Mesa Flexora", name_en: "Lying Leg Curl", stats_pt: "30kg", stats_en: "30kg", reps: "4x12", exec_pt: "Quadril travado colado no banco", exec_en: "Keep hips driven flat into the pad", done: false }
+                    { name_pt: "Agachamento no Smith", name_en: "Smith Machine Squat", stats_pt: "15kg de cada lado", stats_en: "15kg each side", reps: "4x10", exec_pt: "Posicione os pés ligeiramente à frente da linha da barra. Agache jogando o quadril para trás com a coluna ereta e joelhos apontando para fora.", exec_en: "Place feet slightly ahead of the bar line. Squat down sending your hips back with an upright spine and knees tracking outward.", target_key: "target_legs", done: false }
                 ] 
             } 
         };
 
         let currentEnvironment = "casa";
         let currentDay = "A";
-        let currentIndexSelecionado = null;
-
-        const authScreen = document.getElementById('auth-screen');
-        const appScreen = document.getElementById('app-screen');
-        const appNav = document.getElementById('app-nav');
 
         function traduzirInterface() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const chave = el.getAttribute('data-i18n');
-                if (traducoes[appLanguage][chave]) {
-                    el.innerText = traducoes[appLanguage][chave];
-                }
+                if (traducoes[appLanguage][chave]) el.innerText = traducoes[appLanguage][chave];
             });
-
             document.querySelectorAll('[data-i18n-holder]').forEach(el => {
                 const chave = el.getAttribute('data-i18n-holder');
-                if (traducoes[appLanguage][chave]) {
-                    el.placeholder = traducoes[appLanguage][chave];
-                }
+                if (traducoes[appLanguage][chave]) el.placeholder = traducoes[appLanguage][chave];
             });
-
-            const datalist = document.getElementById('global-exercises-list');
-            const listaExercicios = appLanguage === 'en' ? 
-                ["Barbell Bench Press", "Squat", "Lat Pulldown", "Push-ups", "Pull-ups", "Dumbbell Curl", "Triceps Pushdown", "Lateral Raise", "Shoulder Press", "Lunges"] :
-                ["Supino Reto com Barra", "Agachamento Livre", "Puxada Alta no Pulley", "Flexão de Braço", "Barra Fixa Supinada", "Rosca Direta com Halteres", "Tríceps na Polia", "Elevação Lateral", "Desenvolvimento Ombros", "Afundo / Passada"];
-            
-            datalist.innerHTML = '';
-            listaExercicios.forEach(ex => {
-                const opt = document.createElement('option');
-                opt.value = ex;
-                datalist.appendChild(opt);
-            });
-        }
-
-        function renderizarHistoricoInicial() {
-            const historyList = document.getElementById('progress-history-list');
-            historyList.innerHTML = `
-                <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
-                    <span class="text-gray-300 font-semibold">${traducoes[appLanguage].hist1_name}</span>
-                    <span class="text-green-400 font-bold">${traducoes[appLanguage].hist1_val}</span>
-                </div>
-                <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
-                    <span class="text-gray-300 font-semibold">${traducoes[appLanguage].hist2_name}</span>
-                    <span class="text-green-400 font-bold">${traducoes[appLanguage].hist2_val}</span>
-                </div>
-                <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
-                    <span class="text-gray-300 font-semibold">${traducoes[appLanguage].hist3_name}</span>
-                    <span class="text-cyan-400 font-bold">${traducoes[appLanguage].hist3_val}</span>
-                </div>
-            `;
         }
 
         function toggleAuthMode() {
@@ -509,7 +502,6 @@
                 authMode = 'cadastro';
                 authTitle.innerText = traducoes[appLanguage].authTitleRegister;
                 nameField.classList.remove('hidden');
-                document.getElementById('auth-name').required = true;
                 btnSubmit.innerText = traducoes[appLanguage].btnAuthRegister;
                 toggleText.innerText = traducoes[appLanguage].toggleTextRegister;
                 btnToggle.innerText = traducoes[appLanguage].btnToggleRegister;
@@ -517,7 +509,6 @@
                 authMode = 'login';
                 authTitle.innerText = traducoes[appLanguage].authTitleLogin;
                 nameField.classList.add('hidden');
-                document.getElementById('auth-name').required = false;
                 btnSubmit.innerText = traducoes[appLanguage].btnAuthLogin;
                 toggleText.innerText = traducoes[appLanguage].toggleTextLogin;
                 btnToggle.innerText = traducoes[appLanguage].btnToggleLogin;
@@ -530,59 +521,11 @@
             document.getElementById('user-stats').innerText = `${userProfile.weight.toFixed(1)}kg | ${userProfile.height}m | ${userProfile.age} ${lblAnos}`;
             
             const imc = userProfile.weight / (userProfile.height * userProfile.height);
-            let classf = "";
-            if (imc < 18.5) classf = traducoes[appLanguage].imcUnderweight;
-            else if (imc < 25) classf = traducoes[appLanguage].imcIdeal;
-            else if (imc < 30) classf = traducoes[appLanguage].imcOverweight;
-            else classf = traducoes[appLanguage].imcObesity;
-            
+            let classf = imc < 18.5 ? traducoes[appLanguage].imcUnderweight : imc < 25 ? traducoes[appLanguage].imcIdeal : imc < 30 ? traducoes[appLanguage].imcOverweight : traducoes[appLanguage].imcObesity;
             document.getElementById('lbl-imc-val').innerText = `${imc.toFixed(1)} (${classf})`;
 
             const diff = userProfile.weight - userProfile.initialWeight;
-            const lblEvolucao = document.getElementById('lbl-evolucao-status');
-            if(diff < 0) {
-                lblEvolucao.innerText = `${traducoes[appLanguage].evolLost} ${Math.abs(diff).toFixed(1)}${traducoes[appLanguage].evolLostTail}`;
-            } else if(diff > 0) {
-                lblEvolucao.innerText = `${traducoes[appLanguage].evolGained} ${diff.toFixed(1)}${traducoes[appLanguage].evolGainedTail}`;
-            } else {
-                lblEvolucao.innerText = traducoes[appLanguage].evolStable;
-            }
-        }
-
-        function openWeightModal() {
-            document.getElementById('modal-new-weight').value = userProfile.weight;
-            document.getElementById('weight-modal').classList.remove('hidden');
-        }
-
-        function closeWeightModal() {
-            document.getElementById('weight-modal').classList.add('hidden');
-        }
-
-        function saveWeightUpdate() {
-            const newWeight = parseFloat(document.getElementById('modal-new-weight').value);
-            if(newWeight && newWeight > 20) {
-                userProfile.weight = newWeight;
-                updateProfileUI();
-                adaptExercisesToWeight();
-                closeWeightModal();
-                renderWorkout();
-                
-                const historyList = document.getElementById('progress-history-list');
-                const log = document.createElement('div');
-                log.className = "p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between text-xxs";
-                log.innerHTML = `<span class="text-gray-300 font-semibold">${traducoes[appLanguage].historyLogWeight}</span><span class="text-cyan-400 font-bold">${newWeight.toFixed(1)} kg</span>`;
-                historyList.prepend(log);
-            }
-        }
-
-        function adaptExercisesToWeight() {
-            const diff = userProfile.weight - userProfile.initialWeight;
-            routineData.casa.A.forEach(ex => {
-                if(ex.name_pt.includes("Flexão") || ex.name_pt.includes("Tríceps Banco")) {
-                    ex.stats_pt = diff === 0 ? "Peso Corporal" : `Peso Corp. (${userProfile.weight.toFixed(1)}kg)`;
-                    ex.stats_en = diff === 0 ? "Bodyweight" : `Bodyweight (${userProfile.weight.toFixed(1)}kg)`;
-                }
-            });
+            document.getElementById('lbl-evolucao-status').innerText = diff < 0 ? `${traducoes[appLanguage].evolLost} ${Math.abs(diff).toFixed(1)}${traducoes[appLanguage].evolLostTail}` : diff > 0 ? `${traducoes[appLanguage].evolGained} ${diff.toFixed(1)}${traducoes[appLanguage].evolGainedTail}` : traducoes[appLanguage].evolStable;
         }
 
         function changeTab(tab) {
@@ -626,13 +569,68 @@
             }
             const completedCount = list.filter(ex => ex.done).length;
             const percent = Math.round((completedCount / list.length) * 100);
-            
-            document.getElementById('progress-percent').innerText = `${percent}%`;
+            document.getElementById('progress-percent').innerText = percent === 100 ? traducoes[appLanguage].lblPaidWorkout : `${percent}%`;
             document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+        }
+
+        // NOVO FORMATO DE EXIBIÇÃO: Super limpo com botão exclusivo para instruções completas
+        function renderWorkout() {
+            const container = document.getElementById('workout-container');
+            const list = routineData[currentEnvironment][currentDay] || [];
             
-            if(percent === 100) {
-                document.getElementById('progress-percent').innerText = traducoes[appLanguage].lblPaidWorkout;
+            if(list.length === 0) {
+                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-xs text-gray-400">${traducoes[appLanguage].lblNoExercises}</div>`;
+                updateProgressBar();
+                return;
             }
+
+            container.innerHTML = '';
+            list.forEach((ex, idx) => {
+                const nameDisplay = appLanguage === 'en' ? ex.name_en : ex.name_pt;
+                const statsDisplay = appLanguage === 'en' ? ex.stats_en : ex.stats_pt;
+
+                const card = document.createElement('div');
+                card.className = `exercise-card p-3 rounded-xl flex justify-between items-center ${ex.done ? 'completed' : ''}`;
+                card.innerHTML = `
+                    <div class="flex items-center gap-3 flex-1 overflow-hidden">
+                        <div onclick="toggleExerciseDone(${idx})" class="custom-checkbox flex-none ${ex.done ? 'checked' : ''}">
+                            ${ex.done ? '<i class="fas fa-check text-xs"></i>' : ''}
+                        </div>
+                        <div class="overflow-hidden pr-1">
+                            <h4 class="font-bold text-white text-sm truncate ${ex.done ? 'line-through text-gray-500' : ''}">${nameDisplay}</h4>
+                            <p class="text-xs text-gray-400 mt-0.5 font-medium">${statsDisplay} | ${ex.reps}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-1.5 flex-none ml-1">
+                        <!-- Novo Botão Lâmpada/Ajuda para abrir a instrução completa sem estragar o card -->
+                        <button onclick="openExecModal(${idx})" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-yellow-400 rounded-lg flex justify-center items-center text-yellow-500 transition" title="Como executar">
+                            <i class="fas fa-lightbulb text-xs"></i>
+                        </button>
+                        <button onclick="deleteExercise(${idx})" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-red-500 rounded-lg flex justify-center items-center text-red-500 transition">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            updateProgressBar();
+        }
+
+        // FUNÇÃO DO NOVO MODAL DE INSTRUÇÃO: Puxa o texto correspondente completo e limpo
+        function openExecModal(idx) {
+            const ex = routineData[currentEnvironment][currentDay][idx];
+            const nameDisplay = appLanguage === 'en' ? ex.name_en : ex.name_pt;
+            const textDisplay = appLanguage === 'en' ? ex.exec_en : ex.exec_pt;
+            const targetDisplay = traducoes[appLanguage][ex.target_key] || "";
+
+            document.getElementById('exec-modal-title').innerHTML = `<i class="fas fa-lightbulb text-yellow-400"></i> ${nameDisplay}`;
+            document.getElementById('exec-modal-text').innerText = textDisplay;
+            document.getElementById('exec-modal-target').innerText = targetDisplay;
+            document.getElementById('exec-modal').classList.remove('hidden');
+        }
+
+        function closeExecModal() {
+            document.getElementById('exec-modal').classList.add('hidden');
         }
 
         function deleteExercise(idx) {
@@ -642,108 +640,33 @@
             }
         }
 
-        function renderWorkout() {
-            const container = document.getElementById('workout-container');
-            const list = routineData[currentEnvironment][currentDay];
-            
-            if(!list || list.length === 0) {
-                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-xs text-gray-400">${traducoes[appLanguage].lblNoExercises}</div>`;
-                updateProgressBar();
-                return;
+        function openWeightModal() {
+            document.getElementById('modal-new-weight').value = userProfile.weight;
+            document.getElementById('weight-modal').classList.remove('hidden');
+        }
+        function closeWeightModal() { document.getElementById('weight-modal').classList.add('hidden'); }
+
+        function saveWeightUpdate() {
+            const newWeight = parseFloat(document.getElementById('modal-new-weight').value);
+            if(newWeight && newWeight > 20) {
+                userProfile.weight = newWeight;
+                updateProfileUI();
+                closeWeightModal();
+                renderWorkout();
+                
+                const historyList = document.getElementById('progress-history-list');
+                const log = document.createElement('div');
+                log.className = "p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between text-xs";
+                log.innerHTML = `<span class="text-gray-300 font-semibold">${traducoes[appLanguage].historyLogWeight}</span><span class="text-cyan-400 font-bold">${newWeight.toFixed(1)} kg</span>`;
+                historyList.prepend(log);
             }
-
-            container.innerHTML = '';
-            
-            list.forEach((ex, idx) => {
-                const nameDisplay = appLanguage === 'en' ? ex.name_en : ex.name_pt;
-                const statsDisplay = appLanguage === 'en' ? ex.stats_en : ex.stats_pt;
-                const execDisplay = appLanguage === 'en' ? (ex.exec_en || '') : (ex.exec_pt || '');
-
-                const card = document.createElement('div');
-                card.className = `exercise-card p-3 rounded-xl flex justify-between items-center ${ex.done ? 'completed' : ''}`;
-                card.innerHTML = `
-                    <div class="flex items-center gap-3 flex-1 overflow-hidden">
-                        <div onclick="toggleExerciseDone(${idx})" class="custom-checkbox flex-none ${ex.done ? 'checked' : ''}">
-                            ${ex.done ? '<i class="fas fa-check text-xs"></i>' : ''}
-                        </div>
-                        <div class="overflow-hidden">
-                            <h4 class="font-bold text-white text-sm truncate ${ex.done ? 'line-through text-gray-500' : ''}">${nameDisplay}</h4>
-                            <p class="text-xxs text-gray-400 mt-0.5 font-medium">${statsDisplay} | ${ex.reps}</p>
-                            ${execDisplay ? `<p class="text-xxs text-red-400 italic mt-0.5 truncate bg-black bg-opacity-20 px-1.5 py-0.5 rounded w-max max-w-full">${execDisplay}</p>` : ''}
-                        </div>
-                    </div>
-                    <div class="flex gap-1.5 flex-none ml-2">
-                        <button onclick="openEditModal(${idx}, '${nameDisplay}', '${statsDisplay}', '${ex.reps}', '${execDisplay}')" class="w-8 h-8 bg-gray-800 border border-gray-700 hover:border-cyan-500 rounded-lg flex justify-center items-center text-gray-400 hover:text-white transition">
-                            <i class="fas fa-edit text-xxs"></i>
-                        </button>
-                        <button onclick="deleteExercise(${idx})" class="w-8 h-8 bg-gray-800 border border-gray-700 hover:border-red-500 rounded-lg flex justify-center items-center text-red-500 hover:bg-red-950 transition">
-                            <i class="fas fa-trash-alt text-xxs"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            updateProgressBar();
         }
 
-        function openEditModal(index, exerciseName, weight, reps, exec) {
-            currentIndexSelecionado = index;
-            const inputName = document.getElementById('modal-exercise-name');
-            const inputWeight = document.getElementById('modal-exercise-weight');
-            const inputReps = document.getElementById('modal-exercise-reps');
-            const inputExec = document.getElementById('modal-exercise-exec');
-            
-            inputName.value = exerciseName;
-            inputWeight.value = weight;
-            inputReps.value = reps;
-            inputExec.value = exec || '';
-            
-            document.getElementById('edit-modal').classList.remove('hidden');
-            
-            setTimeout(() => {
-                inputName.focus();
-                inputName.select();
-            }, 60);
-        }
-
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.add('hidden');
-        }
-
-        function saveExerciseEdit() {
-            const novoNome = document.getElementById('modal-exercise-name').value;
-            const novaCarga = document.getElementById('modal-exercise-weight').value;
-            const novasReps = document.getElementById('modal-exercise-reps').value;
-            const novaExec = document.getElementById('modal-exercise-exec').value;
-            
-            if(routineData[currentEnvironment] && routineData[currentEnvironment][currentDay][currentIndexSelecionado]) {
-                if (appLanguage === 'en') {
-                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].name_en = novoNome;
-                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].stats_en = novaCarga;
-                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].exec_en = novaExec;
-                } else {
-                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].name_pt = novoNome;
-                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].stats_pt = novaCarga;
-                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].exec_pt = novaExec;
-                }
-                routineData[currentEnvironment][currentDay][currentIndexSelecionado].reps = novasReps;
-            }
-            closeEditModal();
-            renderWorkout();
-        }
-
-        // Cronômetro de Descanso
-        let timerInterval = null;
-        let timeRemaining = 60;
-        let isTimerRunning = false;
-
+        // Cronômetro Funcional
+        let timerInterval = null, timeRemaining = 60, isTimerRunning = false;
         function updateTimerDisplay() {
-            const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
-            const seconds = (timeRemaining % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${minutes}:${seconds}`;
+            document.getElementById('timer-display').innerText = `${Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
         }
-
         function toggleTimer() {
             if(isTimerRunning) {
                 clearInterval(timerInterval);
@@ -753,53 +676,37 @@
                 document.getElementById('btn-start-toggle').innerText = traducoes[appLanguage].btnTimerPause;
                 document.getElementById('btn-start-toggle').classList.replace('bg-red-600', 'bg-yellow-600');
                 timerInterval = setInterval(() => {
-                    if(timeRemaining > 0) {
-                        timeRemaining--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        alert(traducoes[appLanguage].alertTimerFinish);
-                        resetTimer();
-                    }
+                    if(timeRemaining > 0) { timeRemaining--; updateTimerDisplay(); } 
+                    else { clearInterval(timerInterval); alert(traducoes[appLanguage].alertTimerFinish); resetTimer(); }
                 }, 1000);
             }
             isTimerRunning = !isTimerRunning;
         }
-
         function setTimerSeconds(secs) {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            timeRemaining = secs;
+            clearInterval(timerInterval); isTimerRunning = false; timeRemaining = secs;
             document.getElementById('btn-start-toggle').innerText = traducoes[appLanguage].btnTimerStart;
-            document.getElementById('btn-start-toggle').className = "px-3 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg uppercase tracking-wider";
+            document.getElementById('btn-start-toggle').className = "px-3 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg uppercase tracking-wider text-xxs";
             updateTimerDisplay();
         }
-
-        function resetTimer() {
-            setTimerSeconds(60);
-        }
+        function resetTimer() { setTimerSeconds(60); }
 
         document.addEventListener('DOMContentLoaded', () => {
             traduzirInterface();
-            renderizarHistoricoInicial();
+            // Histórico de simulação inicial limpo
+            document.getElementById('progress-history-list').innerHTML = `
+                <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between text-xs"><span class="text-gray-300">Supino Reto / Bench Press</span><span class="text-green-400 font-bold">+20kg</span></div>
+                <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800 flex justify-between text-xs"><span class="text-gray-300">Agachamento / Squat</span><span class="text-green-400 font-bold">+120kg</span></div>
+            `;
         });
 
         document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('auth-email').value;
-
-            if (authMode === 'cadastro') {
-                const nameInput = document.getElementById('auth-name').value;
-                if(nameInput.trim() !== "") {
-                    userProfile.name = nameInput;
-                }
-                alert(`${traducoes[appLanguage].alertRegisterSuccess}${email}${traducoes[appLanguage].alertRegisterRedirect}`);
+            if (authMode === 'cadastro' && document.getElementById('auth-name').value.trim() !== "") {
+                userProfile.name = document.getElementById('auth-name').value;
             }
-
-            authScreen.classList.add('hidden');
-            appScreen.classList.remove('hidden');
-            appNav.style.display = 'flex';
-            
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            document.getElementById('app-nav').style.display = 'flex';
             updateProfileUI();
             renderWorkout();
         });

@@ -123,7 +123,15 @@
         
         <div id="auth-screen" class="auth-card p-8 w-full">
             <div class="brand-logo text-center text-3xl mb-6 tracking-wider">Hybrid<span>Fitness</span></div>
+            
+            <h2 id="auth-title" class="text-xl font-bold text-center text-white mb-4">Acessar Painel</h2>
+            
             <form id="auth-form" class="space-y-4">
+                <div id="name-field" class="hidden">
+                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
+                    <input type="text" id="auth-name" placeholder="Seu nome" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
+                </div>
+
                 <div>
                     <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">E-mail do Atleta</label>
                     <input type="email" id="auth-email" required placeholder="atleta@email.com" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
@@ -132,10 +140,16 @@
                     <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Senha</label>
                     <input type="password" id="auth-password" required placeholder="••••••••" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
                 </div>
-                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-sm uppercase tracking-widest transition shadow-lg">
+                
+                <button type="submit" id="btn-auth-submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-sm uppercase tracking-widest transition shadow-lg">
                     Acessar Painel
                 </button>
             </form>
+
+            <div class="text-center mt-6 text-sm text-gray-400">
+                <span id="auth-toggle-text">Novo por aqui?</span> 
+                <button onclick="toggleAuthMode()" id="btn-auth-toggle" class="text-red-500 font-semibold hover:underline ml-1">Criar uma conta</button>
+            </div>
         </div>
 
         <div id="app-screen" class="hidden w-full space-y-4">
@@ -288,8 +302,8 @@
             <div class="flex items-center gap-2">
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div>
-                    <h4 class="text-sm font-bold text-white">Hybrid Gemini Coach</h4>
-                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">API Oficial Ativa</span>
+                    <h4 class="text-sm font-bold text-white">Hybrid Personal IA</h4>
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Modo Simulação Ativo</span>
                 </div>
             </div>
             <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl focus:outline-none">
@@ -299,13 +313,13 @@
         
         <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm flex flex-col" id="ai-chat-messages">
             <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200">
-                Fala Thiago! Agora sou o seu motor oficial Gemini. Posso reestruturar totalmente suas fichas, calcular volumes perfeitos ou tirar dúvidas de execução. O que vamos ajustar hoje?
+                Fala Thiago! Sou o seu Coach de Treinos Inteligente. O que você gostaria de mudar na sua ficha ou ajustar nos treinos hoje?
             </div>
         </div>
         
         <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
-            <input type="text" id="ai-chat-input" placeholder="Diga ao Gemini o que mudar no seu treino..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
-            <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm transition hover:bg-cyan-400">Enviar</button>
+            <input type="text" id="ai-chat-input" placeholder="Diga o que mudar no treino..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
+            <button id="btn-send-chat" class="bg-red-600 text-white font-bold px-4 rounded-xl text-sm transition hover:bg-red-700">Enviar</button>
         </div>
     </div>
 
@@ -322,8 +336,8 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES CHAVE: Insira sua chave obtida no Google AI Studio abaixo:
-        const GEMINI_API_KEY = "SUA_API_KEY_DO_GEMINI_AQUI"; 
+        // Variável de controle do tipo de autenticação (pode ser 'login' ou 'cadastro')
+        let authMode = 'login';
 
         // Perfil do Usuário Mutável
         let userProfile = {
@@ -359,7 +373,7 @@
                     { name: "Supino Inclinado com Halteres", stats: "18kg por Halter", reps: "4x12", done: false },
                     { name: "Voador (Pec Deck)", stats: "45kg", reps: "3x12", done: false },
                     { name: "Tríceps Pulley / Corda", stats: "25kg", reps: "4x12", done: false },
-                    { name: "Desenvolvimento Máquina", stats: "15kg de cada lado", reps: "4x10", done: false }
+                    { name: "Desenvolvimento Ombros Máquina", stats: "15kg de cada lado", reps: "4x10", done: false }
                 ], 
                 B: [
                     { name: "Puxada Alta no Pulley", stats: "50kg", reps: "4x10", done: false },
@@ -389,7 +403,35 @@
         const chatInput = document.getElementById('ai-chat-input');
         const sendChatBtn = document.getElementById('btn-send-chat');
 
+        // Função para alternar dinamicamente entre Login e Cadastro
+        function toggleAuthMode() {
+            const nameField = document.getElementById('name-field');
+            const authTitle = document.getElementById('auth-title');
+            const btnSubmit = document.getElementById('btn-auth-submit');
+            const toggleText = document.getElementById('auth-toggle-text');
+            const btnToggle = document.getElementById('btn-auth-toggle');
+
+            if (authMode === 'login') {
+                authMode = 'cadastro';
+                authTitle.innerText = "Criar Nova Conta";
+                nameField.classList.remove('hidden');
+                document.getElementById('auth-name').required = true;
+                btnSubmit.innerText = "Cadastrar Atleta";
+                toggleText.innerText = "Já tem uma conta?";
+                btnToggle.innerText = "Fazer Login";
+            } else {
+                authMode = 'login';
+                authTitle.innerText = "Acessar Painel";
+                nameField.classList.add('hidden');
+                document.getElementById('auth-name').required = false;
+                btnSubmit.innerText = "Acessar Painel";
+                toggleText.innerText = "Novo por aqui?";
+                btnToggle.innerText = "Criar uma conta";
+            }
+        }
+
         function updateProfileUI() {
+            document.getElementById('user-name').innerText = userProfile.name;
             document.getElementById('user-stats').innerText = `${userProfile.weight.toFixed(1)}kg | ${userProfile.height}m | ${userProfile.age} anos`;
             const imc = userProfile.weight / (userProfile.height * userProfile.height);
             let classf = "";
@@ -511,7 +553,7 @@
             const list = routineData[currentEnvironment][currentDay];
             
             if(!list || list.length === 0) {
-                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-sm text-gray-400">Nenhum exercício listado para hoje. Peça ao Gemini para montar seu treino!</div>`;
+                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-sm text-gray-400">Nenhum exercício listado para hoje. Adicione um novo!</div>`;
                 document.getElementById('category-counter').innerText = "0 Exercícios";
                 updateProgressBar();
                 return;
@@ -594,18 +636,10 @@
             chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
         }
 
-        // ================= CONEXÃO COM O GEMINI GOOGLE API REAIS =================
-        async function enviarMensagemParaIA() {
+        function enviarMensagemParaIA() {
             const text = chatInput.value.trim();
             if(!text) return;
 
-            // Se você esquecer de trocar a API Key, ele avisa
-            if(GEMINI_API_KEY === "SUA_API_KEY_DO_GEMINI_AQUI") {
-                alert("Por favor, gere e adicione sua chave de API do Gemini na linha 257 do script!");
-                return;
-            }
-
-            // Exibe mensagem do usuário
             const userDiv = document.createElement('div');
             userDiv.className = "chat-bubble user p-3.5 rounded-2xl max-w-[85%] self-end text-sm";
             userDiv.innerText = text;
@@ -613,66 +647,22 @@
             chatInput.value = '';
             scrollToBottomIA();
 
-            // Exibe balão de carregamento do Gemini
-            const aiDiv = document.createElement('div');
-            aiDiv.className = "chat-bubble ai p-3.5 rounded-2xl max-w-[85%] self-start text-sm text-gray-300";
-            aiDiv.innerText = "Gemini pensando...";
-            chatMessages.appendChild(aiDiv);
-            scrollToBottomIA();
-
-            // Engenharia de Prompt: Instruções estruturadas pro Gemini responder de forma limpa
-            const systemInstructions = `Você é o Hybrid Gemini Coach, o treinador pessoal de IA do ${userProfile.name}.
-            Métricas dele: Altura ${userProfile.height}m, Peso atual ${userProfile.weight}kg, Objetivo principal: Hipertrofia híbrida.
-            Abas de treino disponíveis no sistema: "casa" e "academia". Dias de treino: "A", "B", "C".
-            Ele está interagindo agora na aba de treino de "${currentEnvironment.toUpperCase()}" no treino "${currentDay}".
-            A rotina completa atual salva no formato JSON é essa: ${JSON.stringify(routineData)}.
-
-            Instrução estrita: Se o usuário pedir para mudar ou reestruturar o treino, altere o JSON correspondente. Sua resposta DEVE conter um texto motivador e focado de no máximo 3 linhas, seguido OBRIGATORIAMENTE por uma estrutura JSON válida envolvida pelas tags [ROUTINE_JSON] e [/ROUTINE_JSON] se houver modificação nos exercícios. Não mude a formatação estrutural do objeto. Exemplo caso mude:
-            Parabéns Thiago, ajustei seu treino A com o foco em peito solicitado!
-            [ROUTINE_JSON]
-            ...objeto rotina completo atualizado...
-            [/ROUTINE_JSON]`;
-
-            try {
-                // Chamada oficial à API do Gemini 1.5 Flash da Google
-                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            setTimeout(() => {
+                const aiDiv = document.createElement('div');
+                aiDiv.className = "chat-bubble ai p-3.5 rounded-2xl max-w-[85%] self-start text-sm text-gray-200";
                 
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: `${systemInstructions}\n\nPedido do usuário: ${text}` }]
-                        }]
-                    })
-                });
-
-                const data = await response.json();
-                const geminiReply = data.candidates[0].content.parts[0].text;
-
-                // Processa a resposta textual limpa do Gemini separando do bloco JSON de comandos se houver
-                let textToDisplay = geminiReply;
-                if (geminiReply.includes("[ROUTINE_JSON]")) {
-                    const partes = geminiReply.split("[ROUTINE_JSON]");
-                    textToDisplay = partes[0].trim();
-                    
-                    const jsonContent = partes[1].split坚[/ROUTINE_JSON]坚[0] || partes[1].split("[/ROUTINE_JSON]")[0];
-                    try {
-                        const parsedRoutine = JSON.parse(jsonContent.trim());
-                        if (parsedRoutine.casa || parsedRoutine.academia) {
-                            routineData = parsedRoutine;
-                            renderWorkout();
-                        }
-                    } catch(e) { console.log("Erro ao interpretar JSON gerado pelo Gemini.", e); }
+                const lowerText = text.toLowerCase();
+                if (lowerText.includes('mudar') || lowerText.includes('trocar') || lowerText.includes('substituir')) {
+                    aiDiv.innerText = "Entendido! Clique no ícone de lápis 📝 ao lado de qualquer exercício para alterá-lo, ou use o botão de exclusão 🗑️ se quiser removê-lo completamente da sua rotina atual.";
+                } else if (lowerText.includes('treino') || lowerText.includes('ficha')) {
+                    aiDiv.innerText = `Você está visualizando a rotina do Treino ${currentDay} no modo ${currentEnvironment === 'casa' ? 'Treino Casa' : 'Academia'}. Posso te ajudar a planejar as séries e repetições se quiser ajustar manualmente nos botões de edição!`;
+                } else {
+                    aiDiv.innerText = "Excelente pergunta! Para manter o foco na hipertrofia híbrida, certifique-se de executar os movimentos de forma controlada, focando na falha concêntrica entre 10 a 15 repetições e descansando de 60 a 90 segundos.";
                 }
-
-                aiDiv.innerText = textToDisplay;
-
-            } catch (err) {
-                console.error(err);
-                aiDiv.innerText = "Houve um erro de conexão com a API do Gemini. Verifique sua chave de acesso ou status de rede.";
-            }
-            scrollToBottomIA();
+                
+                chatMessages.appendChild(aiDiv);
+                scrollToBottomIA();
+            }, 700);
         }
 
         sendChatBtn.addEventListener('click', enviarMensagemParaIA);
@@ -724,12 +714,30 @@
             setTimerSeconds(60);
         }
 
+        // Evento de envio do formulário de Login/Cadastro
         document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+
+            if (authMode === 'cadastro') {
+                const nameInput = document.getElementById('auth-name').value;
+                if(nameInput.trim() !== "") {
+                    userProfile.name = nameInput; // Atualiza o perfil com o nome cadastrado
+                }
+                alert(`Cadastro realizado com sucesso para: ${email}! Redirecionando para o painel...`);
+            } else {
+                // Modo Login convencional
+                // Aqui você pode manter as chamadas do supabase.auth.signInWithPassword se tiver configurado
+            }
+
+            // Esconde a tela de login/cadastro e abre o app
             authScreen.classList.add('hidden');
             appScreen.classList.remove('hidden');
             appNav.style.display = 'flex';
             aiBtn.style.display = 'flex';
+            
             updateProfileUI();
             renderWorkout();
         });

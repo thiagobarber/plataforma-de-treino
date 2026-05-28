@@ -7,7 +7,7 @@
     
     <!-- Tailwind CSS para estilização moderna -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-    <!-- Ícones para os botões de Edição e Exclusão -->
+    <!-- Ícones para os botões -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Biblioteca do Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
@@ -238,7 +238,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DINÂMICA DE TREINO -->
+    <!-- MODAL DE EDIÇÃO DINÂMICA DE TREINO (ATUALIZADO COM CARGA E REPS SEPARADOS) -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -249,14 +249,20 @@
                     <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome do Exercício</label>
                     <input type="text" id="modal-exercise-name" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
                 </div>
-                <div>
-                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Metas, Séries e Repetições</label>
-                    <input type="text" id="modal-exercise-meta" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Carga (Peso)</label>
+                        <input type="text" id="modal-exercise-weight" placeholder="Ex: Corpo ou 20kg" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Séries x Reps</label>
+                        <input type="text" id="modal-exercise-reps" placeholder="Ex: 4x12 ou 3xFalha" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                    </div>
                 </div>
             </div>
             <div class="flex gap-2.5 pt-2">
                 <button onclick="closeEditModal()" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold tracking-wider uppercase border border-gray-700">Cancelar</button>
-                <button onclick="saveExerciseEdit()" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold tracking-wider uppercase">Salvar Alteração</button>
+                <button onclick="saveExerciseEdit()" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold tracking-wider uppercase">Salvar</button>
             </div>
         </div>
     </div>
@@ -273,21 +279,21 @@
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div>
                     <h4 class="text-sm font-bold text-white">Hybrid Coach IA</h4>
-                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Sistema Analítico Ativo</span>
+                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Processamento Ativo</span>
                 </div>
             </div>
             <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
         </div>
         <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm" id="ai-chat-messages">
             <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200" id="ai-initial-welcome">
-                Fala, Thiago! Sou seu Coach de IA. Monitoro sua constância, volume de séries e evolução nos treinos de **Casa** e **Academia**. 
+                Fala, atleta! Sou o motor de IA integrado à sua planilha. 
                 <br><br>
-                Cada categoria está blindada com no **mínimo 5 exercícios** estratégicos para evitar platôs de desenvolvimento! Como posso otimizar sua carga hoje?
+                Estou analisando seu painel em tempo real. Pode me mandar dados de aumento de carga, cansaço ou dúvidas sobre os exercícios que eu vou recalcular sua estratégia!
             </div>
         </div>
         <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
-            <input type="text" id="ai-chat-input" placeholder="Diga se aumentou a carga ou mudou repetições..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
-            <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm">Analisar</button>
+            <input type="text" id="ai-chat-input" placeholder="Pergunte sobre as reps ou diga o que alterou..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
+            <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm">Enviar</button>
         </div>
     </div>
 
@@ -310,52 +316,52 @@
 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Banco com o MÍNIMO EXATO DE 5 EXERCÍCIOS por Categoria (Separando Casa e Academia de verdade)
+        // BANCO DE DADOS CORRIGIDO - ESTRUTURA COM CARGA E REPS SEPARADOS
         let routineData = {
             casa: {
                 A: [
-                    { id: 101, name: "Flexão de Braço Padrão", meta: "4 Séries x 20 Repetições" },
-                    { id: 102, name: "Flexão Diamante", meta: "3 Séries x 12 Repetições" },
-                    { id: 103, name: "Mergulho no Banco", meta: "3 Séries x 15 Repetições" },
-                    { id: 104, name: "Flexão Aberta (Foco Peitoral)", meta: "3 Séries x 15 Repetições" },
-                    { id: 105, name: "Flexão Declinada (Pés no Sofá)", meta: "4 Séries x 10 Repetições" }
+                    { id: 101, name: "Flexão de Braço Padrão", weight: "Peso Corporal", reps: "4x20" },
+                    { id: 102, name: "Flexão Diamante", weight: "Peso Corporal", reps: "3x12" },
+                    { id: 103, name: "Mergulho no Banco", weight: "Peso Corporal", reps: "3x15" },
+                    { id: 104, name: "Flexão Aberta (Foco Peitoral)", weight: "Peso Corporal", reps: "3x15" },
+                    { id: 105, name: "Flexão Declinada (Pés no Sofá)", weight: "Peso Corporal", reps: "4x10" }
                 ],
                 B: [
-                    { id: 106, name: "Barra Fixa Pronada", meta: "4 Séries x Falha" },
-                    { id: 107, name: "Barra Fixa Supinada", meta: "3 Séries x 8 Repetições" },
-                    { id: 108, name: "Remada Invertida na Mesa", meta: "4 Séries x 12 Repetições" },
-                    { id: 109, name: "Rosca Direta com Elástico/Galão", meta: "3 Séries x 15 Repetições" },
-                    { id: 110, name: "Remada Unilateral com Carga", meta: "4 Séries x 12 Repetições" }
+                    { id: 106, name: "Barra Fixa Pronada", weight: "Peso Corporal", reps: "4x Falha" },
+                    { id: 107, name: "Barra Fixa Supinada", weight: "Peso Corporal", reps: "3x8" },
+                    { id: 108, name: "Remada Invertida na Mesa", weight: "Peso Corporal", reps: "4x12" },
+                    { id: 109, name: "Rosca Direta com Galão", weight: "10kg", reps: "3x15" },
+                    { id: 110, name: "Remada Unilateral com Carga", weight: "15kg", reps: "4x12" }
                 ],
                 C: [
-                    { id: 111, name: "Agachamento Livre", meta: "4 Séries x 25 Repetições" },
-                    { id: 112, name: "Agachamento Búlgaro", meta: "4 Séries x 12 Repetições (Cada Perna)" },
-                    { id: 113, name: "Elevação Pélvica Solo", meta: "3 Séries x 20 Repetições" },
-                    { id: 114, name: "Passada Estática (Afundo)", meta: "3 Séries x 15 Repetições" },
-                    { id: 115, name: "Panturrilhas Degrau Unilateral", meta: "4 Séries x 20 Repetições" }
+                    { id: 111, name: "Agachamento Livre", weight: "Peso Corporal", reps: "4x25" },
+                    { id: 112, name: "Agachamento Búlgaro", weight: "Peso Corporal", reps: "4x12" },
+                    { id: 113, name: "Elevação Pélvica Solo", weight: "Peso Corporal", reps: "3x20" },
+                    { id: 114, name: "Passada Estática (Afundo)", weight: "Peso Corporal", reps: "3x15" },
+                    { id: 115, name: "Panturrilhas Degrau Unilateral", weight: "Peso Corporal", reps: "4x20" }
                 ]
             },
             academia: {
                 A: [
-                    { id: 201, name: "Supino Reto com Barra", meta: "4 Séries x 10 Repetições" },
-                    { id: 202, name: "Supino Inclinado com Halteres", meta: "4 Séries x 12 Repetições" },
-                    { id: 203, name: "Crucifixo na Polia (Crossover)", meta: "3 Séries x 15 Repetições" },
-                    { id: 204, name: "Tríceps Pulley Barra W", meta: "4 Séries x 12 Repetições" },
-                    { id: 205, name: "Tríceps Testa com Halteres", meta: "3 Séries x 12 Repetições" }
+                    { id: 201, name: "Supino Reto com Barra", weight: "40kg total", reps: "4x10" },
+                    { id: 202, name: "Supino Inclinado com Halteres", weight: "16kg cada", reps: "4x12" },
+                    { id: 203, name: "Crucifixo na Polia (Crossover)", weight: "20kg", reps: "3x15" },
+                    { id: 204, name: "Tríceps Pulley Barra W", weight: "30kg", reps: "4x12" },
+                    { id: 205, name: "Tríceps Testa com Halteres", weight: "10kg cada", reps: "3x12" }
                 ],
                 B: [
-                    { id: 206, name: "Puxada Alta no Pulley", meta: "4 Séries x 12 Repetições" },
-                    { id: 207, name: "Remada Baixa Sentada V", meta: "4 Séries x 10 Repetições" },
-                    { id: 208, name: "Remada Curvada com Barra", meta: "3 Séries x 12 Repetições" },
-                    { id: 209, name: "Rosca Direta na Polia", meta: "4 Séries x 12 Repetições" },
-                    { id: 210, name: "Rosca Martelo com Halteres", meta: "3 Séries x 12 Repetições" }
+                    { id: 206, name: "Puxada Alta no Pulley", weight: "45kg", reps: "4x12" },
+                    { id: 207, name: "Remada Baixa Sentada V", weight: "40kg", reps: "4x10" },
+                    { id: 208, name: "Remada Curvada com Barra", weight: "30kg total", reps: "3x12" },
+                    { id: 209, name: "Rosca Direta na Polia", weight: "25kg", reps: "4x12" },
+                    { id: 210, name: "Rosca Martelo com Halteres", weight: "12kg cada", reps: "3x12" }
                 ],
                 C: [
-                    { id: 211, name: "Leg Press 45°", meta: "4 Séries x 12 Repetições" },
-                    { id: 212, name: "Agachamento no Hack", meta: "4 Séries x 10 Repetições" },
-                    { id: 213, name: "Cadeira Extensora", meta: "3 Séries x 15 Repetições (Drop Set na última)" },
-                    { id: 214, name: "Mesa Flexora", meta: "4 Séries x 12 Repetições" },
-                    { id: 215, name: "Gêmeos Sentado (Panturrilha)", meta: "4 Séries x 20 Repetições" }
+                    { id: 211, name: "Leg Press 45°", weight: "120kg", reps: "4x12" },
+                    { id: 212, name: "Agachamento no Hack", weight: "40kg total", reps: "4x10" },
+                    { id: 213, name: "Cadeira Extensora", weight: "35kg", reps: "3x15" },
+                    { id: 214, name: "Mesa Flexora", weight: "25kg", reps: "4x12" },
+                    { id: 215, name: "Gêmeos Sentado (Panturrilha)", weight: "30kg", reps: "4x20" }
                 ]
             }
         };
@@ -463,11 +469,10 @@
             document.getElementById(`nav-${env}`).classList.add('active');
             renderWorkout();
             
-            // IA Real Interagindo com a mudança de ambiente
-            triggerAiVoice(`Você mudou para o ambiente **${env.toUpperCase()}**. Carreguei sua planilha otimizada com foco em alto rendimento para as metas de hoje.`);
+            triggerAiVoice(`Modo **${env.toUpperCase()}** ativado. Analisei seu plano e trouxe os 5 treinos específicos mapeados para o Treino ${currentDay}.`);
         }
 
-        // Renderização Dinâmica com Botões Editar/Excluir
+        // Renderização Dinâmica com Exibição Isolada de Carga e Repetições
         function renderWorkout() {
             const container = document.getElementById('workout-container');
             const counter = document.getElementById('category-counter');
@@ -476,7 +481,6 @@
             const list = routineData[currentEnvironment][currentDay] || [];
             counter.innerText = `${list.length} Exercícios`;
 
-            // Alerta visual de segurança se o usuário excluir e cair abaixo de 5
             if(list.length < 5) {
                 counter.className = "text-xs px-2.5 py-1 bg-red-950 border border-red-800 text-red-400 rounded-full font-bold";
             } else {
@@ -484,7 +488,7 @@
             }
 
             if(list.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Nenhum treino agendado. Use as funções para reestruturar.</p>`;
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Nenhum treino agendado nesta aba.</p>`;
                 return;
             }
 
@@ -498,9 +502,15 @@
                         </div>
                         <div class="flex-1">
                             <h4 class="text-sm font-bold text-white">${ex.name}</h4>
-                            <p class="text-xs text-red-500 font-bold tracking-wider mt-0.5">${ex.meta}</p>
+                            <div class="flex gap-3 mt-1">
+                                <span class="text-xs bg-gray-900 border border-gray-800 text-gray-400 px-2 py-0.5 rounded-md">
+                                    <i class="fas fa-weight-hanging text-cyan-400 mr-1 text-[10px]"></i>${ex.weight || 'Sem carga'}
+                                </span>
+                                <span class="text-xs bg-gray-900 border border-gray-800 text-red-400 px-2 py-0.5 rounded-md font-semibold">
+                                    <i class="fas fa-redo mr-1 text-[10px]"></i>${ex.reps || '4x10'}
+                                </span>
+                            </div>
                         </div>
-                        <!-- Ações de Gerenciamento -->
                         <div class="flex gap-1.5">
                             <button onclick="openEditModal(${ex.id})" class="w-8 h-8 rounded-lg bg-gray-800 border border-gray-700 hover:text-green-400 text-gray-400 transition flex items-center justify-center text-xs">
                                 <i class="fas fa-pen"></i>
@@ -515,7 +525,7 @@
             });
         }
 
-        // LÓGICA DO BOTÃO EDITAR
+        // LÓGICA DO MODAL TOTALMENTE ADAPTÁVEL (NOME, CARGA E REPS)
         function openEditModal(id) {
             const list = routineData[currentEnvironment][currentDay];
             const item = list.find(ex => ex.id === id);
@@ -523,11 +533,12 @@
 
             selectedExerciseForEdit = item;
             document.getElementById('modal-exercise-name').value = item.name;
-            document.getElementById('modal-exercise-meta').value = item.meta;
+            document.getElementById('modal-exercise-weight').value = item.weight || '';
+            document.getElementById('modal-exercise-reps').value = item.reps || '';
             editModal.classList.remove('hidden');
         }
 
-        function closeModal() {
+        function closeEditModal() {
             editModal.classList.add('hidden');
             selectedExerciseForEdit = null;
         }
@@ -535,18 +546,16 @@
         function saveExerciseEdit() {
             if(!selectedExerciseForEdit) return;
 
-            const oldName = selectedExerciseForEdit.name;
             selectedExerciseForEdit.name = document.getElementById('modal-exercise-name').value;
-            selectedExerciseForEdit.meta = document.getElementById('modal-exercise-meta').value;
+            selectedExerciseForEdit.weight = document.getElementById('modal-exercise-weight').value;
+            selectedExerciseForEdit.reps = document.getElementById('modal-exercise-reps').value;
 
-            closeModal();
+            closeEditModal();
             renderWorkout();
 
-            // Comportamento de IA de Verdade ao salvar modificações
-            triggerAiVoice(`Ajuste executado! Você mudou as metas de **${oldName}** para **${selectedExerciseForEdit.name}** (${selectedExerciseForEdit.meta}). Já atualizei seu histórico analítico para recalcular o volume acumulado.`);
+            triggerAiVoice(`Alteração salva! Atualizei o exercício **${selectedExerciseForEdit.name}** com a nova carga e repetições especificadas. Os parâmetros de volume muscular já foram ajustados.`);
         }
 
-        // LÓGICA DO BOTÃO EXCLUIR (Com validação inteligente da IA)
         function deleteExercise(id) {
             const list = routineData[currentEnvironment][currentDay];
             const index = list.findIndex(ex => ex.id === id);
@@ -554,20 +563,17 @@
 
             const targetName = list[index].name;
 
-            if(confirm(`Tem certeza que deseja remover "${targetName}"? Isso limpará os índices de evolução deste exercício.`)) {
+            if(confirm(`Tem certeza que deseja remover "${targetName}"?`)) {
                 list.splice(index, 1);
                 renderWorkout();
 
-                // Intervenção proativa da IA Real monitorando o volume mínimo
                 if(list.length < 5) {
-                    triggerAiVoice(`⚠️ **Aviso de Performance de IA:** Você removeu "${targetName}". O Treino ${currentDay} (${currentEnvironment}) possui agora apenas **${list.length} exercícios**. Deixar menos de 5 treinos por categoria pode quebrar o estímulo de hipertrofia. Recomendo usar o botão de edição ou adicionar um substituto para manter os grupos musculares ativos!`);
-                } else {
-                    triggerAiVoice(`Exercício "${targetName}" removido com sucesso. Categoria reorganizada e balanceada.`);
+                    triggerAiVoice(`⚠️ **Alerta do Coach:** O volume do Treino ${currentDay} caiu para **${list.length} exercícios**. Sugiro manter de 4 a 5 movimentos para evitar a estagnação dos resultados.`);
                 }
             }
         }
 
-        // Cronômetro
+        // Cronômetro de Descanso
         const display = document.getElementById('timer-display');
         const startBtn = document.getElementById('btn-start-toggle');
 
@@ -589,7 +595,7 @@
                         updateTimerDisplay();
                     } else {
                         clearInterval(timerInterval);
-                        alert("Descanso finalizado! Vá para a próxima série.");
+                        alert("Fim do descanso! Volte para a próxima série.");
                         resetTimer();
                     }
                 }, 1000);
@@ -613,7 +619,7 @@
         document.getElementById('btn-quick-90').addEventListener('click', () => { timeRemaining = 90; updateTimerDisplay(); });
         document.getElementById('btn-reset-timer').addEventListener('click', resetTimer);
 
-        // Chat da IA Inteligente (Comportamento Humano/Coach)
+        // MOTOR DE RESPOSTA COGNITIVO - SIMULAÇÃO DE IA REAL EM TEMPO REAL
         const chatBox = document.getElementById('ai-chat');
         document.getElementById('ai-btn').addEventListener('click', () => chatBox.classList.remove('hidden'));
         document.getElementById('close-ai-chat').addEventListener('click', () => chatBox.classList.add('hidden'));
@@ -643,21 +649,33 @@
             msgContainer.appendChild(userBubble);
             input.value = "";
 
-            // Lógica de Processamento de Resposta da IA Baseada em Palavras-chave do usuário
+            // Simula processamento da IA lendo o contexto atual da página
             setTimeout(() => {
-                let aiResponse = "Entendido! Estou processando seus dados de evolução. Mantenha a disciplina na execução das séries.";
-                
+                const currentExercises = routineData[currentEnvironment][currentDay] || [];
+                const firstExerciseName = currentExercises[0] ? currentExercises[0].name : "exercícios";
                 const lowerTxt = txt.toLowerCase();
-                if(lowerTxt.includes("aumentei") || lowerTxt.includes("carga") || lowerTxt.includes("peso")) {
-                    aiResponse = "🔥 **Ajuste analítico de Hipertrofia:** Excelente evolução de carga! Isso força a tensão mecânica das fibras musculares. Certifique-se de aumentar o tempo de descanso no cronômetro para 90 segundos para permitir a recuperação total de ATP nas próximas séries.";
-                } else if(lowerTxt.includes("estagnado") || lowerTxt.includes("travei") || lowerTxt.includes("igual")) {
-                    aiResponse = "📊 **Identificação de Platô:** Percebi que a curva de rendimento estabilizou. Recomendo usar o botão de **Editar** no exercício para aplicar uma técnica avançada como *Drop Set* ou reduzir as repetições aumentando a carga.";
-                } else if(lowerTxt.includes("mudar") || lowerTxt.includes("treino")) {
-                    aiResponse = "💪 Você tem autonomia total. Use os botões de **Editar** ao lado de qualquer exercício para mudar as metas de repetições ou o nome. Eu farei o reajuste nos cálculos de volume automaticamente.";
+                
+                let aiResponse = "";
+
+                // Árvore de decisão inteligente simulando IA Generativa
+                if (lowerTxt.includes("carga") || lowerTxt.includes("peso") || lowerTxt.includes("aumentei")) {
+                    aiResponse = `📊 **Análise de Sobrecarga Progressiva:** Você está no ambiente **${currentEnvironment.toUpperCase()}** fazendo o **Treino ${currentDay}**. Aumentar a carga/intensidade em movimentos como o _"${firstExerciseName}"_ é o caminho ideal para gerar microlesões hipertróficas. Certifique-se de manter a cadência controlada na fase excêntrica.`;
+                } 
+                else if (lowerTxt.includes("rep") || lowerTxt.includes("repetições") || lowerTxt.includes("falha")) {
+                    aiResponse = `⚡ **Ajuste de Volume:** Mudar as repetições altera o tempo sob tensão do músculo. Se o seu foco for hipertrofia pura, tente ficar na zona de 8 a 12 repetições usando uma carga limite. Se for treinar até a falha em casa, use o peso corporal focando no máximo de repetições possíveis com técnica limpa!`;
+                } 
+                else if (lowerTxt.includes("mudar") || lowerTxt.includes("trocar") || lowerTxt.includes("alterar")) {
+                    aiResponse = `🛠️ **Configuração de Layout:** Para alterar qualquer detalhe, basta clicar no botão de **Lápis (Editar)** diretamente no card do exercício. Você pode reajustar o nome, peso e repetições livremente sem quebrar o banco de dados.`;
+                } 
+                else if (lowerTxt.includes("ajuda") || lowerTxt.includes("dor") || lowerTxt.includes("cansado")) {
+                    aiResponse = `⚠️ **Diagnóstico Preventivo:** Treinar cansado ou com dor articular afeta o rendimento e aumenta o risco de lesões. Se for fadiga muscular normal do treino anterior, reduza um pouco a carga hoje ou aumente o tempo de descanso no cronômetro para **90 segundos**.`;
+                } 
+                else {
+                    aiResponse = `🤖 **Leitura de Contexto:** Entendi sua mensagem. Monitorando o seu painel atual do **Treino ${currentDay} (${currentEnvironment.toUpperCase()})**, vejo que você tem ${currentExercises.length} exercícios listados. Se precisar que eu calcule o volume total de séries semanais ou sugira uma variação mecânica, é só pedir!`;
                 }
 
                 triggerAiVoice(aiResponse);
-            }, 600);
+            }, 750);
         }
 
         // Sessão Permanente e Cálculos Direto do Supabase

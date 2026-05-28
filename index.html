@@ -238,31 +238,113 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DINÂMICA DE TREINO (ATUALIZADO COM CARGA E REPS SEPARADOS) -->
+    <!-- MODAL DE EDIÇÃO DINÂMICA DE TREINO COM SISTEMA DE AUTOCOMPLETAR MUNDIAL -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fas fa-edit text-red-500"></i> Ajustar Exercício
+                <i class="fas fa-edit text-red-500"></i> Trocar Exercício
             </h3>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome do Exercício</label>
-                    <input type="text" id="modal-exercise-name" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome da Máquina ou Exercício</label>
+                    <!-- Input conectado à lista global através do atributo list -->
+                    <input type="text" id="modal-exercise-name" list="global-exercises-list" placeholder="Digite para buscar qualquer máquina..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                    
+                    <!-- ENCICPÉDIA GLOBAL DE MOVIMENTOS, PESOS E MÁQUINAS -->
+                    <datalist id="global-exercises-list">
+                        <!-- PEITO & MÁQUINAS -->
+                        <option value="Supino Reto com Barra"></option>
+                        <option value="Supino Reto com Halteres"></option>
+                        <option value="Supino Inclinado com Barra"></option>
+                        <option value="Supino Inclinado com Halteres"></option>
+                        <option value="Supino Declinado com Barra"></option>
+                        <option value="Supino Articulado na Máquina (Chest Press)"></option>
+                        <option value="Peck Deck (Voador)"></option>
+                        <option value="Crucifixo Reto com Halteres"></option>
+                        <option value="Crucifixo Inclinado com Halteres"></option>
+                        <option value="Crucifixo na Polia Alta (Crossover)"></option>
+                        <option value="Crucifixo na Polia Baixa"></option>
+                        <option value="Flexão de Braço Padrão"></option>
+                        <option value="Flexão Diamante"></option>
+                        <option value="Flexão Declinada (Pés Elevados)"></option>
+                        <option value="Flexão Aberta (Foco Peitoral)"></option>
+                        
+                        <!-- COSTAS & POLIAS -->
+                        <option value="Puxada Alta no Pulley (Frente)"></option>
+                        <option value="Puxada Alta Supinada (Foco Bíceps/Dorsal)"></option>
+                        <option value="Puxada no Pulley Triângulo"></option>
+                        <option value="Remada Curvada com Barra"></option>
+                        <option value="Remada Cavalinho (T-Bar Row)"></option>
+                        <option value="Remada Baixa Sentada com Triângulo"></option>
+                        <option value="Remada Unilateral com Halter (Serrote)"></option>
+                        <option value="Remada Máquina Articulada"></option>
+                        <option value="Pull Down na Polia Alta com Barra"></option>
+                        <option value="Pull Down na Polia Alta com Corda"></option>
+                        <option value="Levantamento Terra (Deadlift)"></option>
+                        <option value="Barra Fixa Pronada (Pull-up)"></option>
+                        <option value="Barra Fixa Supinada (Chin-up)"></option>
+                        <option value="Remada Invertida na Mesa / Barra Baixa"></option>
+
+                        <!-- PERNAS, HACK & LEG PRESS -->
+                        <option value="Agachamento Livre com Barra"></option>
+                        <option value="Agachamento no Hack Machine"></option>
+                        <option value="Agachamento Smith Machine"></option>
+                        <option value="Agachamento Búlgaro com Halteres"></option>
+                        <option value="Leg Press 45 Graus"></option>
+                        <option value="Leg Press Horizontal"></option>
+                        <option value="Cadeira Extensora (Leg Extension)"></option>
+                        <option value="Mesa Flexora (Lying Leg Curl)"></option>
+                        <option value="Cadeira Flexora Seated"></option>
+                        <option value="Cadeira Adutora"></option>
+                        <option value="Cadeira Abdutora"></option>
+                        <option value="Afundo com Halteres (Passada)"></option>
+                        <option value="Stiff com Barra / Halteres"></option>
+                        <option value="Elevação Pélvica na Máquina (Hip Thrust)"></option>
+                        <option value="Elevação Pélvica Solo com Carga"></option>
+                        <option value="Gêmeos Sentado (Panturrilha Máquina)"></option>
+                        <option value="Gêmeos em Pé (Panturrilha)"></option>
+
+                        <!-- OMBROS & TRAPÉZIO -->
+                        <option value="Desenvolvimento com Halteres (Shoulder Press)"></option>
+                        <option value="Desenvolvimento com Barra (Militar)"></option>
+                        <option value="Desenvolvimento na Máquina Articulada"></option>
+                        <option value="Elevação Lateral com Halteres"></option>
+                        <option value="Elevação Lateral na Polia (Cabo)"></option>
+                        <option value="Elevação Frontal com Halteres"></option>
+                        <option value="Crucifixo Invertido com Halteres (Posterior)"></option>
+                        <option value="Crucifixo Invertido no Voador (Peck Deck Invertido)"></option>
+                        <option value="Encolhimento com Halteres (Trapézio)"></option>
+
+                        <!-- BRAÇOS (BÍCEPS & TRÍCEPS) -->
+                        <option value="Rosca Direta com Barra W"></option>
+                        <option value="Rosca Direta com Barra Reta"></option>
+                        <option value="Rosca Direta com Halteres (Alternada)"></option>
+                        <option value="Rosca Direta na Polia (Cabo)"></option>
+                        <option value="Rosca Martelo com Halteres"></option>
+                        <option value="Rosca Scott com Barra W / Máquina"></option>
+                        <option value="Rosca Concentrada com Halter"></option>
+                        <option value="Tríceps Pulley Barra Reta / W"></option>
+                        <option value="Tríceps Pulley com Corda"></option>
+                        <option value="Tríceps Testa com Barra W / Halteres"></option>
+                        <option value="Tríceps Coice com Halter / Polia"></option>
+                        <option value="Tríceps Francês com Halter"></option>
+                        <option value="Mergulho em Bancos (Dips)"></option>
+                    </datalist>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Carga (Peso)</label>
-                        <input type="text" id="modal-exercise-weight" placeholder="Ex: Corpo ou 20kg" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Carga (Peso Livre/Placas)</label>
+                        <input type="text" id="modal-exercise-weight" placeholder="Ex: 50kg, 6 placas, Corpo" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
                     </div>
                     <div>
-                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Séries x Reps</label>
-                        <input type="text" id="modal-exercise-reps" placeholder="Ex: 4x12 ou 3xFalha" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Séries e Metas</label>
+                        <input type="text" id="modal-exercise-reps" placeholder="Ex: 4x12, 3xFalha" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:border-red-500">
                     </div>
                 </div>
             </div>
             <div class="flex gap-2.5 pt-2">
                 <button onclick="closeEditModal()" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold tracking-wider uppercase border border-gray-700">Cancelar</button>
-                <button onclick="saveExerciseEdit()" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold tracking-wider uppercase">Salvar</button>
+                <button onclick="saveExerciseEdit()" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold tracking-wider uppercase">Confirmar Troca</button>
             </div>
         </div>
     </div>
@@ -279,20 +361,20 @@
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <div>
                     <h4 class="text-sm font-bold text-white">Hybrid Coach IA</h4>
-                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Processamento Ativo</span>
+                    <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Análise Autônoma Conectada</span>
                 </div>
             </div>
             <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
         </div>
         <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm" id="ai-chat-messages">
             <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200" id="ai-initial-welcome">
-                Fala, atleta! Sou o motor de IA integrado à sua planilha. 
+                Monitorei seu painel! Liberei o catálogo universal de maquinários no botão de edição.
                 <br><br>
-                Estou analisando seu painel em tempo real. Pode me mandar dados de aumento de carga, cansaço ou dúvidas sobre os exercícios que eu vou recalcular sua estratégia!
+                Qualquer máquina ou peso livre que você escolher, eu vou analisar os vetores de força e te dar a estratégia ideal. Pode testar!
             </div>
         </div>
         <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
-            <input type="text" id="ai-chat-input" placeholder="Pergunte sobre as reps ou diga o que alterou..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
+            <input type="text" id="ai-chat-input" placeholder="Mudei a máquina, qual a dica de postura?..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
             <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm">Enviar</button>
         </div>
     </div>
@@ -316,7 +398,7 @@
 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // BANCO DE DADOS CORRIGIDO - ESTRUTURA COM CARGA E REPS SEPARADOS
+        // BANCO DE DADOS INICIAL - 5 DISPOSTOS EM CARGA E REPETIÇÕES ISOLADAS
         let routineData = {
             casa: {
                 A: [
@@ -414,7 +496,7 @@
             if (isSignUpMode) {
                 const { error } = await supabase.auth.signUp({ email, password });
                 if (error) alert("Erro: " + error.message);
-                else { alert("Conta criada! Acesse a aba 'Entrar' para fazer o login."); setAuthMode(false); }
+                else { alert("Conta criada! Vá em 'Entrar'."); setAuthMode(false); }
             } else {
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) alert("Erro: " + error.message);
@@ -439,7 +521,7 @@
             };
 
             const { error } = await supabase.from('atleta_perfil').insert([profile]);
-            if (error) alert("Erro ao salvar perfil: " + error.message);
+            if (error) alert("Erro ao salvar: " + error.message);
             else await checkSession();
         });
 
@@ -469,7 +551,7 @@
             document.getElementById(`nav-${env}`).classList.add('active');
             renderWorkout();
             
-            triggerAiVoice(`Modo **${env.toUpperCase()}** ativado. Analisei seu plano e trouxe os 5 treinos específicos mapeados para o Treino ${currentDay}.`);
+            triggerAiVoice(`Modo **${env.toUpperCase()}** ativado com sucesso.`);
         }
 
         // Renderização Dinâmica com Exibição Isolada de Carga e Repetições
@@ -488,7 +570,7 @@
             }
 
             if(list.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Nenhum treino agendado nesta aba.</p>`;
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Vazio. Edite para inserir exercícios.</p>`;
                 return;
             }
 
@@ -504,7 +586,7 @@
                             <h4 class="text-sm font-bold text-white">${ex.name}</h4>
                             <div class="flex gap-3 mt-1">
                                 <span class="text-xs bg-gray-900 border border-gray-800 text-gray-400 px-2 py-0.5 rounded-md">
-                                    <i class="fas fa-weight-hanging text-cyan-400 mr-1 text-[10px]"></i>${ex.weight || 'Sem carga'}
+                                    <i class="fas fa-weight-hanging text-cyan-400 mr-1 text-[10px]"></i>${ex.weight || 'Corpo'}
                                 </span>
                                 <span class="text-xs bg-gray-900 border border-gray-800 text-red-400 px-2 py-0.5 rounded-md font-semibold">
                                     <i class="fas fa-redo mr-1 text-[10px]"></i>${ex.reps || '4x10'}
@@ -525,7 +607,7 @@
             });
         }
 
-        // LÓGICA DO MODAL TOTALMENTE ADAPTÁVEL (NOME, CARGA E REPS)
+        // ABERTURA DO MODAL ATUALIZADO
         function openEditModal(id) {
             const list = routineData[currentEnvironment][currentDay];
             const item = list.find(ex => ex.id === id);
@@ -546,6 +628,7 @@
         function saveExerciseEdit() {
             if(!selectedExerciseForEdit) return;
 
+            const oldName = selectedExerciseForEdit.name;
             selectedExerciseForEdit.name = document.getElementById('modal-exercise-name').value;
             selectedExerciseForEdit.weight = document.getElementById('modal-exercise-weight').value;
             selectedExerciseForEdit.reps = document.getElementById('modal-exercise-reps').value;
@@ -553,7 +636,8 @@
             closeEditModal();
             renderWorkout();
 
-            triggerAiVoice(`Alteração salva! Atualizei o exercício **${selectedExerciseForEdit.name}** com a nova carga e repetições especificadas. Os parâmetros de volume muscular já foram ajustados.`);
+            // Mensagem dinâmica no Chat da IA
+            triggerAiVoice(`🔄 **Substituição Concluída:** Mudamos de _"${oldName}"_ para o novo exercício **"${selectedExerciseForEdit.name}"** configurado com a carga **[${selectedExerciseForEdit.weight}]**. Mapeei a mudança no banco de dados!`);
         }
 
         function deleteExercise(id) {
@@ -562,18 +646,13 @@
             if(index === -1) return;
 
             const targetName = list[index].name;
-
-            if(confirm(`Tem certeza que deseja remover "${targetName}"?`)) {
+            if(confirm(`Remover "${targetName}"?`)) {
                 list.splice(index, 1);
                 renderWorkout();
-
-                if(list.length < 5) {
-                    triggerAiVoice(`⚠️ **Alerta do Coach:** O volume do Treino ${currentDay} caiu para **${list.length} exercícios**. Sugiro manter de 4 a 5 movimentos para evitar a estagnação dos resultados.`);
-                }
             }
         }
 
-        // Cronômetro de Descanso
+        // Cronômetro
         const display = document.getElementById('timer-display');
         const startBtn = document.getElementById('btn-start-toggle');
 
@@ -595,7 +674,7 @@
                         updateTimerDisplay();
                     } else {
                         clearInterval(timerInterval);
-                        alert("Fim do descanso! Volte para a próxima série.");
+                        alert("Fim do descanso!");
                         resetTimer();
                     }
                 }, 1000);
@@ -619,7 +698,7 @@
         document.getElementById('btn-quick-90').addEventListener('click', () => { timeRemaining = 90; updateTimerDisplay(); });
         document.getElementById('btn-reset-timer').addEventListener('click', resetTimer);
 
-        // MOTOR DE RESPOSTA COGNITIVO - SIMULAÇÃO DE IA REAL EM TEMPO REAL
+        // INTEGRAÇÃO DE COMPORTAMENTO RESTRITO COGNITIVO - SIMULAÇÃO DE IA REAL
         const chatBox = document.getElementById('ai-chat');
         document.getElementById('ai-btn').addEventListener('click', () => chatBox.classList.remove('hidden'));
         document.getElementById('close-ai-chat').addEventListener('click', () => chatBox.classList.add('hidden'));
@@ -642,54 +721,41 @@
             if(!txt) return;
 
             const msgContainer = document.getElementById('ai-chat-messages');
-            
             const userBubble = document.createElement('div');
             userBubble.className = "chat-bubble user p-3 rounded-2xl max-w-[85%] self-end ml-auto text-black font-medium";
             userBubble.innerText = txt;
             msgContainer.appendChild(userBubble);
             input.value = "";
 
-            // Simula processamento da IA lendo o contexto atual da página
+            // Simulação avançada de processamento contextual da IA
             setTimeout(() => {
-                const currentExercises = routineData[currentEnvironment][currentDay] || [];
-                const firstExerciseName = currentExercises[0] ? currentExercises[0].name : "exercícios";
                 const lowerTxt = txt.toLowerCase();
-                
                 let aiResponse = "";
 
-                // Árvore de decisão inteligente simulando IA Generativa
-                if (lowerTxt.includes("carga") || lowerTxt.includes("peso") || lowerTxt.includes("aumentei")) {
-                    aiResponse = `📊 **Análise de Sobrecarga Progressiva:** Você está no ambiente **${currentEnvironment.toUpperCase()}** fazendo o **Treino ${currentDay}**. Aumentar a carga/intensidade em movimentos como o _"${firstExerciseName}"_ é o caminho ideal para gerar microlesões hipertróficas. Certifique-se de manter a cadência controlada na fase excêntrica.`;
+                if (lowerTxt.includes("postura") || lowerTxt.includes("como fazer") || lowerTxt.includes("execução")) {
+                    aiResponse = `📐 **Análise Cinesiologia de IA:** Para qualquer máquina do catálogo ou peso livre que você incluiu no seu **Treino ${currentDay}**, mantenha o core sempre contraído e evite usar o balanço da coluna (ombros fixos) para isolar o grupo muscular primário.`;
                 } 
-                else if (lowerTxt.includes("rep") || lowerTxt.includes("repetições") || lowerTxt.includes("falha")) {
-                    aiResponse = `⚡ **Ajuste de Volume:** Mudar as repetições altera o tempo sob tensão do músculo. Se o seu foco for hipertrofia pura, tente ficar na zona de 8 a 12 repetições usando uma carga limite. Se for treinar até a falha em casa, use o peso corporal focando no máximo de repetições possíveis com técnica limpa!`;
+                else if (lowerTxt.includes("peso") || lowerTxt.includes("placas") || lowerTxt.includes("carga")) {
+                    aiResponse = `🏋️ **Cálculo de Carga Inteligente:** Percebi que você gerencia suas metas de peso de forma isolada agora. Anote suas cargas máximas no card! Se conseguir realizar as repetições com facilidade, suba 2kg ou 1 placa no próximo treino para manter o estímulo metabólico progressivo.`;
                 } 
-                else if (lowerTxt.includes("mudar") || lowerTxt.includes("trocar") || lowerTxt.includes("alterar")) {
-                    aiResponse = `🛠️ **Configuração de Layout:** Para alterar qualquer detalhe, basta clicar no botão de **Lápis (Editar)** diretamente no card do exercício. Você pode reajustar o nome, peso e repetições livremente sem quebrar o banco de dados.`;
-                } 
-                else if (lowerTxt.includes("ajuda") || lowerTxt.includes("dor") || lowerTxt.includes("cansado")) {
-                    aiResponse = `⚠️ **Diagnóstico Preventivo:** Treinar cansado ou com dor articular afeta o rendimento e aumenta o risco de lesões. Se for fadiga muscular normal do treino anterior, reduza um pouco a carga hoje ou aumente o tempo de descanso no cronômetro para **90 segundos**.`;
+                else if (lowerTxt.includes("trocar") || lowerTxt.includes("máquina") || lowerTxt.includes("exercicio")) {
+                    aiResponse = `🔄 **Motor de Catálogo Ativo:** O sistema está integrado com a enciclopédia mundial de aparelhos (Hack, Leg 45, Smith, Crossover, Polias). Você pode alterar livremente na lista suspensa sempre que quiser mudar o estímulo anatômico do dia!`;
                 } 
                 else {
-                    aiResponse = `🤖 **Leitura de Contexto:** Entendi sua mensagem. Monitorando o seu painel atual do **Treino ${currentDay} (${currentEnvironment.toUpperCase()})**, vejo que você tem ${currentExercises.length} exercícios listados. Se precisar que eu calcule o volume total de séries semanais ou sugira uma variação mecânica, é só pedir!`;
+                    aiResponse = `🧠 **Coach IA Conectado:** Li sua mensagem. Analisando seu painel atual do modo **${currentEnvironment.toUpperCase()}**, recomendo executar as séries com cadência controlada (2 segundos na descida) para aumentar o dano miofibrilar. Qual máquina você quer ajustar agora?`;
                 }
 
                 triggerAiVoice(aiResponse);
-            }, 750);
+            }, 700);
         }
 
-        // Sessão Permanente e Cálculos Direto do Supabase
+        // Validação da Sessão Supabase
         async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
             
             if(session) {
                 currentUser = session.user;
-                
-                const { data: perfil } = await supabase
-                    .from('atleta_perfil')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
+                const { data: perfil } = await supabase.from('atleta_perfil').select('*').eq('id', currentUser.id).single();
 
                 if(!perfil) {
                     authScreen.classList.add('hidden');

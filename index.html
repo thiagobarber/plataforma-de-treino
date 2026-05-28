@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Training - Foco & Evolução</title>
     
-    <!-- Mudança para versão estável e ultra-compatível do Tailwind -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.0-alpha.4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Mudança para a distribuição oficial e direta do Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
     <style>
-        .hidden { display: none; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
     <div id="auth-screen" class="max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-green-400">Entrar no Hybrid Training</h2>
         
@@ -42,32 +39,31 @@
         </div>
     </div>
 
-    <!-- TELA DE CONFIGURAÇÃO INICIAL DO PERFIL -->
     <div id="setup-screen" class="hidden max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 class="text-2xl font-bold text-center mb-6 text-green-400">Configure seu Perfil</h2>
         <form id="setup-form" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-1">Nome Completo</label>
-                <input type="text" id="setup-name" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                <input type="text" id="setup-name" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Peso (kg)</label>
-                    <input type="number" step="0.1" id="setup-weight" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                    <input type="number" step="0.1" id="setup-weight" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Altura (m)</label>
-                    <input type="number" step="0.01" id="setup-height" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                    <input type="number" step="0.01" id="setup-height" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Idade</label>
-                    <input type="number" id="setup-age" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                    <input type="number" id="setup-age" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Gênero</label>
-                    <select id="setup-gender" class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                    <select id="setup-gender" class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
                         <option value="masculino">Masculino</option>
                         <option value="feminino">Feminino</option>
                         <option value="outro">Outro</option>
@@ -76,7 +72,7 @@
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">Objetivo Principal</label>
-                <input type="text" id="setup-goal" placeholder="Ex: Ganhar força, Hipertrofia, Calistenia" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                <input type="text" id="setup-goal" placeholder="Ex: Ganhar força, Hipertrofia, Calistenia" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
             </div>
             <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-gray-900 font-bold py-2.5 rounded transition">
                 Salvar Perfil e Começar
@@ -84,7 +80,6 @@
         </form>
     </div>
 
-    <!-- TELA PRINCIPAL DO APLICATIVO -->
     <div id="app-screen" class="hidden flex-1 w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
         <header class="flex justify-between items-center border-b border-gray-800 pb-4">
             <div>
@@ -123,29 +118,26 @@
         </main>
     </div>
 
-    <!-- Rodapé básico -->
     <footer class="text-center py-4 text-xs text-gray-600 border-t border-gray-800 mt-6">
         Hybrid Training &copy; 2026 - Conectado ao Cloud Supabase
     </footer>
 
-    <!-- LOGICA DE PROGRAMAÇÃO E INTEGRAÇÃO -->
     <script>
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
         let supabase;
 
-        // Bloco de teste de inicialização crítica para capturar erros de link externo
         try {
             if (typeof supabase !== 'undefined' && supabase.createClient) {
                 supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             } else if (typeof window.supabase !== 'undefined') {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             } else {
-                alert("Erro grave: A biblioteca externa do Supabase falhou ao carregar no seu navegador. Verifique sua conexão ou tente usar outro navegador.");
+                alert("Erro grave: Biblioteca do Supabase não carregou.");
             }
         } catch (e) {
-            alert("Falha na inicialização do script: " + e.message);
+            alert("Falha na inicialização: " + e.message);
         }
 
         const authScreen = document.getElementById('auth-screen');
@@ -180,26 +172,20 @@
 
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const email = authEmail.value.trim();
             const password = authPassword.value;
 
-            if (!supabase) {
-                alert("O sistema de banco de dados não está respondendo. Não tente enviar o formulário.");
-                return;
-            }
+            if (!supabase) return;
 
             try {
                 if (isSignUpMode) {
                     authSubmitBtn.innerText = "Cadastrando...";
                     authSubmitBtn.disabled = true;
-
                     const { data, error } = await supabase.auth.signUp({ email, password });
-                    
                     if (error) {
                         alert("Erro no cadastro: " + error.message);
                     } else if (data?.user) {
-                        alert("Cadastro feito com sucesso! Agora digite seus dados e entre.");
+                        alert("Cadastro feito com sucesso! Agora entre com suas credenciais.");
                         isSignUpMode = false;
                         authTitle.innerText = "Entrar no Hybrid Training";
                         authSubmitBtn.innerText = "Entrar";
@@ -209,9 +195,7 @@
                 } else {
                     authSubmitBtn.innerText = "Entrando...";
                     authSubmitBtn.disabled = true;
-
                     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                    
                     if (error) {
                         alert("Erro no login: " + error.message);
                     } else {
@@ -219,7 +203,7 @@
                     }
                 }
             } catch (err) {
-                alert("Erro interno capturado: " + err.message);
+                alert("Erro interno: " + err.message);
             } finally {
                 authSubmitBtn.disabled = false;
                 authSubmitBtn.innerText = isSignUpMode ? "Cadastrar" : "Entrar";
@@ -263,7 +247,6 @@
             
             if (session) {
                 currentUser = session.user;
-                
                 const { data: perfil, error } = await supabase
                     .from('atleta_perfil')
                     .select('*')

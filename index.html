@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Fitness Pro Ultimate</title>
     
-    <!-- Tailwind CSS para estilização moderna -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-    <!-- Ícones para os botões -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Biblioteca do Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
     <style>
@@ -110,44 +107,39 @@
 
     <div class="w-full max-w-xl mx-auto p-4 md:p-6 flex-1 flex flex-col justify-center">
         
-        <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
         <div id="auth-screen" class="auth-card p-8 w-full">
             <div class="brand-logo text-center text-3xl mb-6 tracking-wider">Hybrid<span>Fitness</span></div>
             
-            <h2 id="auth-title" class="text-xl font-bold text-center text-white mb-4">Acessar Painel</h2>
+            <h2 id="auth-title" data-i18n="authTitleLogin" class="text-xl font-bold text-center text-white mb-4">Acessar Painel</h2>
             
             <form id="auth-form" class="space-y-4">
-                <!-- Campo Nome (Fica escondido no modo Login, aparece no modo Cadastro) -->
                 <div id="name-field" class="hidden">
-                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
-                    <input type="text" id="auth-name" placeholder="Seu nome" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
+                    <label data-i18n="lblFullName" class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
+                    <input type="text" id="auth-name" data-i18n-holder="placeName" placeholder="Seu nome" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
                 </div>
 
                 <div>
-                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">E-mail do Atleta</label>
-                    <input type="email" id="auth-email" required placeholder="atleta@email.com" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
+                    <label data-i18n="lblEmail" class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">E-mail do Atleta</label>
+                    <input type="email" id="auth-email" required data-i18n-holder="placeEmail" placeholder="atleta@email.com" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Senha</label>
+                    <label data-i18n="lblPassword" class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Senha</label>
                     <input type="password" id="auth-password" required placeholder="••••••••" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
                 </div>
                 
-                <button type="submit" id="btn-auth-submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-sm uppercase tracking-widest transition shadow-lg">
+                <button type="submit" id="btn-auth-submit" data-i18n="btnAuthLogin" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-sm uppercase tracking-widest transition shadow-lg">
                     Acessar Painel
                 </button>
             </form>
 
-            <!-- Alternador de Telas (Login / Cadastro) -->
             <div class="text-center mt-6 text-sm text-gray-400">
-                <span id="auth-toggle-text">Novo por aqui?</span> 
-                <button onclick="toggleAuthMode()" id="btn-auth-toggle" class="text-red-500 font-semibold hover:underline ml-1">Criar uma conta</button>
+                <span id="auth-toggle-text" data-i18n="toggleTextLogin">Novo por aqui?</span> 
+                <button onclick="toggleAuthMode()" id="btn-auth-toggle" data-i18n="btnToggleLogin" class="text-red-500 font-semibold hover:underline ml-1">Criar uma conta</button>
             </div>
         </div>
 
-        <!-- TELA PRINCIPAL DO APP -->
         <div id="app-screen" class="hidden w-full space-y-4">
             
-            <!-- Painel Superior de Perfil -->
             <div class="p-5 rounded-2xl border border-gray-800" style="background: linear-gradient(135deg, #1e2430, #141821);">
                 <div class="flex justify-between items-start mb-4">
                     <div>
@@ -155,44 +147,40 @@
                         <div class="flex items-center gap-2 mt-0.5">
                             <p id="user-stats" class="text-sm text-gray-400">78.0kg | 1.64m | 30 anos</p>
                             <button onclick="openWeightModal()" class="text-xs text-cyan-400 hover:text-cyan-300 ml-1" title="Atualizar Peso">
-                                <i class="fas fa-weight-scale"></i> Mudar Peso
+                                <i class="fas fa-weight-scale"></i> <span data-i18n="btnChangeWeight">Mudar Peso</span>
                             </button>
                         </div>
                     </div>
-                    <div id="user-goal" class="text-xs font-bold px-3 py-1.5 rounded-full text-cyan-400 bg-cyan-950 border border-cyan-800">
+                    <div id="user-goal" data-i18n="userGoalText" class="text-xs font-bold px-3 py-1.5 rounded-full text-cyan-400 bg-cyan-950 border border-cyan-800">
                         Hipertrofia
                     </div>
                 </div>
 
-                <!-- Bloco de Diagnóstico Corporal -->
                 <div class="p-4 bg-black bg-opacity-25 border border-gray-800 rounded-xl space-y-2">
-                    <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">📊 Diagnóstico Corporal & Progresso</div>
+                    <div data-i18n="diagnosticTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">📊 Diagnóstico Corporal & Progresso</div>
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                            <span class="text-gray-400 block">IMC Atual:</span>
+                            <span data-i18n="lblImc" class="text-gray-400 block">IMC Atual:</span>
                             <strong id="lbl-imc-val" class="text-white text-sm">29.0 (Sobrepeso)</strong>
                         </div>
                         <div>
-                            <span class="text-gray-400 block">Evolução Geral:</span>
+                            <span data-i18n="lblEvolution" class="text-gray-400 block">Evolução Geral:</span>
                             <strong class="text-green-400 text-sm" id="lbl-evolucao-status">Carga padrão estável</strong>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CONTEÚDO DAS ABAS DE TREINO (CASA E ACADEMIA) -->
             <div id="workout-content-area" class="space-y-4">
-                <!-- Seletores de Treino ABC -->
                 <div class="flex gap-2.5">
-                    <button class="abc-btn active flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')">Treino A</button>
-                    <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-B" onclick="changeDay('B')">Treino B</button>
-                    <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-C" onclick="changeDay('C')">Treino C</button>
+                    <button class="abc-btn active flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')"><span data-i18n="txtWorkout">Treino</span> A</button>
+                    <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-B" onclick="changeDay('B')"><span data-i18n="txtWorkout">Treino</span> B</button>
+                    <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-C" onclick="changeDay('C')"><span data-i18n="txtWorkout">Treino</span> C</button>
                 </div>
 
-                <!-- Barra de Progresso Diária Dinâmica -->
                 <div class="p-3 bg-gray-800 rounded-xl border border-gray-700 space-y-1.5">
                     <div class="flex justify-between text-xs font-bold uppercase tracking-wider">
-                        <span class="text-gray-400">Progresso do Treino</span>
+                        <span data-i18n="workoutProgress" class="text-gray-400">Progresso do Treino</span>
                         <span id="progress-percent" class="text-green-400">0% Concluído</span>
                     </div>
                     <div class="w-full bg-gray-900 h-2.5 rounded-full overflow-hidden border border-gray-700">
@@ -200,21 +188,18 @@
                     </div>
                 </div>
 
-                <!-- Indicador de exercícios -->
                 <div class="flex justify-between items-center px-1">
-                    <span class="text-xs uppercase font-bold text-gray-400 tracking-wider">Exercícios do Dia</span>
+                    <span data-i18n="dayExercises" class="text-xs uppercase font-bold text-gray-400 tracking-wider">Exercícios do Dia</span>
                     <span id="category-counter" class="text-xs px-2.5 py-1 bg-gray-800 border border-gray-700 text-gray-300 rounded-full font-bold">0 Exercícios</span>
                 </div>
 
-                <!-- Listagem Dinâmica dos Exercícios -->
                 <div id="workout-container" class="space-y-3"></div>
 
-                <!-- Módulo de Descanso / Cronômetro -->
                 <div class="p-4 bg-gray-800 rounded-2xl border border-gray-800 text-center">
-                    <span class="text-xs text-gray-400 font-bold uppercase tracking-widest block mb-1">⏱️ Descanso</span>
+                    <span data-i18n="lblRestTimer" class="text-xs text-gray-400 font-bold uppercase tracking-widest block mb-1">⏱️ Descanso</span>
                     <div class="timer-val text-4xl font-extrabold px-6 py-2 rounded-xl w-max mx-auto border mb-3 select-none cursor-pointer" id="timer-display">01:00</div>
                     <div class="flex gap-2 justify-center text-xs">
-                        <button class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg" id="btn-start-toggle" onclick="toggleTimer()">Iniciar</button>
+                        <button class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg" id="btn-start-toggle" onclick="toggleTimer()" data-i18n="btnTimerStart">Iniciar</button>
                         <button class="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300" onclick="setTimerSeconds(60)">60s</button>
                         <button class="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300" onclick="setTimerSeconds(90)">90s</button>
                         <button class="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-500" onclick="resetTimer()">Reset</button>
@@ -222,95 +207,198 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DA ABA DE PROGRESSO (HISTÓRICO) -->
             <div id="progress-content-area" class="hidden space-y-4">
                 <div class="p-4 bg-gray-800 border border-gray-700 rounded-xl">
-                    <h4 class="text-sm font-bold text-white mb-3 uppercase tracking-wider">📈 Histórico de Cargas & Evolução</h4>
+                    <h4 data-i18n="historyTitle" class="text-sm font-bold text-white mb-3 uppercase tracking-wider">📈 Histórico de Cargas & Evolução</h4>
                     <div class="space-y-2 text-xs" id="progress-history-list">
-                        <div class="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
-                            <span class="text-gray-300 font-semibold">Supino Reto com Barra</span>
-                            <span class="text-green-400 font-bold">Subiu para 20kg/lado</span>
                         </div>
-                        <div class="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
-                            <span class="text-gray-300 font-semibold">Leg Press 45 Graus</span>
-                            <span class="text-green-400 font-bold">Subiu para 120kg total</span>
-                        </div>
-                        <div class="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
-                            <span class="text-gray-300 font-semibold">Remada Curvada com Galão</span>
-                            <span class="text-cyan-400 font-bold">Aumento de 2 reps</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DE EXERCÍCIO -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fas fa-edit text-red-500"></i> Trocar Exercício
+                <i class="fas fa-edit text-red-500"></i> <span data-i18n="modalEditTitle">Trocar Exercício</span>
             </h3>
             <div class="space-y-3">
                 <div>
-                    <input type="text" id="modal-exercise-name" list="global-exercises-list" onclick="this.select()" onfocus="this.select()" placeholder="Nome do exercício..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
+                    <input type="text" id="modal-exercise-name" list="global-exercises-list" onclick="this.select()" onfocus="this.select()" data-i18n-holder="placeModalName" placeholder="Nome do exercício..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
                     <datalist id="global-exercises-list">
-                        <option value="Supino Reto com Barra"></option>
-                        <option value="Agachamento Livre"></option>
-                        <option value="Puxada Alta no Pulley"></option>
-                        <option value="Flexão de Braço"></option>
-                        <option value="Barra Fixa Supinada"></option>
-                        <option value="Rosca Direta com Halteres"></option>
-                        <option value="Tríceps na Polia"></option>
-                        <option value="Elevação Lateral"></option>
-                        <option value="Desenvolvimento Ombros"></option>
-                        <option value="Afundo / Passada"></option>
-                    </datalist>
+                        </datalist>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="text" id="modal-exercise-weight" placeholder="Carga" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
-                    <input type="text" id="modal-exercise-reps" placeholder="Séries" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
+                    <input type="text" id="modal-exercise-weight" data-i18n-holder="placeModalWeight" placeholder="Carga" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
+                    <input type="text" id="modal-exercise-reps" data-i18n-holder="placeModalReps" placeholder="Séries" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none">
                 </div>
             </div>
             <div class="flex gap-2.5 pt-2">
-                <button onclick="closeEditModal()" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold uppercase">Cancelar</button>
-                <button onclick="saveExerciseEdit()" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase">Confirmar</button>
+                <button onclick="closeEditModal()" data-i18n="btnCancel" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold uppercase">Cancelar</button>
+                <button onclick="saveExerciseEdit()" data-i18n="btnConfirm" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE ATUALIZAÇÃO DE PESO -->
     <div id="weight-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fas fa-weight-scale text-cyan-400"></i> Atualizar Peso Corporal
+                <i class="fas fa-weight-scale text-cyan-400"></i> <span data-i18n="modalWeightTitle">Atualizar Peso Corporal</span>
             </h3>
-            <p class="text-xs text-gray-400">Insira seu peso atualizado em kg. Isso recalculará seu diagnóstico e adaptará sua evolução de treinos.</p>
+            <p id="modal-weight-desc" data-i18n="modalWeightDesc" class="text-xs text-gray-400">Insira seu peso atualizado em kg. Isso recalculará seu diagnóstico e adaptará sua evolução de treinos.</p>
             <div>
                 <input type="number" id="modal-new-weight" step="0.1" placeholder="Ex: 76.5" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white text-base text-center font-bold focus:outline-none">
             </div>
             <div class="flex gap-2.5 pt-2">
-                <button onclick="closeWeightModal()" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold uppercase">Cancelar</button>
-                <button onclick="saveWeightUpdate()" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-600 text-black rounded-xl text-xs font-bold uppercase">Salvar Peso</button>
+                <button onclick="closeWeightModal()" data-i18n="btnCancel" class="flex-1 py-3 bg-gray-800 text-gray-300 rounded-xl text-xs font-bold uppercase">Cancelar</button>
+                <button onclick="saveWeightUpdate()" data-i18n="btnSaveWeight" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-600 text-black rounded-xl text-xs font-bold uppercase">Salvar Peso</button>
             </div>
         </div>
     </div>
 
-    <!-- ABA DE NAVEGAÇÃO INFERIOR COMPLETA -->
     <div class="bottom-nav fixed bottom-0 left-0 right-0 h-20 flex justify-around items-center z-30" id="app-nav" style="display: none;">
         <button class="nav-item active flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-casa" onclick="changeTab('casa')">
-            <i class="fas fa-home text-lg"></i>Treino Casa
+            <i class="fas fa-home text-lg"></i><span data-i18n="navHome">Treino Casa</span>
         </button>
         <button class="nav-item flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-academia" onclick="changeTab('academia')">
-            <i class="fas fa-dumbbell text-lg"></i>Academia
+            <i class="fas fa-dumbbell text-lg"></i><span data-i18n="navGym">Academia</span>
         </button>
         <button class="nav-item flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-progresso" onclick="changeTab('progresso')">
-            <i class="fas fa-chart-line text-lg"></i>Progresso
+            <i class="fas fa-chart-line text-lg"></i><span data-i18n="navProgress">Progresso</span>
         </button>
     </div>
 
     <script>
+        // Sistema de Dicionário de Idiomas Dinâmico (Internacionalização)
+        const traducoes = {
+            pt: {
+                authTitleLogin: "Acessar Painel",
+                authTitleRegister: "Criar Nova Conta",
+                lblFullName: "Nome Completo",
+                placeName: "Seu nome",
+                lblEmail: "E-mail do Atleta",
+                placeEmail: "atleta@email.com",
+                lblPassword: "Senha",
+                btnAuthLogin: "Acessar Painel",
+                btnAuthRegister: "Cadastrar Atleta",
+                toggleTextLogin: "Novo por aqui?",
+                toggleTextRegister: "Já tem uma conta?",
+                btnToggleLogin: "Criar uma conta",
+                btnToggleRegister: "Fazer Login",
+                btnChangeWeight: "Mudar Peso",
+                userGoalText: "Hipertrofia",
+                diagnosticTitle: "📊 Diagnóstico Corporal & Progresso",
+                lblImc: "IMC Atual:",
+                lblEvolution: "Evolução Geral:",
+                txtWorkout: "Treino",
+                workoutProgress: "Progresso do Treino",
+                dayExercises: "Exercícios do Dia",
+                lblRestTimer: "⏱️ Descanso",
+                btnTimerStart: "Iniciar",
+                btnTimerPause: "Pausar",
+                historyTitle: "📈 Histórico de Cargas & Evolução",
+                modalEditTitle: "Trocar Exercício",
+                placeModalName: "Nome do exercício...",
+                placeModalWeight: "Carga",
+                placeModalReps: "Séries",
+                btnCancel: "Cancelar",
+                btnConfirm: "Confirmar",
+                modalWeightTitle: "Atualizar Peso Corporal",
+                modalWeightDesc: "Insira seu peso atualizado em kg. Isso recalculará seu diagnóstico e adaptará sua evolução de treinos.",
+                btnSaveWeight: "Salvar Peso",
+                navHome: "Treino Casa",
+                navGym: "Academia",
+                navProgress: "Progresso",
+                alertRegisterSuccess: "Cadastro realizado com sucesso para: ",
+                alertRegisterRedirect: "! Redirecionando para o painel...",
+                alertTimerFinish: "Hora de esmagar a próxima série!",
+                confirmDelete: "Deseja realmente excluir este exercício?",
+                lblCompletedText: "Concluído",
+                lblPaidWorkout: "🔥 Treino Pago!",
+                lblNoExercises: "Nenhum exercício listado para hoje. Adicione um novo!",
+                lblExercisesCounter: "Exercícios",
+                imcUnderweight: "Abaixo do peso",
+                imcIdeal: "Peso Ideal",
+                imcOverweight: "Sobrepeso",
+                imcObesity: "Obesidade",
+                evolLost: "Perdeu",
+                evolLostTail: "kg! Carga corporal adaptada.",
+                evolGained: "Ganhou",
+                evolGainedTail: "kg. Força gravitacional maior em Casa.",
+                evolStable: "Peso estável. Foco na progressão.",
+                historyLogWeight: "Peso Corporal Atualizado",
+                // Histórico padrão inicial
+                hist1_name: "Supino Reto com Barra", hist1_val: "Subiu para 20kg/lado",
+                hist2_name: "Leg Press 45 Graus", hist2_val: "Subiu para 120kg total",
+                hist3_name: "Remada Curvada com Galão", hist3_val: "Aumento de 2 reps"
+            },
+            en: {
+                authTitleLogin: "Sign In",
+                authTitleRegister: "Create New Account",
+                lblFullName: "Full Name",
+                placeName: "Your name",
+                lblEmail: "Athlete's Email",
+                placeEmail: "athlete@email.com",
+                lblPassword: "Password",
+                btnAuthLogin: "Sign In",
+                btnAuthRegister: "Register Athlete",
+                toggleTextLogin: "New here?",
+                toggleTextRegister: "Already have an account?",
+                btnToggleLogin: "Create an account",
+                btnToggleRegister: "Sign In",
+                btnChangeWeight: "Update Weight",
+                userGoalText: "Hypertrophy",
+                diagnosticTitle: "📊 Body Diagnostic & Progress",
+                lblImc: "Current BMI:",
+                lblEvolution: "Overall Evolution:",
+                txtWorkout: "Workout",
+                workoutProgress: "Workout Progress",
+                dayExercises: "Exercises of the Day",
+                lblRestTimer: "⏱️ Rest",
+                btnTimerStart: "Start",
+                btnTimerPause: "Pause",
+                historyTitle: "📈 Load History & Evolution",
+                modalEditTitle: "Change Exercise",
+                placeModalName: "Exercise name...",
+                placeModalWeight: "Load/Weight",
+                placeModalReps: "Sets/Reps",
+                btnCancel: "Cancel",
+                btnConfirm: "Confirm",
+                modalWeightTitle: "Update Body Weight",
+                modalWeightDesc: "Enter your updated weight in kg. This will recalculate your diagnostic and adapt your workout evolution.",
+                btnSaveWeight: "Save Weight",
+                navHome: "Home Workout",
+                navGym: "Gym Workout",
+                navProgress: "Progress",
+                alertRegisterSuccess: "Registration successful for: ",
+                alertRegisterRedirect: "! Redirecting to dashboard...",
+                alertTimerFinish: "Time to crush the next set!",
+                confirmDelete: "Do you really want to delete this exercise?",
+                lblCompletedText: "Completed",
+                lblPaidWorkout: "🔥 Workout Done!",
+                lblNoExercises: "No exercises listed for today. Add a new one!",
+                lblExercisesCounter: "Exercises",
+                imcUnderweight: "Underweight",
+                imcIdeal: "Ideal Weight",
+                imcOverweight: "Overweight",
+                imcObesity: "Obesity",
+                evolLost: "Lost",
+                evolLostTail: "kg! Body load adapted.",
+                evolGained: "Gained",
+                evolGainedTail: "kg. Higher gravitational force at Home.",
+                evolStable: "Stable weight. Focus on progression.",
+                historyLogWeight: "Body Weight Updated",
+                // Histórico padrão inicial
+                hist1_name: "Barbell Bench Press", hist1_val: "Increased to 20kg/side",
+                hist2_name: "45 Degree Leg Press", hist2_val: "Increased to 120kg total",
+                hist3_name: "Gallon Bent-Over Row", hist3_val: "Increased by 2 reps"
+            }
+        };
+
+        // Identifica automaticamente se o navegador está em Inglês, senão define Português como padrão
+        const appLanguage = navigator.language.startsWith('en') ? 'en' : 'pt';
+
         // Variável de controle do tipo de autenticação (pode ser 'login' ou 'cadastro')
         let authMode = 'login';
 
@@ -323,44 +411,45 @@
             initialWeight: 78.0
         };
 
+        // Estrutura de dados com suporte nativo a bi-idioma (name_pt e name_en / stats_pt e stats_en)
         let routineData = { 
             casa: { 
                 A: [
-                    { name: "Flexão de Braço (Solo)", stats: "Peso Corporal", reps: "4x12", done: false },
-                    { name: "Flexão Inclinada (Sofá)", stats: "Peso Corporal", reps: "3x15", done: false },
-                    { name: "Tríceps Banco (Cadeira)", stats: "Peso Corporal", reps: "4x12", done: false },
-                    { name: "Abdominal Supra", stats: "Sem Carga", reps: "4x20", done: false }
+                    { name_pt: "Flexão de Braço (Solo)", name_en: "Push-ups (Floor)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x12", done: false },
+                    { name_pt: "Flexão Inclinada (Sofá)", name_en: "Incline Push-ups (Sofa)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "3x15", done: false },
+                    { name_pt: "Tríceps Banco (Cadeira)", name_en: "Bench Dips (Chair)", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x12", done: false },
+                    { name_pt: "Abdominal Supra", name_en: "Crunches", stats_pt: "Sem Carga", stats_en: "No Load", reps: "4x20", done: false }
                 ], 
                 B: [
-                    { name: "Remada Curvada com Galão", stats: "10kg cada lado", reps: "4x12", done: false },
-                    { name: "Rosca Direta com Galão", stats: "5kg", reps: "4x12", done: false },
-                    { name: "Prancha Isométrica", stats: "Estático", reps: "3x45s", done: false }
+                    { name_pt: "Remada Curvada com Galão", name_en: "Gallon Bent-Over Row", stats_pt: "10kg cada lado", stats_en: "10kg each side", reps: "4x12", done: false },
+                    { name_pt: "Rosca Direta com Galão", name_en: "Gallon Biceps Curl", stats_pt: "5kg", stats_en: "5kg", reps: "4x12", done: false },
+                    { name_pt: "Prancha Isométrica", name_en: "Plank", stats_pt: "Estático", stats_en: "Static", reps: "3x45s", done: false }
                 ], 
                 C: [
-                    { name: "Agachamento Livre", stats: "Peso Corporal", reps: "4x20", done: false },
-                    { name: "Afundo Unilateral", stats: "Sem Carga", reps: "3x12 cada perna", done: false },
-                    { name: "Elevação Lateral com Garrafas", stats: "2kg cada", reps: "4x15", done: false }
+                    { name_pt: "Agachamento Livre", name_en: "Bodyweight Squat", stats_pt: "Peso Corporal", stats_en: "Bodyweight", reps: "4x20", done: false },
+                    { name_pt: "Afundo Unilateral", name_en: "Lunges", stats_pt: "Sem Carga", stats_en: "No Load", reps: "3x12 cada perna", stats_en: "3x12 each leg", reps: "3x12", done: false },
+                    { name_pt: "Elevação Lateral com Garrafas", name_en: "Bottle Lateral Raise", stats_pt: "2kg cada", stats_en: "2kg each", reps: "4x15", done: false }
                 ] 
             }, 
             academia: { 
                 A: [
-                    { name: "Supino Reto com Barra", stats: "20kg de cada lado", reps: "4x10", done: false },
-                    { name: "Supino Inclinado com Halteres", stats: "18kg por Halter", reps: "4x12", done: false },
-                    { name: "Voador (Pec Deck)", stats: "45kg", reps: "3x12", done: false },
-                    { name: "Tríceps Pulley / Corda", stats: "25kg", reps: "4x12", done: false },
-                    { name: "Desenvolvimento Ombros Máquina", stats: "15kg de cada lado", reps: "4x10", done: false }
+                    { name_pt: "Supino Reto com Barra", name_en: "Barbell Bench Press", stats_pt: "20kg de cada lado", stats_en: "20kg each side", reps: "4x10", done: false },
+                    { name_pt: "Supino Inclinado com Halteres", name_en: "Incline Dumbbell Press", stats_pt: "18kg por Halter", stats_en: "18kg per Dumbbell", reps: "4x12", done: false },
+                    { name_pt: "Voador (Pec Deck)", name_en: "Chest Fly (Pec Deck)", stats_pt: "45kg", stats_en: "45kg", reps: "3x12", done: false },
+                    { name_pt: "Tríceps Pulley / Corda", name_en: "Triceps Rope Pushdown", stats_pt: "25kg", stats_en: "25kg", reps: "4x12", done: false },
+                    { name_pt: "Desenvolvimento Ombros Máquina", name_en: "Machine Shoulder Press", stats_pt: "15kg de cada lado", stats_en: "15kg each side", reps: "4x10", done: false }
                 ], 
                 B: [
-                    { name: "Puxada Alta no Pulley", stats: "50kg", reps: "4x10", done: false },
-                    { name: "Remada Baixa Sentado", stats: "40kg", reps: "4x12", done: false },
-                    { name: "Rosca Direta com Barra W", stats: "8kg de cada lado", reps: "4x10", done: false },
-                    { name: "Rosca Martelo com Halteres", stats: "12kg por Halter", reps: "3x12", done: false }
+                    { name_pt: "Puxada Alta no Pulley", name_en: "Lat Pulldown", stats_pt: "50kg", stats_en: "50kg", reps: "4x10", done: false },
+                    { name_pt: "Remada Baixa Sentado", name_en: "Seated Cable Row", stats_pt: "40kg", stats_en: "40kg", reps: "4x12", done: false },
+                    { name_pt: "Rosca Direta com Barra W", name_en: "W-Bar Biceps Curl", stats_pt: "8kg de cada lado", stats_en: "8kg each side", reps: "4x10", done: false },
+                    { name_pt: "Rosca Martelo com Halteres", name_en: "Hammer Curl", stats_pt: "12kg por Halter", stats_en: "12kg per Dumbbell", reps: "3x12", done: false }
                 ], 
                 C: [
-                    { name: "Agachamento no Smith", stats: "15kg de cada lado", reps: "4x10", done: false },
-                    { name: "Leg Press 45 Graus", stats: "120kg Total", reps: "4x12", done: false },
-                    { name: "Cadeira Extensora", stats: "40kg", reps: "4x15", done: false },
-                    { name: "Mesa Flexora", stats: "30kg", reps: "4x12", done: false }
+                    { name_pt: "Agachamento no Smith", name_en: "Smith Machine Squat", stats_pt: "15kg de cada lado", stats_en: "15kg each side", reps: "4x10", done: false },
+                    { name_pt: "Leg Press 45 Graus", name_en: "45-Degree Leg Press", stats_pt: "120kg Total", stats_en: "120kg Total", reps: "4x12", done: false },
+                    { name_pt: "Cadeira Extensora", name_en: "Leg Extension", stats_pt: "40kg", stats_en: "40kg", reps: "4x15", done: false },
+                    { name_pt: "Mesa Flexora", name_en: "Lying Leg Curl", stats_pt: "30kg", stats_en: "30kg", reps: "4x12", done: false }
                 ] 
             } 
         };
@@ -373,7 +462,56 @@
         const appScreen = document.getElementById('app-screen');
         const appNav = document.getElementById('app-nav');
 
-        // Função para alternar dinamicamente entre Login e Cadastro
+        // Função automática que traduz os rótulos fixos e placeholders
+        function traduzirInterface() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const chave = el.getAttribute('data-i18n');
+                if (traducoes[appLanguage][chave]) {
+                    el.innerText = traducoes[appLanguage][chave];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-holder]').forEach(el => {
+                const chave = el.getAttribute('data-i18n-holder');
+                if (traducoes[appLanguage][chave]) {
+                    el.placeholder = traducoes[appLanguage][chave];
+                }
+            });
+
+            // Alimenta a datalist do modal conforme o idioma
+            const datalist = document.getElementById('global-exercises-list');
+            const listaExercicios = appLanguage === 'en' ? 
+                ["Barbell Bench Press", "Squat", "Lat Pulldown", "Push-ups", "Pull-ups", "Dumbbell Curl", "Triceps Pushdown", "Lateral Raise", "Shoulder Press", "Lunges"] :
+                ["Supino Reto com Barra", "Agachamento Livre", "Puxada Alta no Pulley", "Flexão de Braço", "Barra Fixa Supinada", "Rosca Direta com Halteres", "Tríceps na Polia", "Elevação Lateral", "Desenvolvimento Ombros", "Afundo / Passada"];
+            
+            datalist.innerHTML = '';
+            listaExercicios.forEach(ex => {
+                const opt = document.createElement('option');
+                opt.value = ex;
+                datalist.appendChild(opt);
+            });
+        }
+
+        // Renderiza o histórico padrão traduzido
+        function renderizarHistoricoInicial() {
+            const historyList = document.getElementById('progress-history-list');
+            historyList.innerHTML = `
+                <div class="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
+                    <span class="text-gray-300 font-semibold">${traducoes[appLanguage].hist1_name}</span>
+                    <span class="text-green-400 font-bold">${traducoes[appLanguage].hist1_val}</span>
+                </div>
+                <div class="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
+                    <span class="text-gray-300 font-semibold">${traducoes[appLanguage].hist2_name}</span>
+                    <span class="text-green-400 font-bold">${traducoes[appLanguage].hist2_val}</span>
+                </div>
+                <div class="p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between">
+                    <span class="text-gray-300 font-semibold">${traducoes[appLanguage].hist3_name}</span>
+                    <span class="text-cyan-400 font-bold">${traducoes[appLanguage].hist3_val}</span>
+                </div>
+            `;
+        }
+
+        // Alternar dinamicamente entre Login e Cadastro (Apoiando múltiplos idiomas)
         function toggleAuthMode() {
             const nameField = document.getElementById('name-field');
             const authTitle = document.getElementById('auth-title');
@@ -383,45 +521,47 @@
 
             if (authMode === 'login') {
                 authMode = 'cadastro';
-                authTitle.innerText = "Criar Nova Conta";
+                authTitle.innerText = traducoes[appLanguage].authTitleRegister;
                 nameField.classList.remove('hidden');
                 document.getElementById('auth-name').required = true;
-                btnSubmit.innerText = "Cadastrar Atleta";
-                toggleText.innerText = "Já tem uma conta?";
-                btnToggle.innerText = "Fazer Login";
+                btnSubmit.innerText = traducoes[appLanguage].btnAuthRegister;
+                toggleText.innerText = traducoes[appLanguage].toggleTextRegister;
+                btnToggle.innerText = traducoes[appLanguage].btnToggleRegister;
             } else {
                 authMode = 'login';
-                authTitle.innerText = "Acessar Painel";
+                authTitle.innerText = traducoes[appLanguage].authTitleLogin;
                 nameField.classList.add('hidden');
                 document.getElementById('auth-name').required = false;
-                btnSubmit.innerText = "Acessar Painel";
-                toggleText.innerText = "Novo por aqui?";
-                btnToggle.innerText = "Criar uma conta";
+                btnSubmit.innerText = traducoes[appLanguage].btnAuthLogin;
+                toggleText.innerText = traducoes[appLanguage].toggleTextLogin;
+                btnToggle.innerText = traducoes[appLanguage].btnToggleLogin;
             }
         }
 
         function updateProfileUI() {
             document.getElementById('user-name').innerText = userProfile.name;
-            document.getElementById('user-stats').innerText = `${userProfile.weight.toFixed(1)}kg | ${userProfile.height}m | ${userProfile.age} anos`;
+            const lblAnos = appLanguage === 'en' ? 'years old' : 'anos';
+            document.getElementById('user-stats').innerText = `${userProfile.weight.toFixed(1)}kg | ${userProfile.height}m | ${userProfile.age} ${lblAnos}`;
+            
             const imc = userProfile.weight / (userProfile.height * userProfile.height);
             let classf = "";
-            if (imc < 18.5) classf = "Abaixo do peso";
-            else if (imc < 25) classf = "Peso Ideal";
-            else if (imc < 30) classf = "Sobrepeso";
-            else classf = "Obesidade";
+            if (imc < 18.5) classf = traducoes[appLanguage].imcUnderweight;
+            else if (imc < 25) classf = traducoes[appLanguage].imcIdeal;
+            else if (imc < 30) classf = traducoes[appLanguage].imcOverweight;
+            else classf = traducoes[appLanguage].imcObesity;
             
             document.getElementById('lbl-imc-val').innerText = `${imc.toFixed(1)} (${classf})`;
 
             const diff = userProfile.weight - userProfile.initialWeight;
             const lblEvolucao = document.getElementById('lbl-evolucao-status');
             if(diff < 0) {
-                lblEvolucao.innerText = `Perdeu ${Math.abs(diff).toFixed(1)}kg! Carga corporal adaptada.`;
+                lblEvolucao.innerText = `${traducoes[appLanguage].evolLost} ${Math.abs(diff).toFixed(1)}${traducoes[appLanguage].evolLostTail}`;
                 lblEvolucao.className = "text-green-400 text-sm";
             } else if(diff > 0) {
-                lblEvolucao.innerText = `Ganhou ${diff.toFixed(1)}kg. Força gravitacional maior em Casa.`;
+                lblEvolucao.innerText = `${traducoes[appLanguage].evolGained} ${diff.toFixed(1)}${traducoes[appLanguage].evolGainedTail}`;
                 lblEvolucao.className = "text-yellow-400 text-sm";
             } else {
-                lblEvolucao.innerText = "Peso estável. Foco na progressão.";
+                lblEvolucao.innerText = traducoes[appLanguage].evolStable;
                 lblEvolucao.className = "text-cyan-400 text-sm";
             }
         }
@@ -431,6 +571,7 @@
             document.getElementById('weight-modal').classList.remove('hidden');
         }
 
+        // Mantém funcionalidade idêntica
         function closeWeightModal() {
             document.getElementById('weight-modal').classList.add('hidden');
         }
@@ -447,7 +588,7 @@
                 const historyList = document.getElementById('progress-history-list');
                 const log = document.createElement('div');
                 log.className = "p-3 bg-gray-900 rounded-lg border border-gray-800 flex justify-between";
-                log.innerHTML = `<span class="text-gray-300 font-semibold">Peso Corporal Atualizado</span><span class="text-cyan-400 font-bold">${newWeight.toFixed(1)} kg</span>`;
+                log.innerHTML = `<span class="text-gray-300 font-semibold">${traducoes[appLanguage].historyLogWeight}</span><span class="text-cyan-400 font-bold">${newWeight.toFixed(1)} kg</span>`;
                 historyList.prepend(log);
             }
         }
@@ -455,8 +596,9 @@
         function adaptExercisesToWeight() {
             const diff = userProfile.weight - userProfile.initialWeight;
             routineData.casa.A.forEach(ex => {
-                if(ex.name.includes("Flexão") || ex.name.includes("Tríceps Banco")) {
-                    ex.stats = diff === 0 ? "Peso Corporal" : `Peso Corp. (${userProfile.weight.toFixed(1)}kg)`;
+                if(ex.name_pt.includes("Flexão") || ex.name_pt.includes("Tríceps Banco")) {
+                    ex.stats_pt = diff === 0 ? "Peso Corporal" : `Peso Corp. (${userProfile.weight.toFixed(1)}kg)`;
+                    ex.stats_en = diff === 0 ? "Bodyweight" : `Bodyweight (${userProfile.weight.toFixed(1)}kg)`;
                 }
             });
         }
@@ -496,43 +638,48 @@
         function updateProgressBar() {
             const list = routineData[currentEnvironment][currentDay] || [];
             if(list.length === 0) {
-                document.getElementById('progress-percent').innerText = "0% Concluído";
+                document.getElementById('progress-percent').innerText = "0% " + traducoes[appLanguage].lblCompletedText;
                 document.getElementById('progress-bar-fill').style.width = "0%";
                 return;
             }
             const completedCount = list.filter(ex => ex.done).length;
             const percent = Math.round((completedCount / list.length) * 100);
             
-            document.getElementById('progress-percent').innerText = `${percent}% Concluído`;
+            document.getElementById('progress-percent').innerText = `${percent}% ${traducoes[appLanguage].lblCompletedText}`;
             document.getElementById('progress-bar-fill').style.width = `${percent}%`;
             
             if(percent === 100) {
-                document.getElementById('progress-percent').innerText = "🔥 Treino Pago!";
+                document.getElementById('progress-percent').innerText = traducoes[appLanguage].lblPaidWorkout;
             }
         }
 
         function deleteExercise(idx) {
-            if(confirm("Deseja realmente excluir este exercício?")) {
+            if(confirm(traducoes[appLanguage].confirmDelete)) {
                 routineData[currentEnvironment][currentDay].splice(idx, 1);
                 renderWorkout();
             }
         }
 
+        // Renderização adaptada para carregar os campos de nome e carga com base no idioma do navegador
         function renderWorkout() {
             const container = document.getElementById('workout-container');
             const list = routineData[currentEnvironment][currentDay];
             
             if(!list || list.length === 0) {
-                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-sm text-gray-400">Nenhum exercício listado para hoje. Adicione um novo!</div>`;
-                document.getElementById('category-counter').innerText = "0 Exercícios";
+                container.innerHTML = `<div class="p-4 bg-gray-800 rounded-xl text-center text-sm text-gray-400">${traducoes[appLanguage].lblNoExercises}</div>`;
+                document.getElementById('category-counter').innerText = `0 ${traducoes[appLanguage].lblExercisesCounter}`;
                 updateProgressBar();
                 return;
             }
 
-            document.getElementById('category-counter').innerText = `${list.length} Exercícios`;
+            document.getElementById('category-counter').innerText = `${list.length} ${traducoes[appLanguage].lblExercisesCounter}`;
             container.innerHTML = '';
             
             list.forEach((ex, idx) => {
+                // Seleção dinâmica das chaves de idioma do banco de dados simulado
+                const nameDisplay = appLanguage === 'en' ? ex.name_en : ex.name_pt;
+                const statsDisplay = appLanguage === 'en' ? ex.stats_en : ex.stats_pt;
+
                 const card = document.createElement('div');
                 card.className = `exercise-card p-4 rounded-xl flex justify-between items-center ${ex.done ? 'completed' : ''}`;
                 card.innerHTML = `
@@ -541,12 +688,12 @@
                             ${ex.done ? '<i class="fas fa-check text-xs"></i>' : ''}
                         </div>
                         <div>
-                            <h4 class="font-bold text-white text-base ${ex.done ? 'line-through text-gray-500' : ''}">${ex.name}</h4>
-                            <p class="text-xs text-gray-400 mt-0.5">${ex.stats} | ${ex.reps}</p>
+                            <h4 class="font-bold text-white text-base ${ex.done ? 'line-through text-gray-500' : ''}">${nameDisplay}</h4>
+                            <p class="text-xs text-gray-400 mt-0.5">${statsDisplay} | ${ex.reps}</p>
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openEditModal(${idx}, '${ex.name}', '${ex.stats}', '${ex.reps}')" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-cyan-500 rounded-lg flex justify-center items-center text-gray-400 hover:text-white transition">
+                        <button onclick="openEditModal(${idx}, '${nameDisplay}', '${statsDisplay}', '${ex.reps}')" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-cyan-500 rounded-lg flex justify-center items-center text-gray-400 hover:text-white transition">
                             <i class="fas fa-edit text-xs"></i>
                         </button>
                         <button onclick="deleteExercise(${idx})" class="w-9 h-9 bg-gray-800 border border-gray-700 hover:border-red-500 rounded-lg flex justify-center items-center text-red-500 hover:bg-red-950 transition">
@@ -588,8 +735,14 @@
             const novasReps = document.getElementById('modal-exercise-reps').value;
             
             if(routineData[currentEnvironment] && routineData[currentEnvironment][currentDay][currentIndexSelecionado]) {
-                routineData[currentEnvironment][currentDay][currentIndexSelecionado].name = novoNome;
-                routineData[currentEnvironment][currentDay][currentIndexSelecionado].stats = novaCarga;
+                // Atualiza tanto a chave pt quanto en para evitar inconsistências durante a edição local
+                if (appLanguage === 'en') {
+                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].name_en = novoNome;
+                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].stats_en = novaCarga;
+                } else {
+                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].name_pt = novoNome;
+                    routineData[currentEnvironment][currentDay][currentIndexSelecionado].stats_pt = novaCarga;
+                }
                 routineData[currentEnvironment][currentDay][currentIndexSelecionado].reps = novasReps;
             }
             closeEditModal();
@@ -610,10 +763,10 @@
         function toggleTimer() {
             if(isTimerRunning) {
                 clearInterval(timerInterval);
-                document.getElementById('btn-start-toggle').innerText = "Iniciar";
+                document.getElementById('btn-start-toggle').innerText = traducoes[appLanguage].btnTimerStart;
                 document.getElementById('btn-start-toggle').classList.replace('bg-yellow-600', 'bg-red-600');
             } else {
-                document.getElementById('btn-start-toggle').innerText = "Pausar";
+                document.getElementById('btn-start-toggle').innerText = traducoes[appLanguage].btnTimerPause;
                 document.getElementById('btn-start-toggle').classList.replace('bg-red-600', 'bg-yellow-600');
                 timerInterval = setInterval(() => {
                     if(timeRemaining > 0) {
@@ -621,7 +774,7 @@
                         updateTimerDisplay();
                     } else {
                         clearInterval(timerInterval);
-                        alert("Hora de esmagar a próxima série!");
+                        alert(traducoes[appLanguage].alertTimerFinish);
                         resetTimer();
                     }
                 }, 1000);
@@ -633,7 +786,7 @@
             clearInterval(timerInterval);
             isTimerRunning = false;
             timeRemaining = secs;
-            document.getElementById('btn-start-toggle').innerText = "Iniciar";
+            document.getElementById('btn-start-toggle').innerText = traducoes[appLanguage].btnTimerStart;
             document.getElementById('btn-start-toggle').className = "px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg";
             updateTimerDisplay();
         }
@@ -642,19 +795,24 @@
             setTimerSeconds(60);
         }
 
+        // Executado na inicialização da página
+        document.addEventListener('DOMContentLoaded', () => {
+            traduzirInterface();
+            renderizarHistoricoInicial();
+        });
+
         // Evento de envio do formulário de Login/Cadastro
         document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
             
             const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
 
             if (authMode === 'cadastro') {
                 const nameInput = document.getElementById('auth-name').value;
                 if(nameInput.trim() !== "") {
                     userProfile.name = nameInput;
                 }
-                alert(`Cadastro realizado com sucesso para: ${email}! Redirecionando para o painel...`);
+                alert(`${traducoes[appLanguage].alertRegisterSuccess}${email}${traducoes[appLanguage].alertRegisterRedirect}`);
             }
 
             // Esconde a tela de login/cadastro e abre o app

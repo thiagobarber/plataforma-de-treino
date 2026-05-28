@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Training - Foco & Evolução</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
@@ -19,11 +19,11 @@
         <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-green-400">Entrar no Hybrid Training</h2>
         
         <form id="auth-form" class="space-y-4">
-            <div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">E-mail</label>
                 <input type="email" id="auth-email" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 focus:border-green-500 focus:outline-none text-white">
             </div>
-            <div>
+            <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Senha</label>
                 <input type="password" id="auth-password" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 focus:border-green-500 focus:outline-none text-white">
             </div>
@@ -41,38 +41,38 @@
 
     <div id="setup-screen" class="hidden max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
         <h2 class="text-2xl font-bold text-center mb-6 text-green-400">Configure seu Perfil</h2>
-        <form id="setup-form" class="space-y-4">
-            <div>
+        <form id="setup-form">
+            <div class="mb-4">
                 <label class="block text-sm font-medium mb-1">Nome Completo</label>
-                <input type="text" id="setup-name" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
+                <input type="text" id="setup-name" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Peso (kg)</label>
-                    <input type="number" step="0.1" id="setup-weight" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
+                    <input type="number" step="0.1" id="setup-weight" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Altura (m)</label>
-                    <input type="number" step="0.01" id="setup-height" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
+                    <input type="number" step="0.01" id="setup-height" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">Idade</label>
-                    <input type="number" id="setup-age" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
+                    <input type="number" id="setup-age" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Gênero</label>
-                    <select id="setup-gender" class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
+                    <select id="setup-gender" class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
                         <option value="masculino">Masculino</option>
                         <option value="feminino">Feminino</option>
                         <option value="outro">Outro</option>
                     </select>
                 </div>
             </div>
-            <div>
+            <div class="mb-6">
                 <label class="block text-sm font-medium mb-1">Objetivo Principal</label>
-                <input type="text" id="setup-goal" placeholder="Ex: Ganhar força, Hipertrofia, Calistenia" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:border-green-500 focus:outline-none">
+                <input type="text" id="setup-goal" placeholder="Ex: Ganhar força, Hipertrofia, Calistenia" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
             </div>
             <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-gray-900 font-bold py-2.5 rounded transition">
                 Salvar Perfil e Começar
@@ -81,30 +81,30 @@
     </div>
 
     <div id="app-screen" class="hidden flex-1 w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-        <header class="flex justify-between items-center border-b border-gray-800 pb-4">
+        <header class="flex justify-between items-center border-b border-gray-800 pb-4 mb-6">
             <div>
                 <h1 class="text-xl md:text-3xl font-bold">Olá, <span id="user-display-name" class="text-green-400">Atleta</span>!</h1>
                 <p class="text-sm text-gray-400">Foco nos treinos e consistência hoje.</p>
             </div>
-            <button id="logout-btn" class="bg-red-900/50 hover:bg-red-900 text-red-200 text-sm px-4 py-2 rounded transition border border-red-700">
+            <button id="logout-btn" class="bg-red-950 hover:bg-red-900 text-red-200 text-sm px-4 py-2 rounded transition border border-red-700">
                 Sair
             </button>
         </header>
 
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-800/50 p-4 rounded-lg border border-gray-800">
-            <div class="text-center">
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-800 p-4 rounded-lg border border-gray-700 mb-6">
+            <div class="text-center p-2">
                 <span class="block text-xs text-gray-400 uppercase tracking-wider">Peso</span>
                 <span id="card-weight" class="text-xl font-bold">-- kg</span>
             </div>
-            <div class="text-center">
+            <div class="text-center p-2">
                 <span class="block text-xs text-gray-400 uppercase tracking-wider">Altura</span>
                 <span id="card-height" class="text-xl font-bold">-- m</span>
             </div>
-            <div class="text-center">
+            <div class="text-center p-2">
                 <span class="block text-xs text-gray-400 uppercase tracking-wider">Idade</span>
                 <span id="card-age" class="text-xl font-bold">-- anos</span>
             </div>
-            <div class="text-center">
+            <div class="text-center p-2">
                 <span class="block text-xs text-gray-400 uppercase tracking-wider">Objetivo</span>
                 <span id="card-goal" class="text-xl font-bold truncate block px-2">--</span>
             </div>
@@ -134,7 +134,7 @@
             } else if (typeof window.supabase !== 'undefined') {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             } else {
-                alert("Erro grave: Biblioteca do Supabase não carregou.");
+                alert("Erro: Biblioteca do Supabase não carregou.");
             }
         } catch (e) {
             alert("Falha na inicialização: " + e.message);

@@ -3,1052 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Fitness Pro Ultimate</title>
+    <title>Hybrid Training - Foco & Evolução</title>
+    <!-- Tailwind CSS para um visual moderno -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Biblioteca Oficial do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --bg-main: #0f1115;
-            --bg-card: #181c24;
-            --bg-nav: #12141c;
-            --primary: #ff3838;
-            --primary-glow: rgba(255, 56, 56, 0.2);
-            --accent: #00d2d3;
-            --accent-glow: rgba(0, 210, 211, 0.3);
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --border: #222834;
-            --success: #2ed573;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            padding-bottom: 90px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .setup-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-
-        .brand-logo {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-        }
-
-        .brand-logo span { color: var(--primary); }
-
-        .form-group { margin-bottom: 18px; }
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            padding: 14px;
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .btn-primary {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px var(--primary-glow);
-        }
-
-        .btn-auth-toggle {
-            background: none;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            display: block;
-            margin: 15px auto 0;
-            font-size: 0.85rem;
-        }
-
-        #screen-setup, #screen-app { display: none; }
-
-        .profile-widget {
-            background: linear-gradient(135deg, #1e2430, #141821);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .profile-user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        .btn-reset-setup {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: fit-content;
-        }
-
-        .badge-goal {
-            background: rgba(0, 210, 211, 0.1);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            align-self: flex-start;
-        }
-
-        .bio-panel {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-        }
-
-        .bio-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .bio-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .bio-item span {
-            color: var(--text-muted);
-            display: block;
-            font-size: 0.75rem;
-        }
-
-        .abc-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .abc-btn {
-            flex: 1;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .abc-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .exercise-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-
-        .exercise-hero {
-            display: flex;
-            padding: 16px;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .exercise-visual-box {
-            width: 75px;
-            height: 75px;
-            background-color: var(--bg-main);
-            border-radius: 12px;
-            flex-shrink: 0;
-            border: 1px solid var(--border);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .exercise-visual-box svg {
-            width: 45px;
-            height: 45px;
-            fill: none;
-            stroke: var(--text-muted);
-            stroke-width: 2;
-        }
-
-        .exercise-detail { flex: 1; }
-        .exercise-detail h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
-        .exercise-detail p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
-
-        .progress-log-zone {
-            background: rgba(46, 213, 115, 0.05);
-            border-top: 1px dashed var(--border);
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            color: var(--success);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .exercise-footer {
-            background: rgba(0, 0, 0, 0.15);
-            padding: 10px 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .meta-tag { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
-        
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-action-ex {
-            background: none;
-            border: none;
-            color: var(--accent);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            max-width: 450px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .ai-guide-box {
-            background: var(--bg-main);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-left: 3px solid var(--accent);
-        }
-
-        .ai-guide-box h5 { color: var(--accent); margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase; }
-        .ai-guide-box p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
-
-        .hub-timer {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 15px;
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        .timer-val { 
-            font-size: 2.8rem; 
-            font-weight: 800; 
-            font-family: monospace; 
-            margin: 5px auto; 
-            background: var(--bg-main);
-            border: 1px dashed var(--border);
-            color: var(--accent);
-            padding: 5px 15px;
-            border-radius: 10px;
-            width: fit-content;
-            cursor: pointer;
-        }
-
-        .timer-actions { display: flex; gap: 8px; justify-content: center; margin-top: 12px; }
-
-        .btn-sec {
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 70px;
-            background: var(--bg-nav);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .nav-item.active { color: var(--primary); }
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-
-        .ai-floating-btn {
-            position: fixed;
-            bottom: 85px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--accent), #00a8ff);
-            border-radius: 50%;
-            box-shadow: 0 4px 20px var(--accent-glow);
-            border: 2px solid rgba(255,255,255,0.2);
-            cursor: pointer;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1500;
-            animation: pulseIA 2s infinite;
-        }
-
-        @keyframes pulseIA {
-            0% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
-            50% { transform: scale(1.06); box-shadow: 0 4px 25px rgba(0, 210, 211, 0.6); }
-            100% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
-        }
-
-        .ai-floating-btn svg { width: 28px; height: 28px; fill: white; }
-
-        .ai-chat-container {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg-main);
-            z-index: 2500;
-            display: none;
-            flex-direction: column;
-        }
-
-        @media (min-width: 600px) {
-            .ai-chat-container {
-                top: auto; left: auto;
-                right: 20px; bottom: 160px;
-                width: 380px; height: 550px;
-                border-radius: 20px;
-                border: 1px solid var(--border);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            }
-        }
-
-        .ai-chat-header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ai-chat-title { display: flex; align-items: center; gap: 10px; }
-        .ai-status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
-
-        .ai-chat-body {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .chat-bubble { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
-        .chat-bubble.ai { background: var(--bg-card); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
-        .chat-bubble.user { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
-
-        .ai-chat-footer { padding: 12px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; gap: 8px; }
-        .ai-chat-input { flex: 1; background: var(--bg-main); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: white; outline: none; font-size: 0.9rem; }
-        .btn-send-chat { background: var(--accent); border: none; color: black; font-weight: 700; padding: 0 16px; border-radius: 10px; cursor: pointer; }
-        
-        .setup-api-box { background: rgba(0,0,0,0.2); border: 1px dashed var(--border); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.8rem; }
+        .hidden { display: none; }
     </style>
 </head>
-<body>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <div class="container">
+    <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
+    <div id="auth-screen" class="max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+        <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-green-400">Entrar no Hybrid Training</h2>
         
-        <div id="screen-auth" class="setup-card">
-            <div class="brand-logo">Hybrid<span>Fitness</span></div>
-            <h3 id="auth-title" style="text-align: center; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-muted);">ENTRAR NA CONTA</h3>
-            <form onsubmit="handleAuthSubmit(event)">
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="auth-email" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="auth-password" required placeholder="******">
-                </div>
-                <button type="submit" id="btn-auth-submit" class="btn-primary">Entrar</button>
-            </form>
-            <button class="btn-auth-toggle" id="btn-auth-toggle" onclick="toggleAuthMode()">Não tem conta? Cadastre-se</button>
-        </div>
-
-        <div id="screen-setup" class="setup-card">
-            <div class="brand-logo">Configuração<span>Inicial</span></div>
-            
-            <div class="setup-api-box">
-                <label style="color: var(--accent); font-weight: 700; display:block; margin-bottom:4px;">Chave API Google Gemini (Opcional):</label>
-                <input type="password" id="in-gemini-key" placeholder="AIzaSy..." style="width:100%; padding:8px; background:#0f1115; border:1px solid var(--border); color:white; border-radius:6px; font-size:0.8rem;">
-                <p style="color: var(--text-muted); font-size:0.7rem; margin-top:4px;">Insira sua API Key para ativar inteligência dinâmica real.</p>
+        <form id="auth-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">E-mail</label>
+                <input type="email" id="auth-email" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 focus:border-green-500 focus:outline-none text-white">
             </div>
-
-            <form onsubmit="initApp(event)">
-                <div class="form-group">
-                    <label>Seu Nome / Apelido</label>
-                    <input type="text" id="in-name" required placeholder="Ex: Thiago">
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Peso (kg)</label>
-                        <input type="text" id="in-weight" required placeholder="Ex: 78">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Altura (m)</label>
-                        <input type="text" id="in-height" required placeholder="Ex: 1.64">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Idade</label>
-                        <input type="number" id="in-age" required placeholder="Ex: 30">
-                    </div>
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Gênero</label>
-                        <select id="in-gender">
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Objetivo</label>
-                        <select id="in-goal">
-                            <option value="Hipertrofia">💪 Hipertrofia</option>
-                            <option value="Definição">🔥 Queima & Definição</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">Salvar e Gerar Treinos</button>
-            </form>
-        </div>
-
-        <div id="screen-app">
-            <div class="profile-widget">
-                <div class="profile-header">
-                    <div class="profile-user-info">
-                        <h3 id="user-name">Atleta</h3>
-                        <p id="user-stats">00kg | 0.00m | 00 anos</p>
-                        <div class="profile-actions">
-                            <button class="btn-reset-setup" onclick="editProfileData()">Alterar Dados</button>
-                            <button class="btn-reset-setup" style="color: var(--primary)" onclick="handleLogout()">Sair</button>
-                        </div>
-                    </div>
-                    <div class="badge-goal" id="user-goal">Objetivo</div>
-                </div>
-                
-                <div class="bio-panel">
-                    <div class="bio-title">📊 Diagnóstico Corporal</div>
-                    <div class="bio-grid">
-                        <div class="bio-item"><span id="lbl-imc-val">IMC: --</span><strong id="lbl-imc-status">Calculando...</strong></div>
-                        <div class="bio-item"><span>Meta Corporal:</span><strong id="lbl-meta-corp">Definindo...</strong></div>
-                        <div class="bio-item" style="grid-column: span 2;"><span>Diretriz Alimentar:</span><p id="lbl-feed-advice" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 3px;"></p></div>
-                    </div>
-                </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Senha</label>
+                <input type="password" id="auth-password" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 focus:border-green-500 focus:outline-none text-white">
             </div>
+            <button type="submit" id="auth-submit-btn" class="w-full bg-green-500 hover:bg-green-600 text-gray-900 font-bold py-2.5 rounded transition">
+                Entrar
+            </button>
+        </form>
 
-            <div class="abc-tabs">
-                <button class="abc-btn active" id="btn-A" onclick="changeDay('A')">TREINO A</button>
-                <button class="abc-btn" id="btn-B" onclick="changeDay('B')">TREINO B</button>
-                <button class="abc-btn" id="btn-C" onclick="changeDay('C')">TREINO C</button>
-            </div>
-
-            <div id="workout-container"></div>
-
-            <div class="hub-timer">
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;">⏱️ Descanso</span>
-                <div class="timer-val" id="timer-display" onclick="editTime()">01:00</div>
-                <div class="timer-actions">
-                    <button class="btn-sec" id="btn-start-toggle" onclick="toggleTimer()" style="background: var(--primary); font-weight:700;">Iniciar</button>
-                    <button class="btn-sec" onclick="setQuickTimer(60)">60s</button>
-                    <button class="btn-sec" onclick="setQuickTimer(90)">90s</button>
-                    <button class="btn-sec" style="color: var(--text-muted)" onclick="resetTimer()">Reset</button>
-                </div>
-            </div>
+        <div class="text-center mt-4">
+            <button id="toggle-auth-mode" class="text-sm text-gray-400 hover:text-green-400 underline">
+                Não tem uma conta? Cadastre-se
+            </button>
         </div>
     </div>
 
-    <button class="ai-floating-btn" id="ai-btn" onclick="toggleAIChat()">
-        <svg viewBox="0 0 24 24">
-            <path d="M12 2c1.1 0 2 .9 2 2v1c2.42 0 4.57 1.25 5.82 3.14l1.11-1.11c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-1.07 1.07C21.72 10.23 22 11.08 22 12c0 1.1-.9 2-2 2h-1v1c0 2.42-1.25 4.57-3.14 5.82l1.11 1.11c.39.39.39 1.02 0 1.41-.39.39-1.02.39-1.41 0l-1.07-1.07c-.72.45-1.57.73-2.49.73-1.1 0-2-.9-2-2v-1H9c-2.42 0-4.57-1.25-5.82-3.14l-1.11 1.11c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.07-1.07C2.28 13.77 2 12.92 2 12c0-1.1.9-2 2-2h1V9c0-2.42 1.25-4.57 3.14-5.82L7.03 2.07c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0l1.07 1.07c.72-.45 1.57-.73 2.49-.73zm0 4c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-2.5 4c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm5 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z"/>
-        </svg>
-    </button>
-
-    <div class="ai-chat-container" id="ai-chat">
-        <div class="ai-chat-header">
-            <div class="ai-chat-title">
-                <div class="ai-status-dot" id="ai-status"></div>
+    <!-- TELA DE CONFIGURAÇÃO INICIAL DO PERFIL (SÓ APARECE NO PRIMEIRO ACESSO) -->
+    <div id="setup-screen" class="hidden max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+        <h2 class="text-2xl font-bold text-center mb-6 text-green-400">Configure seu Perfil</h2>
+        <form id="setup-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Nome Completo</label>
+                <input type="text" id="setup-name" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <h4 style="font-size: 0.95rem;" id="ai-name-label">Personal IA</h4>
-                    <span style="font-size: 0.7rem; color: var(--text-muted);" id="ai-desc-label">Análise de Desempenho</span>
+                    <label class="block text-sm font-medium mb-1">Peso (kg)</label>
+                    <input type="number" step="0.1" id="setup-weight" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Altura (m)</label>
+                    <input type="number" step="0.01" id="setup-height" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
                 </div>
             </div>
-            <button onclick="toggleAIChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer; font-weight:700;">×</button>
-        </div>
-        <div class="ai-chat-body" id="ai-chat-messages">
-            <div class="chat-bubble ai" id="ai-welcome-msg">
-                Olá! Sou seu Personal Trainer de Inteligência Artificial Real. 💪<br><br>
-                Estou pronto para ajustar seus treinos ou atuar imediatamente se você relatar qualquer dor ou incômodo articular/muscular.
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Idade</label>
+                    <input type="number" id="setup-age" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Gênero</label>
+                    <select id="setup-gender" class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="ai-chat-footer">
-            <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Pergunte ou relate um incômodo..." onkeypress="handleChatKeyPress(event)">
-            <button class="btn-send-chat" onclick="sendChatMessage()">Enviar</button>
-        </div>
-    </div>
-
-    <div class="bottom-nav" id="app-nav" style="display: none;">
-        <button class="nav-item active" id="nav-casa" onclick="changeEnvironment('casa')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Casa</button>
-        <button class="nav-item" id="nav-academia" onclick="changeEnvironment('academia')"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Academia</button>
-    </div>
-
-    <div class="modal" id="guide-modal">
-        <div class="modal-content">
-            <h3 id="guide-title" style="color: var(--primary); margin-bottom: 10px;">Execução</h3>
-            <div class="ai-guide-box"><h5>1. Posição Inicial</h5><p id="guide-step1">Mantenha a coluna neutra e firme.</p></div>
-            <div class="ai-guide-box"><h5>2. Movimento</h5><p id="guide-step2">Cadência controlada esmagando o músculo alvo.</p></div>
-            <div class="ai-guide-box"><h5>⚠️ Evite</h5><p id="guide-step3" style="color: #ff4757;">Usar impulsos ou roubar na amplitude.</p></div>
-            <button class="btn-primary" onclick="closeGuideModal()">Entendido!</button>
-        </div>
-    </div>
-
-    <div class="modal" id="edit-modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 15px; color: var(--primary);">Substituir Exercício</h3>
-            <div class="form-group"><label>Selecione o novo exercício</label><select id="modal-select-ex"></select></div>
-            <div class="form-group"><label>Séries e Repetições</label><input type="text" id="modal-input-meta"></div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn-primary" style="flex: 1;" onclick="saveExerciseEdit()">Salvar</button>
-                <button class="btn-sec" onclick="closeModal()">Cancelar</button>
+            <div>
+                <label class="block text-sm font-medium mb-1">Objetivo Principal</label>
+                <input type="text" id="setup-goal" placeholder="Ex: Ganhar força, Hipertrofia, Calistenia" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white">
             </div>
-        </div>
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-gray-900 font-bold py-2.5 rounded transition">
+                Salvar Perfil e Começar
+            </button>
+        </form>
     </div>
 
+    <!-- TELA PRINCIPAL DO APLICATIVO (PAINEL DE TREINOS) -->
+    <div id="app-screen" class="hidden flex-1 w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+        <header class="flex justify-between items-center border-b border-gray-800 pb-4">
+            <div>
+                <h1 class="text-xl md:text-3xl font-bold">Olá, <span id="user-display-name" class="text-green-400">Atleta</span>!</h1>
+                <p class="text-sm text-gray-400">Foco nos treinos e consistência hoje.</p>
+            </div>
+            <button id="logout-btn" class="bg-red-900/50 hover:bg-red-900 text-red-200 text-sm px-4 py-2 rounded transition border border-red-700">
+                Sair
+            </button>
+        </header>
+
+        <!-- Informações Físicas Atuais -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-800/50 p-4 rounded-lg border border-gray-800">
+            <div class="text-center">
+                <span class="block text-xs text-gray-400 uppercase tracking-wider">Peso</span>
+                <span id="card-weight" class="text-xl font-bold">-- kg</span>
+            </div>
+            <div class="text-center">
+                <span class="block text-xs text-gray-400 uppercase tracking-wider">Altura</span>
+                <span id="card-height" class="text-xl font-bold">-- m</span>
+            </div>
+            <div class="text-center">
+                <span class="block text-xs text-gray-400 uppercase tracking-wider">Idade</span>
+                <span id="card-age" class="text-xl font-bold">-- anos</span>
+            </div>
+            <div class="text-center">
+                <span class="block text-xs text-gray-400 uppercase tracking-wider">Objetivo</span>
+                <span id="card-goal" class="text-xl font-bold truncate block px-2">--</span>
+            </div>
+        </section>
+
+        <!-- Área Central de Treinos -->
+        <main class="bg-gray-800 rounded-lg p-6 border border-gray-700 text-center">
+            <p class="text-gray-400">Seu painel de treinos diários e gerenciador de séries está pronto para ser customizado.</p>
+            <div class="mt-6 p-8 border-2 border-dashed border-gray-700 rounded-lg text-gray-500">
+                [ Espaço para renderização das suas rotinas de Push-ups / Pull-ups e Calistenia ]
+            </div>
+        </main>
+    </div>
+
+    <!-- Rodapé básico -->
+    <footer class="text-center py-4 text-xs text-gray-600 border-t border-gray-800 mt-6">
+        Hybrid Training &copy; 2026 - Conectado ao Cloud Supabase
+    </footer>
+
+
+    <!-- LOGICA DE PROGRAMAÇÃO E INTEGRAÇÃO -->
     <script>
-        // CONFIGURAÇÕES DO SEU SUPABASE
+        // CONFIGURAÇÕES DO SEU SUPABASE INDIVIDUAL
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
-        const SUPABASE_ANON_KEY = "INSIRA_SUA_ANON_KEY_AQUI"; // Pegue no painel do seu Supabase
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inicializa o cliente do Supabase globalmente
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        window.currentEnvironment = "casa";
-        window.currentDay = "A";
-        window.currentEditingIndex = null;
-        window.appState = null;
-        window.isSignUpMode = false;
+        // Elementos das Telas
+        const authScreen = document.getElementById('auth-screen');
+        const setupScreen = document.getElementById('setup-screen');
+        const appScreen = document.getElementById('app-screen');
 
-        const bonecoVectors = {
-            push: `<svg viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
-            pull: `<svg viewBox="0 0 24 24"><path d="M12 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-5 4h10v2H7zm2 4h6v6H9zM3 19h18"/></svg>`,
-            legs: `<svg viewBox="0 0 24 24"><path d="M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3 5h6v4H9zm-1 6h3v5H8zm5 0h3v5h-3z"/></svg>`
-        };
+        // Formulários e Inputs
+        const authForm = document.getElementById('auth-form');
+        const authTitle = document.getElementById('auth-title');
+        const authEmail = document.getElementById('auth-email');
+        const authPassword = document.getElementById('auth-password');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+        const toggleAuthMode = document.getElementById('toggle-auth-mode');
+        
+        const setupForm = document.getElementById('setup-form');
 
-        window.exerciseBank = {
-            push: [
-                { id: "flexao", name: "Flexão de Braço Padrão", desc: "Corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push },
-                { id: "supino_reto", name: "Supino Reto com Barra", desc: "Barra controlada até o peito.", vector: bonecoVectors.push },
-                { id: "supino_inc", name: "Supino Inclinado Halteres", desc: "Foco na porção superior do peito.", vector: bonecoVectors.push },
-                { id: "desenvolvimento", name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça.", vector: bonecoVectors.push },
-                { id: "elev_lateral", name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros.", vector: bonecoVectors.push },
-                { id: "diamante", name: "Flexão Diamante", desc: "Mãos juntas em triângulo, foco no tríceps.", vector: bonecoVectors.push },
-                { id: "mergulho", name: "Mergulho no Banco", desc: "Mãos na cadeira estável e desça.", vector: bonecoVectors.push }
-            ],
-            pull: [
-                { id: "barra_fixa", name: "Barra Fixa", desc: "Puxe o corpo para cima até passar o queixo.", vector: bonecoVectors.pull },
-                { id: "pulley_alto", name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral.", vector: bonecoVectors.pull },
-                { id: "remada_tri", name: "Remada Baixa Triângulo", desc: "Postura reta e puxe a carga.", vector: bonecoVectors.pull },
-                { id: "remada_curv", name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra.", vector: bonecoVectors.pull },
-                { id: "rosca_direta", name: "Rosca Direta", desc: "Flexão de braços isolando o bíceps.", vector: bonecoVectors.pull }
-            ],
-            legs: [
-                { id: "agachamento", name: "Agachamento Livre", desc: "Quadril para trás, joelhos alinhados.", vector: bonecoVectors.legs },
-                { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás em banco.", vector: bonecoVectors.legs },
-                { id: "leg_press", name: "Leg Press 45°", desc: "Empurre a plataforma com a lombar apoiada.", vector: bonecoVectors.legs },
-                { id: "afundo", name: "Afundo Caminhando", desc: "Passadas contínuas descendo o quadril.", vector: bonecoVectors.legs },
-                { id: "panturrilha", name: "Gêmeos em Pé", desc: "Extensão completa para panturrilhas.", vector: bonecoVectors.legs }
-            ]
-        };
+        // Estado do app (Login ou Cadastro)
+        let isSignUpMode = false;
+        let currentUser = null;
 
-        const defaultRoutine = {
-            casa: {
-                A: [
-                    { id: "flexao", name: "Flexão de Braço Padrão", desc: "Foco no peitoral e tríceps. Mantenha o core firme.", meta: "4 SÉRIES x FALHA" },
-                    { id: "diamante", name: "Flexão Diamante (Mãos Juntas)", desc: "Aproximação das mãos intensificando a ação do tríceps.", meta: "3 SÉRIES x 12 REPS" },
-                    { id: "mergulho", name: "Mergulho no Banco ou Cadeira", desc: "Apoie as mãos na borda e desça flexionando os cotovelos.", meta: "3 SÉRIES x 15 REPS" }
-                ],
-                B: [
-                    { id: "barra_fixa", name: "Barra Fixa Pronada", desc: "Puxe o corpo controladamente até o queixo passar a barra.", meta: "4 SÉRIES x 8-12 REPS" },
-                    { id: "remada_curv", name: "Remada Curvada Unilateral", desc: "Puxe o peso em direção ao quadril esmagando a dorsal.", meta: "4 SÉRIES x 12 REPS" }
-                ],
-                C: [
-                    { id: "agachamento", name: "Agachamento Livre Postural", desc: "Mantenha os pés na largura dos ombros e desça com controle.", meta: "4 SÉRIES x 20 REPS" },
-                    { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Coloque um pé para trás apoiado no banco e desça verticalmente.", meta: "4 SÉRIES x 12 REPS" }
-                ]
-            },
-            academia: {
-                A: [
-                    { id: "supino_reto", name: "Supino Reto com Barra", desc: "Controle a descida até o peito e empurre com explosão.", meta: "4 SÉRIES x 10 REPS" },
-                    { id: "supino_inc", name: "Supino Inclinado com Halteres", desc: "Trabalho forte na porção superior/clavicular do peitoral.", meta: "4 SÉRIES x 12 REPS" }
-                ],
-                B: [
-                    { id: "pulley_alto", name: "Puxada Alta Aberta (Pulley)", desc: "Puxe a barra em direção ao peitoral superior abrindo as costas.", meta: "4 SÉRIES x 10 REPS" },
-                    { id: "remada_tri", name: "Remada Baixa com Triângulo", desc: "Mantenha o tronco firme e puxe puxando os cotovelos para trás.", meta: "4 SÉRIES x 12 REPS" }
-                ],
-                C: [
-                    { id: "agachamento", name: "Agachamento Livre com Barra", desc: "Base sólida, desça quebrando os 90° com segurança.", meta: "4 SÉRIES x 8-10 REPS" },
-                    { id: "leg_press", name: "Leg Press 45°", desc: "Lombar colada no banco, desça trazendo os joelhos ao peito.", meta: "4 SÉRIES x 12 REPS" }
-                ]
-            }
-        };
-
-        // CHECAGEM DE SESSÃO DO SUPABASE AO CARREGAR
-        window.onload = async function() {
-            const { data: { session }, error } = await _supabase.auth.getSession();
-            if (session && session.user) {
-                checkUserProfile(session.user);
+        // Alternar modo de autenticação (Login <-> Cadastro)
+        toggleAuthMode.addEventListener('click', () => {
+            isSignUpMode = !isSignUpMode;
+            if (isSignUpMode) {
+                authTitle.innerText = "Criar Nova Conta";
+                authSubmitBtn.innerText = "Cadastrar";
+                toggleAuthMode.innerText = "Já possui uma conta? Entre aqui";
             } else {
-                document.getElementById('screen-auth').style.display = 'block';
+                authTitle.innerText = "Entrar no Hybrid Training";
+                authSubmitBtn.innerText = "Entrar";
+                toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
             }
-        };
+        });
 
-        // ALTERAR MODO LOGIN / CADASTRO
-        function toggleAuthMode() {
-            window.isSignUpMode = !window.isSignUpMode;
-            document.getElementById('auth-title').textContent = window.isSignUpMode ? "CRIAR NOVA CONTA" : "ENTRAR NA CONTA";
-            document.getElementById('btn-auth-submit').textContent = window.isSignUpMode ? "Cadastrar" : "Entrar";
-            document.getElementById('btn-auth-toggle').textContent = window.isSignUpMode ? "Já tem conta? Faça Login" : "Não tem conta? Cadastre-se";
-        }
-
-        // SUBMIT DE LOGIN / CADASTRO
-        async function handleAuthSubmit(e) {
+        // Gerenciar Envio de Login/Cadastro
+        authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value.trim();
+            const email = authEmail.value;
+            const password = authPassword.value;
 
-            if(window.isSignUpMode) {
-                const { data, error } = await _supabase.auth.signUp({ email, password });
-                if(error) return alert("Erro no cadastro: " + error.message);
-                alert("Cadastro realizado! Verifique seu e-mail caso necessário ou faça login.");
-                toggleAuthMode();
+            if (isSignUpMode) {
+                // Fluxo de Cadastro
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) {
+                    alert("Erro ao cadastrar: " + error.message);
+                } else {
+                    alert("Cadastro realizado com sucesso! Agora faça o login para continuar.");
+                    isSignUpMode = false;
+                    authTitle.innerText = "Entrar no Hybrid Training";
+                    authSubmitBtn.innerText = "Entrar";
+                    toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
+                    authPassword.value = "";
+                }
             } else {
-                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-                if(error) return alert("Erro ao entrar: " + error.message);
-                checkUserProfile(data.user);
+                // Fluxo de Login
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    alert("Dados incorretos ou erro: " + error.message);
+                } else {
+                    checkUserSession();
+                }
             }
-        }
+        });
 
-        // VERIFICAR SE O USUÁRIO JÁ POSSUI DADOS NO BANCO
-        async function checkUserProfile(user) {
-            document.getElementById('screen-auth').style.display = 'none';
-            
-            const { data, error } = await _supabase
-                .from('atleta_perfil')
-                .select('*')
-                .eq('id', user.id)
-                .single();
-
-            if (error || !data) {
-                // Usuário logado mas sem perfil preenchido -> Exibe Setup
-                document.getElementById('screen-setup').style.display = 'block';
-            } else {
-                // Perfil carregado com sucesso
-                window.appState = {
-                    name: data.name,
-                    stats: { weight: data.weight, height: data.height, age: data.age, gender: data.gender, goal: data.goal },
-                    apiKey: data.api_key,
-                    routine: data.routine || defaultRoutine,
-                    progress: data.progress || {}
-                };
-                window.loadUserApp();
-            }
-        }
-
-        // SALVAR DADOS INICIAIS DO USUÁRIO
-        window.initApp = async function(e) {
+        // Fluxo para salvar Perfil Inicial
+        setupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const { data: { user } } = await _supabase.auth.getUser();
-            if(!user) return;
-
-            const name = document.getElementById('in-name').value.trim();
-            const weight = parseFloat(document.getElementById('in-weight').value.replace(',', '.'));
-            const height = parseFloat(document.getElementById('in-height').value.replace(',', '.'));
-            const age = parseInt(document.getElementById('in-age').value, 10);
-            const gender = document.getElementById('in-gender').value;
-            const goal = document.getElementById('in-goal').value;
-            const apiKey = document.getElementById('in-gemini-key').value.trim();
+            if (!currentUser) return;
 
             const profileData = {
-                id: user.id,
-                name, weight, height, age, gender, goal, api_key: apiKey,
-                routine: defaultRoutine, progress: {}
+                id: currentUser.id,
+                name: document.getElementById('setup-name').value,
+                weight: parseFloat(document.getElementById('setup-weight').value),
+                height: parseFloat(document.getElementById('setup-height').value),
+                age: parseInt(document.getElementById('setup-age').value),
+                gender: document.getElementById('setup-gender').value,
+                goal: document.getElementById('setup-goal').value
             };
 
-            const { error } = await _supabase.from('atleta_perfil').upsert(profileData);
-            if(error) return alert("Erro ao sincronizar dados: " + error.message);
+            const { error } = await supabase.from('atleta_perfil').insert([profileData]);
 
-            window.appState = {
-                name, stats: { weight, height, age, gender, goal }, apiKey,
-                routine: defaultRoutine, progress: {}
-            };
-            
-            document.getElementById('screen-setup').style.display = 'none';
-            window.loadUserApp();
-        };
-
-        // EXIBE AS INFORMAÇÕES DO APP NA TELA
-        window.loadUserApp = function() {
-            let data = window.appState;
-            document.getElementById('user-name').textContent = data.name;
-            document.getElementById('user-stats').textContent = `${data.stats.weight}kg | ${data.stats.height.toFixed(2)}m | ${data.stats.age} anos`;
-            document.getElementById('user-goal').textContent = data.stats.goal;
-
-            const imc = data.stats.weight / (data.stats.height * data.stats.height);
-            document.getElementById('lbl-imc-val').textContent = `IMC: ${imc.toFixed(1)}`;
-            
-            let tmb = data.stats.gender === "M" ? (10 * data.stats.weight) + (625 * data.stats.height) - (5 * data.stats.age) + 5 : (10 * data.stats.weight) + (625 * data.stats.height) - (5 * data.stats.age) - 161;
-
-            let status = "", metaCorp = "", advice = "";
-            if (imc < 18.5) { status = "Abaixo do Peso"; metaCorp = "Construção de Massa"; advice = `Basal: ${Math.round(tmb)} kcal. Superávit limpo.`; }
-            else if (imc >= 18.5 && imc < 25) { status = "Peso Saudável"; metaCorp = "Recomposição Muscular"; advice = `Basal: ${Math.round(tmb)} kcal. Calorias equilibradas.`; }
-            else if (imc >= 25 && imc < 30) { status = "Sobrepeso Moderado"; metaCorp = "Déficit Inteligente"; advice = `Basal: ${Math.round(tmb)} kcal. Reduza carbo.`; }
-            else { status = "Obesidade"; metaCorp = "Emagrecimento"; advice = `Basal: ${Math.round(tmb)} kcal. Déficit controlado.`; }
-
-            document.getElementById('lbl-imc-status').textContent = status;
-            document.getElementById('lbl-meta-corp').textContent = metaCorp;
-            document.getElementById('lbl-feed-advice').textContent = advice;
-
-            if (data.apiKey) {
-                document.getElementById('ai-status').style.background = "var(--success)";
-                document.getElementById('ai-name-label').textContent = "Personal Trainer IA Real";
-                document.getElementById('ai-desc-label').textContent = "Conectado via API Oficial";
-                document.getElementById('ai-welcome-msg').innerHTML = `Olá **${data.name}**! Minha rede neural real está ativa. Estou analisando suas métricas para ajustar sua rotina focada em **${data.stats.goal}**. Caso sinta qualquer incômodo físico ou queira alterar a estrutura biotipo, pode me reportar aqui!`;
+            if (error) {
+                alert("Erro ao salvar perfil: " + error.message);
             } else {
-                document.getElementById('ai-status').style.background = "#ffb300";
-                document.getElementById('ai-name-label').textContent = "Coach IA (Modo Offline)";
-                document.getElementById('ai-desc-label').textContent = "Insira a API Key para destravar respostas.";
+                showAppLayout(profileData);
             }
+        });
 
-            document.getElementById('screen-app').style.display = 'block';
-            document.getElementById('app-nav').style.display = 'flex';
-            document.getElementById('ai-btn').style.display = 'flex';
-            window.renderWorkout();
-        };
+        // Botão de Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            authScreen.classList.remove('hidden');
+            setupScreen.classList.add('hidden');
+            appScreen.classList.add('hidden');
+            authForm.reset();
+        });
 
-        // RENDERIZADOR DOS CARDS DE TREINO
-        window.renderWorkout = function() {
-            const container = document.getElementById('workout-container');
-            container.innerHTML = "";
-            const list = window.appState.routine[window.currentEnvironment][window.currentDay];
-            const trackingProgress = window.appState.progress || {};
+        // Checar persistência da sessão do usuário
+        async function checkUserSession() {
+            const { data: { session } } = await supabase.auth.getSession();
             
-            list.forEach((ex, index) => {
-                const progKey = `${window.currentEnvironment}_${window.currentDay}_${ex.id || index}`;
-                const loggedProg = trackingProgress[progKey] ? `🔥 Carga Atual: <strong>${trackingProgress[progKey]}</strong>` : `⚡ Sem registro de carga hoje.`;
-                let matchedVector = bonecoVectors.push;
-                for(let cat of ["push", "pull", "legs"]) {
-                    let f = window.exerciseBank[cat].find(e => e.id === ex.id);
-                    if(f) { matchedVector = f.vector; break;}
-                }
-
-                const card = document.createElement('div');
-                card.className = "exercise-card";
-                card.innerHTML = `
-                    <div class="exercise-hero">
-                        <div class="exercise-visual-box">${matchedVector}</div>
-                        <div class="exercise-detail">
-                            <h4>${index + 1}. ${ex.name}</h4>
-                            <p>${ex.desc}</p>
-                        </div>
-                    </div>
-                    <div class="progress-log-zone"><span>${loggedProg}</span></div>
-                    <div class="exercise-footer">
-                        <span class="meta-tag">${ex.meta}</span>
-                        <div class="action-buttons">
-                            <button class="btn-action-ex" style="color:var(--success)" onclick="logProgress('${progKey}')">📈 Carga</button>
-                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal()">📖 Guia</button>
-                            <button class="btn-action-ex" style="color:var(--text-muted)" onclick="openEditModal(${index})">⚙️ Mudar</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        };
-
-        // SALVAR CARGA DIRETAMENTE NO SUPABASE
-        window.logProgress = async function(progKey) {
-            let currentVal = window.appState.progress[progKey] || "";
-            let newLoad = prompt("Digite a carga/repetições obtidas:", currentVal);
-            if (newLoad !== null) {
-                window.appState.progress[progKey] = newLoad;
+            if (session) {
+                currentUser = session.user;
                 
-                const { data: { user } } = await _supabase.auth.getUser();
-                await _supabase.from('atleta_perfil').update({ progress: window.appState.progress }).eq('id', user.id);
+                // Buscar dados do perfil na tabela atleta_perfil
+                const { data: perfil, error } = await supabase
+                    .from('atleta_perfil')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
 
-                window.renderWorkout();
-            }
-        };
-
-        // MUDAR EXERCÍCIO DIRETO NO BANCO
-        window.saveExerciseEdit = async function() {
-            const select = document.getElementById('modal-select-ex');
-            const metaValue = document.getElementById('modal-input-meta').value;
-            const allExercises = [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs];
-            const selectedEx = allExercises.find(e => e.name === select.value);
-            
-            if(selectedEx) {
-                window.appState.routine[window.currentEnvironment][window.currentDay][window.currentEditingIndex] = { id: selectedEx.id, name: selectedEx.name, desc: selectedEx.desc, meta: metaValue };
-                
-                const { data: { user } } = await _supabase.auth.getUser();
-                await _supabase.from('atleta_perfil').update({ routine: window.appState.routine }).eq('id', user.id);
-
-                window.renderWorkout();
-                closeModal();
-            }
-        };
-
-        // AUXILIARES DE NAVEGAÇÃO E MODAIS
-        function changeDay(day) { window.currentDay = day; document.querySelectorAll('.abc-btn').forEach(b => b.classList.remove('active')); document.getElementById(`btn-${day}`).classList.add('active'); window.renderWorkout(); }
-        function changeEnvironment(env) { window.currentEnvironment = env; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(`nav-${env}`).classList.add('active'); window.renderWorkout(); }
-        function openGuideModal() { document.getElementById('guide-modal').style.display = 'flex'; }
-        function closeGuideModal() { document.getElementById('guide-modal').style.display = 'none'; }
-        
-        function openEditModal(index) {
-            window.currentEditingIndex = index;
-            const select = document.getElementById('modal-select-ex'); select.innerHTML = "";
-            [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs].forEach(e => {
-                const op = document.createElement('option'); op.value = e.name; op.textContent = e.name; select.appendChild(op);
-            });
-            const currentEx = window.appState.routine[window.currentEnvironment][window.currentDay][index];
-            select.value = currentEx.name; document.getElementById('modal-input-meta').value = currentEx.meta;
-            document.getElementById('edit-modal').style.display = 'flex';
-        }
-        function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
-        
-        // VOLTAR PARA TELA DE ALTERAR DADOS CORPORAIS
-        window.editProfileData = function() {
-            document.getElementById('screen-app').style.display = 'none';
-            document.getElementById('app-nav').style.display = 'none';
-            document.getElementById('ai-btn').style.display = 'none';
-            
-            document.getElementById('in-name').value = window.appState.name;
-            document.getElementById('in-weight').value = window.appState.stats.weight;
-            document.getElementById('in-height').value = window.appState.stats.height;
-            document.getElementById('in-age').value = window.appState.stats.age;
-            document.getElementById('in-gender').value = window.appState.stats.gender;
-            document.getElementById('in-goal').value = window.appState.stats.goal;
-            document.getElementById('in-gemini-key').value = window.appState.apiKey;
-
-            document.getElementById('screen-setup').style.display = 'block';
-        };
-
-        // DESLOGAR
-        async function handleLogout() {
-            if(confirm("Deseja realmente sair do aplicativo?")) {
-                await _supabase.auth.signOut();
-                location.reload();
-            }
-        }
-
-        // CHAT COM GEMINI IA
-        function toggleAIChat() {
-            const chat = document.getElementById('ai-chat');
-            chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
-            if(chat.style.display === 'flex') {
-                const msgBody = document.getElementById('ai-chat-messages');
-                msgBody.scrollTop = msgBody.scrollHeight;
-            }
-        }
-
-        function handleChatKeyPress(event) { if (event.key === 'Enter') sendChatMessage(); }
-
-        async function sendChatMessage() {
-            const input = document.getElementById('ai-chat-input');
-            const query = input.value.trim();
-            if(!query) return;
-
-            const msgBody = document.getElementById('ai-chat-messages');
-            const userBubble = document.createElement('div');
-            userBubble.className = "chat-bubble user";
-            userBubble.textContent = query;
-            msgBody.appendChild(userBubble);
-            
-            input.value = "";
-            msgBody.scrollTop = msgBody.scrollHeight;
-
-            const aiBubble = document.createElement('div');
-            aiBubble.className = "chat-bubble ai";
-            aiBubble.innerHTML = "<em>Analisando biomecânica...</em>";
-            msgBody.appendChild(aiBubble);
-            msgBody.scrollTop = msgBody.scrollHeight;
-
-            if (!window.appState.apiKey) {
-                setTimeout(() => {
-                    aiBubble.innerHTML = "⚠️ **Modo Offline:** Insira uma API Key do Gemini nas configurações para ativar o cérebro real da IA.";
-                }, 500);
-                return;
-            }
-
-            const systemInstruction = `Você é um Personal Trainer real e experiente. O atleta chama-se ${window.appState.name}, pesa ${window.appState.stats.weight}kg, tem ${window.appState.stats.height}m de altura e foca em ${window.appState.stats.goal}. 
-            Se o usuário relatar qualquer dor, exija a pausa do exercício imediatamente e forneça uma alternativa segura ou correção postural minuciosa. Responda de forma direta usando markdown limpo em português.`;
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${window.appState.apiKey}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ role: "user", parts: [{ text: `${systemInstruction}\n\nAtleta pergunta: ${query}` }] }]
-                    })
-                });
-
-                const data = await response.json();
-                if(data.candidates && data.candidates[0].content.parts[0].text) {
-                    let textResponse = data.candidates[0].content.parts[0].text;
-                    aiBubble.innerHTML = textResponse.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                if (error || !perfil) {
+                    // Se a conta existe mas o perfil não foi criado, abre a tela de setup
+                    authScreen.classList.add('hidden');
+                    setupScreen.classList.remove('hidden');
+                    appScreen.classList.add('hidden');
                 } else {
-                    aiBubble.innerHTML = "❌ Erro na API. Verifique os limites da sua chave.";
+                    // Se o perfil existe, vai direto pro app principal
+                    showAppLayout(perfil);
                 }
-            } catch (error) {
-                aiBubble.innerHTML = "❌ Falha ao conectar com o motor de IA.";
+            } else {
+                // Se não tem login ativo, mostra tela de login
+                authScreen.classList.remove('hidden');
+                setupScreen.classList.add('hidden');
+                appScreen.classList.add('hidden');
             }
-            msgBody.scrollTop = msgBody.scrollHeight;
         }
 
-        // CONTROLE DO TIMER DE DESCANSO
-        let countdown = null; let timeRemaining = 60; let isTimerRunning = false;
-        function updateTimerDisplay() {
-            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
-            const s = (timeRemaining % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').textContent = `${m}:${s}`;
+        // Atualizar interface do app principal com os dados do banco
+        function showAppLayout(perfil) {
+            authScreen.classList.add('hidden');
+            setupScreen.classList.add('hidden');
+            appScreen.classList.remove('hidden');
+
+            document.getElementById('user-display-name').innerText = perfil.name;
+            document.getElementById('card-weight').innerText = `${perfil.weight} kg`;
+            document.getElementById('card-height').innerText = `${perfil.height} m`;
+            document.getElementById('card-age').innerText = `${perfil.age} anos`;
+            document.getElementById('card-goal').innerText = perfil.goal;
         }
-        function toggleTimer() {
-            const btn = document.getElementById('btn-start-toggle');
-            if (isTimerRunning) { clearInterval(countdown); isTimerRunning = false; btn.textContent = "Iniciar"; btn.style.background = "var(--primary)"; }
-            else {
-                isTimerRunning = true; btn.textContent = "Pausar"; btn.style.background = "#eccc68";
-                countdown = setInterval(() => {
-                    if (timeRemaining > 0) { timeRemaining--; updateTimerDisplay(); }
-                    else { clearInterval(countdown); isTimerRunning = false; document.getElementById('timer-display').textContent = "GO!"; btn.textContent = "Iniciar"; btn.style.background = "var(--primary)"; }
-                }, 1000);
-            }
-        }
-        function setQuickTimer(sec) { clearInterval(countdown); isTimerRunning = false; timeRemaining = sec; updateTimerDisplay(); document.getElementById('btn-start-toggle').textContent = "Iniciar"; document.getElementById('btn-start-toggle').style.background = "var(--primary)"; }
-        function resetTimer() { setQuickTimer(60); }
-        function editTime() {
-            let userPrompt = prompt("Tempo de descanso (MM:SS):", "01:00");
-            if (userPrompt) {
-                let parts = userPrompt.split(':');
-                if (parts.length === 2) {
-                    let min = parseInt(parts[0], 10); let sec = parseInt(parts[1], 10);
-                    if (!isNaN(min) && !isNaN(sec) && sec < 60) { timeRemaining = (min * 60) + sec; updateTimerDisplay(); }
-                }
-            }
-        }
+
+        // Executa automaticamente ao carregar a página para ver se o usuário já estava logado
+        checkUserSession();
     </script>
 </body>
 </html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Fitness Pro Ultimate</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-main: #0f1115;
@@ -39,37 +40,13 @@
             padding: 20px;
         }
 
-        .auth-card, .setup-card {
+        .setup-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 30px;
             margin-top: 40px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-
-        .auth-toggle {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-        }
-
-        .auth-toggle-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-
-        .auth-toggle-btn.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-            margin-bottom: -13px;
         }
 
         .brand-logo {
@@ -117,6 +94,16 @@
             box-shadow: 0 4px 15px var(--primary-glow);
         }
 
+        .btn-auth-toggle {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            display: block;
+            margin: 15px auto 0;
+            font-size: 0.85rem;
+        }
+
         #screen-setup, #screen-app { display: none; }
 
         .profile-widget {
@@ -140,16 +127,21 @@
             gap: 2px;
         }
 
-        .btn-logout {
-            background: rgba(255, 56, 56, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
+        .profile-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .btn-reset-setup {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 5px;
             width: fit-content;
         }
 
@@ -390,7 +382,6 @@
         .nav-item.active { color: var(--primary); }
         .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
 
-        /* --- BOTÃO FLUTUANTE DA IA E CHATBOX --- */
         .ai-floating-btn {
             position: fixed;
             bottom: 85px;
@@ -415,11 +406,7 @@
             100% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
         }
 
-        .ai-floating-btn svg {
-            width: 28px;
-            height: 28px;
-            fill: white;
-        }
+        .ai-floating-btn svg { width: 28px; height: 28px; fill: white; }
 
         .ai-chat-container {
             position: fixed;
@@ -450,17 +437,8 @@
             align-items: center;
         }
 
-        .ai-chat-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .ai-status-dot {
-            width: 8px; height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-        }
+        .ai-chat-title { display: flex; align-items: center; gap: 10px; }
+        .ai-status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
 
         .ai-chat-body {
             flex: 1;
@@ -471,106 +449,52 @@
             gap: 12px;
         }
 
-        .chat-bubble {
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
+        .chat-bubble { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
+        .chat-bubble.ai { background: var(--bg-card); color: var(--text-main); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+        .chat-bubble.user { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        .chat-bubble.ai {
-            background: var(--bg-card);
-            color: var(--text-main);
-            border-bottom-left-radius: 4px;
-            border: 1px solid var(--border);
-        }
-
-        .chat-bubble.user {
-            background: var(--accent);
-            color: #000;
-            font-weight: 500;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ai-chat-footer {
-            padding: 12px;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 8px;
-        }
-
-        .ai-chat-input {
-            flex: 1;
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            color: white;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .btn-send-chat {
-            background: var(--accent);
-            border: none;
-            color: black;
-            font-weight: 700;
-            padding: 0 16px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+        .ai-chat-footer { padding: 12px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; gap: 8px; }
+        .ai-chat-input { flex: 1; background: var(--bg-main); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: white; outline: none; font-size: 0.9rem; }
+        .btn-send-chat { background: var(--accent); border: none; color: black; font-weight: 700; padding: 0 16px; border-radius: 10px; cursor: pointer; }
+        
+        .setup-api-box { background: rgba(0,0,0,0.2); border: 1px dashed var(--border); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
         
-        <!-- TELA DE AUTENTICAÇÃO LOCAL -->
-        <div id="screen-auth" class="auth-card">
+        <div id="screen-auth" class="setup-card">
             <div class="brand-logo">Hybrid<span>Fitness</span></div>
-            
-            <div class="auth-toggle">
-                <button id="tab-login" class="auth-toggle-btn active" onclick="switchAuthTab('login')">Entrar</button>
-                <button id="tab-register" class="auth-toggle-btn" onclick="switchAuthTab('register')">Cadastrar</button>
-            </div>
-
-            <form id="form-login" onsubmit="handleLogin(event)">
+            <h3 id="auth-title" style="text-align: center; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-muted);">ENTRAR NA CONTA</h3>
+            <form onsubmit="handleAuthSubmit(event)">
                 <div class="form-group">
-                    <label>E-mail do Atleta</label>
-                    <input type="email" id="login-email" required placeholder="atleta@email.com">
+                    <label>E-mail</label>
+                    <input type="email" id="auth-email" required placeholder="seu@email.com">
                 </div>
                 <div class="form-group">
                     <label>Senha</label>
-                    <input type="password" id="login-pass" required placeholder="••••••••">
+                    <input type="password" id="auth-password" required placeholder="******">
                 </div>
-                <button type="submit" class="btn-primary">Acessar Painel</button>
+                <button type="submit" id="btn-auth-submit" class="btn-primary">Entrar</button>
             </form>
-
-            <form id="form-register" onsubmit="handleRegister(event)" style="display: none;">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="reg-name" required placeholder="Seu Nome">
-                </div>
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="reg-email" required placeholder="atleta@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Criar Senha</label>
-                    <input type="password" id="reg-pass" required placeholder="Mínimo 6 dígitos">
-                </div>
-                <button type="submit" class="btn-primary">Criar Conta</button>
-            </form>
+            <button class="btn-auth-toggle" id="btn-auth-toggle" onclick="toggleAuthMode()">Não tem conta? Cadastre-se</button>
         </div>
 
-        <!-- TELA SETUP -->
         <div id="screen-setup" class="setup-card">
             <div class="brand-logo">Configuração<span>Inicial</span></div>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;">Preencha os dados abaixo para gerar sua ficha.</p>
+            
+            <div class="setup-api-box">
+                <label style="color: var(--accent); font-weight: 700; display:block; margin-bottom:4px;">Chave API Google Gemini (Opcional):</label>
+                <input type="password" id="in-gemini-key" placeholder="AIzaSy..." style="width:100%; padding:8px; background:#0f1115; border:1px solid var(--border); color:white; border-radius:6px; font-size:0.8rem;">
+                <p style="color: var(--text-muted); font-size:0.7rem; margin-top:4px;">Insira sua API Key para ativar inteligência dinâmica real.</p>
+            </div>
+
             <form onsubmit="initApp(event)">
+                <div class="form-group">
+                    <label>Seu Nome / Apelido</label>
+                    <input type="text" id="in-name" required placeholder="Ex: Thiago">
+                </div>
                 <div style="display: flex; gap: 12px;">
                     <div class="form-group" style="flex: 1;">
                         <label>Peso (kg)</label>
@@ -601,18 +525,20 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary">Gerar Minha Ficha de Treino</button>
+                <button type="submit" class="btn-primary">Salvar e Gerar Treinos</button>
             </form>
         </div>
 
-        <!-- APP PRINCIPAL -->
         <div id="screen-app">
             <div class="profile-widget">
                 <div class="profile-header">
                     <div class="profile-user-info">
                         <h3 id="user-name">Atleta</h3>
                         <p id="user-stats">00kg | 0.00m | 00 anos</p>
-                        <button class="btn-logout" onclick="logout()">Sair da Conta</button>
+                        <div class="profile-actions">
+                            <button class="btn-reset-setup" onclick="editProfileData()">Alterar Dados</button>
+                            <button class="btn-reset-setup" style="color: var(--primary)" onclick="handleLogout()">Sair</button>
+                        </div>
                     </div>
                     <div class="badge-goal" id="user-goal">Objetivo</div>
                 </div>
@@ -648,59 +574,50 @@
         </div>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DA IA -->
     <button class="ai-floating-btn" id="ai-btn" onclick="toggleAIChat()">
         <svg viewBox="0 0 24 24">
             <path d="M12 2c1.1 0 2 .9 2 2v1c2.42 0 4.57 1.25 5.82 3.14l1.11-1.11c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-1.07 1.07C21.72 10.23 22 11.08 22 12c0 1.1-.9 2-2 2h-1v1c0 2.42-1.25 4.57-3.14 5.82l1.11 1.11c.39.39.39 1.02 0 1.41-.39.39-1.02.39-1.41 0l-1.07-1.07c-.72.45-1.57.73-2.49.73-1.1 0-2-.9-2-2v-1H9c-2.42 0-4.57-1.25-5.82-3.14l-1.11 1.11c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.07-1.07C2.28 13.77 2 12.92 2 12c0-1.1.9-2 2-2h1V9c0-2.42 1.25-4.57 3.14-5.82L7.03 2.07c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0l1.07 1.07c.72-.45 1.57-.73 2.49-.73zm0 4c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-2.5 4c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm5 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z"/>
         </svg>
     </button>
 
-    <!-- CONTAINER DA JANELA DE CHAT DA IA -->
     <div class="ai-chat-container" id="ai-chat">
         <div class="ai-chat-header">
             <div class="ai-chat-title">
-                <div class="ai-status-dot"></div>
+                <div class="ai-status-dot" id="ai-status"></div>
                 <div>
-                    <h4 style="font-size: 0.95rem;">Coach IA Pro</h4>
-                    <span style="font-size: 0.7rem; color: var(--text-muted);">Personal Trainer 100% Capacitado</span>
+                    <h4 style="font-size: 0.95rem;" id="ai-name-label">Personal IA</h4>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);" id="ai-desc-label">Análise de Desempenho</span>
                 </div>
             </div>
             <button onclick="toggleAIChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer; font-weight:700;">×</button>
         </div>
         <div class="ai-chat-body" id="ai-chat-messages">
-            <!-- Mensagem padrão do sistema simulado -->
-            <div class="chat-bubble ai">
-                Olá! Sou seu Coach de IA especializado de alta performance. 💪<br><br>
-                Estou pronto para te ajudar a **montar treinos**, **corrigir erros de divisão**, ou resolver imediatamente qualquer **dor ou incômodo** que você sinta executando os movimentos. O que vamos ajustar hoje?
+            <div class="chat-bubble ai" id="ai-welcome-msg">
+                Olá! Sou seu Personal Trainer de Inteligência Artificial Real. 💪<br><br>
+                Estou pronto para ajustar seus treinos ou atuar imediatamente se você relatar qualquer dor ou incômodo articular/muscular.
             </div>
         </div>
         <div class="ai-chat-footer">
-            <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Pergunte sobre treinos ou reporte uma dor..." onkeypress="handleChatKeyPress(event)">
+            <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Pergunte ou relate um incômodo..." onkeypress="handleChatKeyPress(event)">
             <button class="btn-send-chat" onclick="sendChatMessage()">Enviar</button>
         </div>
     </div>
 
     <div class="bottom-nav" id="app-nav" style="display: none;">
-        <button class="nav-item active" id="nav-casa" onclick="changeEnvironment('casa')">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Casa
-        </button>
-        <button class="nav-item" id="nav-academia" onclick="changeEnvironment('academia')">
-            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Academia
-        </button>
+        <button class="nav-item active" id="nav-casa" onclick="changeEnvironment('casa')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Casa</button>
+        <button class="nav-item" id="nav-academia" onclick="changeEnvironment('academia')"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg> Academia</button>
     </div>
 
-    <!-- MODAL EXECUÇÃO -->
     <div class="modal" id="guide-modal">
         <div class="modal-content">
             <h3 id="guide-title" style="color: var(--primary); margin-bottom: 10px;">Execução</h3>
-            <div class="ai-guide-box"><h5>1. Posição Inicial</h5><p id="guide-step1">Posicione o corpo de forma anatomica mantendo a coluna reta.</p></div>
-            <div class="ai-guide-box"><h5>2. Movimento</h5><p id="guide-step2">Execute de forma cadenciada com o máximo de contração muscular.</p></div>
-            <div class="ai-guide-box"><h5>⚠️ Evite</h5><p id="guide-step3" style="color: #ff4757;">Usar embalos corporais ou roubar na amplitude.</p></div>
+            <div class="ai-guide-box"><h5>1. Posição Inicial</h5><p id="guide-step1">Mantenha a coluna neutra e firme.</p></div>
+            <div class="ai-guide-box"><h5>2. Movimento</h5><p id="guide-step2">Cadência controlada esmagando o músculo alvo.</p></div>
+            <div class="ai-guide-box"><h5>⚠️ Evite</h5><p id="guide-step3" style="color: #ff4757;">Usar impulsos ou roubar na amplitude.</p></div>
             <button class="btn-primary" onclick="closeGuideModal()">Entendido!</button>
         </div>
     </div>
 
-    <!-- MODAL MUDAR EXERCÍCIO -->
     <div class="modal" id="edit-modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; color: var(--primary);">Substituir Exercício</h3>
@@ -713,13 +630,18 @@
         </div>
     </div>
 
-    <!-- LÓGICA DO BANCO DE DADOS LOCAL (LOCALSTORAGE) -->
     <script>
-        window.currentUserEmail = null;
+        // CONFIGURAÇÕES DO SEU SUPABASE
+        const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
+        const SUPABASE_ANON_KEY = "INSIRA_SUA_ANON_KEY_AQUI"; // Pegue no painel do seu Supabase
+
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         window.currentEnvironment = "casa";
         window.currentDay = "A";
         window.currentEditingIndex = null;
-        window.userData = null;
+        window.appState = null;
+        window.isSignUpMode = false;
 
         const bonecoVectors = {
             push: `<svg viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
@@ -730,22 +652,22 @@
         window.exerciseBank = {
             push: [
                 { id: "flexao", name: "Flexão de Braço Padrão", desc: "Corpo reto e desça até o peito quase tocar o chão.", vector: bonecoVectors.push },
-                { id: "supino_reto", name: "Supino Reto com Barra", desc: "Desça a barra controladamente até o peito.", vector: bonecoVectors.push },
+                { id: "supino_reto", name: "Supino Reto com Barra", desc: "Barra controlada até o peito.", vector: bonecoVectors.push },
                 { id: "supino_inc", name: "Supino Inclinado Halteres", desc: "Foco na porção superior do peito.", vector: bonecoVectors.push },
                 { id: "desenvolvimento", name: "Desenvolvimento de Ombros", desc: "Empurre os halteres acima da cabeça.", vector: bonecoVectors.push },
                 { id: "elev_lateral", name: "Elevação Lateral", desc: "Suba os braços até a linha dos ombros.", vector: bonecoVectors.push },
                 { id: "diamante", name: "Flexão Diamante", desc: "Mãos juntas em triângulo, foco no tríceps.", vector: bonecoVectors.push },
-                { id: "mergulho", name: "Mergulho no Banco", desc: "Apoie as mãos em uma cadeira estável e desça.", vector: bonecoVectors.push }
+                { id: "mergulho", name: "Mergulho no Banco", desc: "Mãos na cadeira estável e desça.", vector: bonecoVectors.push }
             ],
             pull: [
                 { id: "barra_fixa", name: "Barra Fixa", desc: "Puxe o corpo para cima até passar o queixo.", vector: bonecoVectors.pull },
-                { id: "pulley_alto", name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral esmagando as costas.", vector: bonecoVectors.pull },
-                { id: "remada_tri", name: "Remada Baixa Triângulo", desc: "Mantenha a postura reta e puxe a carga.", vector: bonecoVectors.pull },
+                { id: "pulley_alto", name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral.", vector: bonecoVectors.pull },
+                { id: "remada_tri", name: "Remada Baixa Triângulo", desc: "Postura reta e puxe a carga.", vector: bonecoVectors.pull },
                 { id: "remada_curv", name: "Remada Curvada", desc: "Incline o tronco à frente e puxe a barra.", vector: bonecoVectors.pull },
                 { id: "rosca_direta", name: "Rosca Direta", desc: "Flexão de braços isolando o bíceps.", vector: bonecoVectors.pull }
             ],
             legs: [
-                { id: "agachamento", name: "Agachamento Livre", desc: "Desça o quadril para trás mantendo os joelhos alinhados.", vector: bonecoVectors.legs },
+                { id: "agachamento", name: "Agachamento Livre", desc: "Quadril para trás, joelhos alinhados.", vector: bonecoVectors.legs },
                 { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Um pé apoiado atrás em banco.", vector: bonecoVectors.legs },
                 { id: "leg_press", name: "Leg Press 45°", desc: "Empurre a plataforma com a lombar apoiada.", vector: bonecoVectors.legs },
                 { id: "afundo", name: "Afundo Caminhando", desc: "Passadas contínuas descendo o quadril.", vector: bonecoVectors.legs },
@@ -758,138 +680,130 @@
                 A: [
                     { id: "flexao", name: "Flexão de Braço Padrão", desc: "Foco no peitoral e tríceps. Mantenha o core firme.", meta: "4 SÉRIES x FALHA" },
                     { id: "diamante", name: "Flexão Diamante (Mãos Juntas)", desc: "Aproximação das mãos intensificando a ação do tríceps.", meta: "3 SÉRIES x 12 REPS" },
-                    { id: "mergulho", name: "Mergulho no Banco ou Cadeira", desc: "Apoie as mãos na borda e desça flexionando os cotovelos.", meta: "3 SÉRIES x 15 REPS" },
-                    { id: "flexao", name: "Flexão Inclinada (Mãos Elevadas)", desc: "Apoie as mãos em uma superfície alta para focar na porção inferior.", meta: "3 SÉRIES x 12 REPS" },
-                    { id: "desenvolvimento", name: "Desenvolvimento de Ombros (Garrafas/Pesos)", desc: "Empurre os pesos acima da cabeça estabilizando a coluna.", meta: "4 SÉRIES x 15 REPS" }
+                    { id: "mergulho", name: "Mergulho no Banco ou Cadeira", desc: "Apoie as mãos na borda e desça flexionando os cotovelos.", meta: "3 SÉRIES x 15 REPS" }
                 ],
                 B: [
                     { id: "barra_fixa", name: "Barra Fixa Pronada", desc: "Puxe o corpo controladamente até o queixo passar a barra.", meta: "4 SÉRIES x 8-12 REPS" },
-                    { id: "remada_curv", name: "Remada Curvada Unilateral", desc: "Puxe o peso em direção ao quadril esmagando a dorsal.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "barra_fixa", name: "Barra Fixa Supinada (Foco Bíceps)", desc: "Palmas das mãos voltadas para você para ativar mais o braço.", meta: "3 SÉRIES x 10 REPS" },
-                    { id: "rosca_direta", name: "Rosca Direta Adaptada", desc: "Flexão de cotovelos isolando completamente o bíceps.", meta: "4 SÉRIES x 15 REPS" },
-                    { id: "elev_lateral", name: "Elevação Lateral Inclinada", desc: "Incline o tronco à frente para trabalhar a porção posterior do ombro.", meta: "3 SÉRIES x 15 REPS" }
+                    { id: "remada_curv", name: "Remada Curvada Unilateral", desc: "Puxe o peso em direção ao quadril esmagando a dorsal.", meta: "4 SÉRIES x 12 REPS" }
                 ],
                 C: [
                     { id: "agachamento", name: "Agachamento Livre Postural", desc: "Mantenha os pés na largura dos ombros e desça com controle.", meta: "4 SÉRIES x 20 REPS" },
-                    { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Coloque um pé para trás apoiado no banco e desça verticalmente.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "afundo", name: "Afundo Estático (Passada)", desc: "Avanço unilateral descendo o joelho de trás rumo ao chão.", meta: "3 SÉRIES x 12 REPS por perna" },
-                    { id: "agachamento", name: "Agachamento Sumo", desc: "Pés mais afastados com as pontas para fora, foco em adutores.", meta: "3 SÉRIES x 15 REPS" },
-                    { id: "panturrilha", name: "Gêmeos em Pé (Degrau)", desc: "Suba na ponta dos pés usando a amplitude máxima do degrau.", meta: "4 SÉRIES x 25 REPS" }
+                    { id: "bulgaro", name: "Agachamento Búlgaro", desc: "Coloque um pé para trás apoiado no banco e desça verticalmente.", meta: "4 SÉRIES x 12 REPS" }
                 ]
             },
             academia: {
                 A: [
                     { id: "supino_reto", name: "Supino Reto com Barra", desc: "Controle a descida até o peito e empurre com explosão.", meta: "4 SÉRIES x 10 REPS" },
-                    { id: "supino_inc", name: "Supino Inclinado com Halteres", desc: "Trabalho forte na porção superior/clavicular do peitoral.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "desenvolvimento", name: "Desenvolvimento Militar c/ Halteres", desc: "Elevação vertical focando no deltoide anterior.", meta: "4 SÉRIES x 10 REPS" },
-                    { id: "elev_lateral", name: "Elevação Lateral na Polia", desc: "Tensão constante no deltoide lateral durante todo o arco.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "mergulho", name: "Tríceps Pulley (Corda)", desc: "Extensão completa de cotovelos abrindo a corda no final.", meta: "4 SÉRIES x 12 REPS" }
+                    { id: "supino_inc", name: "Supino Inclinado com Halteres", desc: "Trabalho forte na porção superior/clavicular do peitoral.", meta: "4 SÉRIES x 12 REPS" }
                 ],
                 B: [
                     { id: "pulley_alto", name: "Puxada Alta Aberta (Pulley)", desc: "Puxe a barra em direção ao peitoral superior abrindo as costas.", meta: "4 SÉRIES x 10 REPS" },
-                    { id: "remada_tri", name: "Remada Baixa com Triângulo", desc: "Mantenha o tronco firme e puxe puxando os cotovelos para trás.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "remada_curv", name: "Remada Curvada Pronada", desc: "Pegada firme na barra trazendo a carga na linha do umbigo.", meta: "3 SÉRIES x 10 REPS" },
-                    { id: "rosca_direta", name: "Rosca Direta com Barra W", desc: "Movimento isolado preservando a articulação do punho.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "rosca_direta", name: "Rosca Martelo Alternada", desc: "Foco no braquiorradial e na espessura do braço.", meta: "3 SÉRIES x 12 REPS" }
+                    { id: "remada_tri", name: "Remada Baixa com Triângulo", desc: "Mantenha o tronco firme e puxe puxando os cotovelos para trás.", meta: "4 SÉRIES x 12 REPS" }
                 ],
                 C: [
                     { id: "agachamento", name: "Agachamento Livre com Barra", desc: "Base sólida, desça quebrando os 90° com segurança.", meta: "4 SÉRIES x 8-10 REPS" },
-                    { id: "leg_press", name: "Leg Press 45°", desc: "Lombar colada no banco, desça trazendo os joelhos ao peito.", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "bulgaro", name: "Agachamento Búlgaro c/ Halteres", desc: "Segure um halter em cada mão para aumentar a sobrecarga.", meta: "3 SÉRIES x 10 REPS" },
-                    { id: "leg_press", name: "Cadeira Extensora", desc: "Cadência controlada segurando 1 segundo no topo (pico de contração).", meta: "4 SÉRIES x 12 REPS" },
-                    { id: "panturrilha", name: "Gêmeos Sentado (Solear)", desc: "Trabalho isolador focado na porção inferior da panturrilha.", meta: "4 SÉRIES x 20 REPS" }
+                    { id: "leg_press", name: "Leg Press 45°", desc: "Lombar colada no banco, desça trazendo os joelhos ao peito.", meta: "4 SÉRIES x 12 REPS" }
                 ]
             }
         };
 
-        function switchAuthTab(tab) {
-            document.getElementById('tab-login').classList.remove('active');
-            document.getElementById('tab-register').classList.remove('active');
-            document.getElementById('form-login').style.display = 'none';
-            document.getElementById('form-register').style.display = 'none';
-
-            if (tab === 'login') {
-                document.getElementById('tab-login').classList.add('active');
-                document.getElementById('form-login').style.display = 'block';
+        // CHECAGEM DE SESSÃO DO SUPABASE AO CARREGAR
+        window.onload = async function() {
+            const { data: { session }, error } = await _supabase.auth.getSession();
+            if (session && session.user) {
+                checkUserProfile(session.user);
             } else {
-                document.getElementById('tab-register').classList.add('active');
-                document.getElementById('form-register').style.display = 'block';
+                document.getElementById('screen-auth').style.display = 'block';
+            }
+        };
+
+        // ALTERAR MODO LOGIN / CADASTRO
+        function toggleAuthMode() {
+            window.isSignUpMode = !window.isSignUpMode;
+            document.getElementById('auth-title').textContent = window.isSignUpMode ? "CRIAR NOVA CONTA" : "ENTRAR NA CONTA";
+            document.getElementById('btn-auth-submit').textContent = window.isSignUpMode ? "Cadastrar" : "Entrar";
+            document.getElementById('btn-auth-toggle').textContent = window.isSignUpMode ? "Já tem conta? Faça Login" : "Não tem conta? Cadastre-se";
+        }
+
+        // SUBMIT DE LOGIN / CADASTRO
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+
+            if(window.isSignUpMode) {
+                const { data, error } = await _supabase.auth.signUp({ email, password });
+                if(error) return alert("Erro no cadastro: " + error.message);
+                alert("Cadastro realizado! Verifique seu e-mail caso necessário ou faça login.");
+                toggleAuthMode();
+            } else {
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+                if(error) return alert("Erro ao entrar: " + error.message);
+                checkUserProfile(data.user);
             }
         }
 
-        window.handleRegister = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim().toLowerCase();
-            const password = document.getElementById('reg-pass').value;
-
-            if(localStorage.getItem(`user_${email}`)) {
-                alert("Este e-mail já está cadastrado!");
-                return;
-            }
-
-            const newUser = {
-                name: name,
-                password: password,
-                hasSetup: false,
-                stats: {},
-                routine: defaultRoutine,
-                progress: {}
-            };
-
-            localStorage.setItem(`user_${email}`, JSON.stringify(newUser));
-            alert("Conta criada com sucesso no seu aparelho!");
-            document.getElementById('form-register').reset();
-            switchAuthTab('login');
-        };
-
-        window.handleLogin = function(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const password = document.getElementById('login-pass').value;
-
-            const localData = localStorage.getItem(`user_${email}`);
-            if(!localData) {
-                alert("Usuário não encontrado.");
-                return;
-            }
-
-            const user = JSON.parse(localData);
-            if(user.password !== password) {
-                alert("Senha incorreta.");
-                return;
-            }
-
-            window.currentUserEmail = email;
-            window.userData = user;
-
+        // VERIFICAR SE O USUÁRIO JÁ POSSUI DADOS NO BANCO
+        async function checkUserProfile(user) {
             document.getElementById('screen-auth').style.display = 'none';
-            if(!user.hasSetup) {
+            
+            const { data, error } = await _supabase
+                .from('atleta_perfil')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (error || !data) {
+                // Usuário logado mas sem perfil preenchido -> Exibe Setup
                 document.getElementById('screen-setup').style.display = 'block';
             } else {
+                // Perfil carregado com sucesso
+                window.appState = {
+                    name: data.name,
+                    stats: { weight: data.weight, height: data.height, age: data.age, gender: data.gender, goal: data.goal },
+                    apiKey: data.api_key,
+                    routine: data.routine || defaultRoutine,
+                    progress: data.progress || {}
+                };
                 window.loadUserApp();
             }
-        };
+        }
 
-        window.initApp = function(e) {
+        // SALVAR DADOS INICIAIS DO USUÁRIO
+        window.initApp = async function(e) {
             e.preventDefault();
+            const { data: { user } } = await _supabase.auth.getUser();
+            if(!user) return;
+
+            const name = document.getElementById('in-name').value.trim();
             const weight = parseFloat(document.getElementById('in-weight').value.replace(',', '.'));
             const height = parseFloat(document.getElementById('in-height').value.replace(',', '.'));
             const age = parseInt(document.getElementById('in-age').value, 10);
             const gender = document.getElementById('in-gender').value;
             const goal = document.getElementById('in-goal').value;
+            const apiKey = document.getElementById('in-gemini-key').value.trim();
 
-            window.userData.stats = { weight, height, age, gender, goal };
-            window.userData.hasSetup = true;
+            const profileData = {
+                id: user.id,
+                name, weight, height, age, gender, goal, api_key: apiKey,
+                routine: defaultRoutine, progress: {}
+            };
 
-            localStorage.setItem(`user_${window.currentUserEmail}`, JSON.stringify(window.userData));
+            const { error } = await _supabase.from('atleta_perfil').upsert(profileData);
+            if(error) return alert("Erro ao sincronizar dados: " + error.message);
+
+            window.appState = {
+                name, stats: { weight, height, age, gender, goal }, apiKey,
+                routine: defaultRoutine, progress: {}
+            };
+            
             document.getElementById('screen-setup').style.display = 'none';
             window.loadUserApp();
         };
 
+        // EXIBE AS INFORMAÇÕES DO APP NA TELA
         window.loadUserApp = function() {
-            let data = window.userData;
-
+            let data = window.appState;
             document.getElementById('user-name').textContent = data.name;
             document.getElementById('user-stats').textContent = `${data.stats.weight}kg | ${data.stats.height.toFixed(2)}m | ${data.stats.age} anos`;
             document.getElementById('user-goal').textContent = data.stats.goal;
@@ -900,48 +814,44 @@
             let tmb = data.stats.gender === "M" ? (10 * data.stats.weight) + (625 * data.stats.height) - (5 * data.stats.age) + 5 : (10 * data.stats.weight) + (625 * data.stats.height) - (5 * data.stats.age) - 161;
 
             let status = "", metaCorp = "", advice = "";
-            if (imc < 18.5) {
-                status = "Abaixo do Peso"; metaCorp = "Construção de Massa";
-                advice = `Basal: ${Math.round(tmb)} kcal. Foco em superávit calórico limpo.`;
-            } else if (imc >= 18.5 && imc < 25) {
-                status = "Peso Saudável"; metaCorp = "Recomposição Muscular";
-                advice = `Basal: ${Math.round(tmb)} kcal. Calorias equilibradas e proteínas altas.`;
-            } else if (imc >= 25 && imc < 30) {
-                status = "Sobrepeso Moderado"; metaCorp = "Déficit Inteligente";
-                advice = `Basal: ${Math.round(tmb)} kcal. Reduza carboidratos e treine pesado.`;
-            } else {
-                status = "Obesidade"; metaCorp = "Emagrecimento Saudável";
-                advice = `Basal: ${Math.round(tmb)} kcal. Déficit calórico controlado e mais cardio.`;
-            }
+            if (imc < 18.5) { status = "Abaixo do Peso"; metaCorp = "Construção de Massa"; advice = `Basal: ${Math.round(tmb)} kcal. Superávit limpo.`; }
+            else if (imc >= 18.5 && imc < 25) { status = "Peso Saudável"; metaCorp = "Recomposição Muscular"; advice = `Basal: ${Math.round(tmb)} kcal. Calorias equilibradas.`; }
+            else if (imc >= 25 && imc < 30) { status = "Sobrepeso Moderado"; metaCorp = "Déficit Inteligente"; advice = `Basal: ${Math.round(tmb)} kcal. Reduza carbo.`; }
+            else { status = "Obesidade"; metaCorp = "Emagrecimento"; advice = `Basal: ${Math.round(tmb)} kcal. Déficit controlado.`; }
 
             document.getElementById('lbl-imc-status').textContent = status;
             document.getElementById('lbl-meta-corp').textContent = metaCorp;
             document.getElementById('lbl-feed-advice').textContent = advice;
 
+            if (data.apiKey) {
+                document.getElementById('ai-status').style.background = "var(--success)";
+                document.getElementById('ai-name-label').textContent = "Personal Trainer IA Real";
+                document.getElementById('ai-desc-label').textContent = "Conectado via API Oficial";
+                document.getElementById('ai-welcome-msg').innerHTML = `Olá **${data.name}**! Minha rede neural real está ativa. Estou analisando suas métricas para ajustar sua rotina focada em **${data.stats.goal}**. Caso sinta qualquer incômodo físico ou queira alterar a estrutura biotipo, pode me reportar aqui!`;
+            } else {
+                document.getElementById('ai-status').style.background = "#ffb300";
+                document.getElementById('ai-name-label').textContent = "Coach IA (Modo Offline)";
+                document.getElementById('ai-desc-label').textContent = "Insira a API Key para destravar respostas.";
+            }
+
             document.getElementById('screen-app').style.display = 'block';
             document.getElementById('app-nav').style.display = 'flex';
-            document.getElementById('ai-btn').style.display = 'flex'; // Exibe o botão de IA
+            document.getElementById('ai-btn').style.display = 'flex';
             window.renderWorkout();
         };
 
+        // RENDERIZADOR DOS CARDS DE TREINO
         window.renderWorkout = function() {
             const container = document.getElementById('workout-container');
             container.innerHTML = "";
-            
-            if (!window.userData.routine || !window.userData.routine[window.currentEnvironment]) {
-                window.userData.routine = defaultRoutine;
-            }
-            
-            const list = window.userData.routine[window.currentEnvironment][window.currentDay];
-            const trackingProgress = window.userData.progress || {};
+            const list = window.appState.routine[window.currentEnvironment][window.currentDay];
+            const trackingProgress = window.appState.progress || {};
             
             list.forEach((ex, index) => {
                 const progKey = `${window.currentEnvironment}_${window.currentDay}_${ex.id || index}`;
                 const loggedProg = trackingProgress[progKey] ? `🔥 Carga Atual: <strong>${trackingProgress[progKey]}</strong>` : `⚡ Sem registro de carga hoje.`;
-                
                 let matchedVector = bonecoVectors.push;
-                const catGroup = ["push", "pull", "legs"];
-                for(let cat of catGroup) {
+                for(let cat of ["push", "pull", "legs"]) {
                     let f = window.exerciseBank[cat].find(e => e.id === ex.id);
                     if(f) { matchedVector = f.vector; break;}
                 }
@@ -956,14 +866,12 @@
                             <p>${ex.desc}</p>
                         </div>
                     </div>
-                    <div class="progress-log-zone">
-                        <span>${loggedProg}</span>
-                    </div>
+                    <div class="progress-log-zone"><span>${loggedProg}</span></div>
                     <div class="exercise-footer">
                         <span class="meta-tag">${ex.meta}</span>
                         <div class="action-buttons">
                             <button class="btn-action-ex" style="color:var(--success)" onclick="logProgress('${progKey}')">📈 Carga</button>
-                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal(${index})">📖 Guia</button>
+                            <button class="btn-action-ex" style="color:var(--accent)" onclick="openGuideModal()">📖 Guia</button>
                             <button class="btn-action-ex" style="color:var(--text-muted)" onclick="openEditModal(${index})">⚙️ Mudar</button>
                         </div>
                     </div>
@@ -972,103 +880,98 @@
             });
         };
 
-        window.logProgress = function(progKey) {
-            let currentVal = window.userData.progress[progKey] || "";
+        // SALVAR CARGA DIRETAMENTE NO SUPABASE
+        window.logProgress = async function(progKey) {
+            let currentVal = window.appState.progress[progKey] || "";
             let newLoad = prompt("Digite a carga/repetições obtidas:", currentVal);
-            
             if (newLoad !== null) {
-                window.userData.progress[progKey] = newLoad;
-                localStorage.setItem(`user_${window.currentUserEmail}`, JSON.stringify(window.userData));
+                window.appState.progress[progKey] = newLoad;
+                
+                const { data: { user } } = await _supabase.auth.getUser();
+                await _supabase.from('atleta_perfil').update({ progress: window.appState.progress }).eq('id', user.id);
+
                 window.renderWorkout();
             }
         };
 
-        window.saveExerciseEdit = function() {
+        // MUDAR EXERCÍCIO DIRETO NO BANCO
+        window.saveExerciseEdit = async function() {
             const select = document.getElementById('modal-select-ex');
             const metaValue = document.getElementById('modal-input-meta').value;
             const allExercises = [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs];
             const selectedEx = allExercises.find(e => e.name === select.value);
             
             if(selectedEx) {
-                const cleanEx = { id: selectedEx.id, name: selectedEx.name, desc: selectedEx.desc, meta: metaValue };
-                window.userData.routine[window.currentEnvironment][window.currentDay][window.currentEditingIndex] = cleanEx;
+                window.appState.routine[window.currentEnvironment][window.currentDay][window.currentEditingIndex] = { id: selectedEx.id, name: selectedEx.name, desc: selectedEx.desc, meta: metaValue };
                 
-                localStorage.setItem(`user_${window.currentUserEmail}`, JSON.stringify(window.userData));
+                const { data: { user } } = await _supabase.auth.getUser();
+                await _supabase.from('atleta_perfil').update({ routine: window.appState.routine }).eq('id', user.id);
+
                 window.renderWorkout();
                 closeModal();
             }
         };
 
-        function changeDay(day) {
-            window.currentDay = day;
-            document.querySelectorAll('.abc-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-${day}`).classList.add('active');
-            window.renderWorkout();
-        }
-
-        function changeEnvironment(env) {
-            window.currentEnvironment = env;
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(`nav-${env}`).classList.add('active');
-            window.renderWorkout();
-        }
-
-        function openGuideModal(index) { document.getElementById('guide-modal').style.display = 'flex'; }
+        // AUXILIARES DE NAVEGAÇÃO E MODAIS
+        function changeDay(day) { window.currentDay = day; document.querySelectorAll('.abc-btn').forEach(b => b.classList.remove('active')); document.getElementById(`btn-${day}`).classList.add('active'); window.renderWorkout(); }
+        function changeEnvironment(env) { window.currentEnvironment = env; document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(`nav-${env}`).classList.add('active'); window.renderWorkout(); }
+        function openGuideModal() { document.getElementById('guide-modal').style.display = 'flex'; }
         function closeGuideModal() { document.getElementById('guide-modal').style.display = 'none'; }
-
+        
         function openEditModal(index) {
             window.currentEditingIndex = index;
-            const select = document.getElementById('modal-select-ex');
-            select.innerHTML = "";
-            const allExercises = [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs];
-            allExercises.forEach(e => {
-                const op = document.createElement('option');
-                op.value = e.name; op.textContent = e.name;
-                select.appendChild(op);
+            const select = document.getElementById('modal-select-ex'); select.innerHTML = "";
+            [...window.exerciseBank.push, ...window.exerciseBank.pull, ...window.exerciseBank.legs].forEach(e => {
+                const op = document.createElement('option'); op.value = e.name; op.textContent = e.name; select.appendChild(op);
             });
-            
-            const currentEx = window.userData.routine[window.currentEnvironment][window.currentDay][index];
-            select.value = currentEx.name;
-            document.getElementById('modal-input-meta').value = currentEx.meta;
+            const currentEx = window.appState.routine[window.currentEnvironment][window.currentDay][index];
+            select.value = currentEx.name; document.getElementById('modal-input-meta').value = currentEx.meta;
             document.getElementById('edit-modal').style.display = 'flex';
         }
-
         function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
-
-        window.logout = function() {
-            window.currentUserEmail = null;
-            window.userData = null;
+        
+        // VOLTAR PARA TELA DE ALTERAR DADOS CORPORAIS
+        window.editProfileData = function() {
             document.getElementById('screen-app').style.display = 'none';
             document.getElementById('app-nav').style.display = 'none';
             document.getElementById('ai-btn').style.display = 'none';
-            document.getElementById('ai-chat').style.display = 'none';
-            document.getElementById('screen-auth').style.display = 'block';
+            
+            document.getElementById('in-name').value = window.appState.name;
+            document.getElementById('in-weight').value = window.appState.stats.weight;
+            document.getElementById('in-height').value = window.appState.stats.height;
+            document.getElementById('in-age').value = window.appState.stats.age;
+            document.getElementById('in-gender').value = window.appState.stats.gender;
+            document.getElementById('in-goal').value = window.appState.stats.goal;
+            document.getElementById('in-gemini-key').value = window.appState.apiKey;
+
+            document.getElementById('screen-setup').style.display = 'block';
         };
 
-        // --- SISTEMA INTERNO DO CHATBOT DE AGENTE DE IA ---
+        // DESLOGAR
+        async function handleLogout() {
+            if(confirm("Deseja realmente sair do aplicativo?")) {
+                await _supabase.auth.signOut();
+                location.reload();
+            }
+        }
+
+        // CHAT COM GEMINI IA
         function toggleAIChat() {
             const chat = document.getElementById('ai-chat');
+            chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
             if(chat.style.display === 'flex') {
-                chat.style.display = 'none';
-            } else {
-                chat.style.display = 'flex';
                 const msgBody = document.getElementById('ai-chat-messages');
                 msgBody.scrollTop = msgBody.scrollHeight;
             }
         }
 
-        function handleChatKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendChatMessage();
-            }
-        }
+        function handleChatKeyPress(event) { if (event.key === 'Enter') sendChatMessage(); }
 
-        function sendChatMessage() {
+        async function sendChatMessage() {
             const input = document.getElementById('ai-chat-input');
             const query = input.value.trim();
             if(!query) return;
 
-            // Renderiza mensagem do usuário
             const msgBody = document.getElementById('ai-chat-messages');
             const userBubble = document.createElement('div');
             userBubble.className = "chat-bubble user";
@@ -1078,98 +981,71 @@
             input.value = "";
             msgBody.scrollTop = msgBody.scrollHeight;
 
-            // Resposta simulada inteligente do Personal Trainer Pro Capacitado
-            setTimeout(() => {
-                const aiBubble = document.createElement('div');
-                aiBubble.className = "chat-bubble ai";
-                aiBubble.innerHTML = processAIPersonalResponse(query);
-                msgBody.appendChild(aiBubble);
-                msgBody.scrollTop = msgBody.scrollHeight;
-            }, 600);
-        }
+            const aiBubble = document.createElement('div');
+            aiBubble.className = "chat-bubble ai";
+            aiBubble.innerHTML = "<em>Analisando biomecânica...</em>";
+            msgBody.appendChild(aiBubble);
+            msgBody.scrollTop = msgBody.scrollHeight;
 
-        // Lógica de Contexto e Especialidade Clínica/Esportiva do Personal de IA
-        function processAIPersonalResponse(msg) {
-            const text = msg.toLowerCase();
-            
-            if (text.includes("dor") || text.includes("incomodo") || text.includes("machuc") || text.includes("punho") || text.includes("ombro")) {
-                return `🚨 **Aviso de Biomecânica Importante:** Se você sentiu dor ou incômodo agudo nas articulações, pare imediatamente o exercício!<br><br>
-                        Como seu treinador, aqui está a correção:<br>
-                        1. **Se for no Ombro:** No desenvolvimento ou supinos, reduza a amplitude para não passar dos 90° de flexão de cotovelo e faça a adução das escápulas.<br>
-                        2. **Se for no Punho:** Troque a barra reta por uma Barra W ou halteres para manter a pegada neutra anatômica.<br>
-                        3. **Adaptação:** Mude temporariamente o movimento usando o botão ⚙️ Mudar no card do exercício para uma versão com cabos ou menos carga! O treino deve gerar hipertrofia, não lesão.`;
+            if (!window.appState.apiKey) {
+                setTimeout(() => {
+                    aiBubble.innerHTML = "⚠️ **Modo Offline:** Insira uma API Key do Gemini nas configurações para ativar o cérebro real da IA.";
+                }, 500);
+                return;
             }
 
-            if (text.includes("montar") || text.includes("divis") || text.includes("mudar treino") || text.includes("errado")) {
-                return `📋 **Validação e Montagem de Treino:** Entendido. Se você quer estruturar uma ficha nova ou corrigir o volume atual, lembre-se do padrão ouro que configurei para você:<br><br>
-                        * **Erros Comuns:** Nunca treine Peito e Ombros em dias seguidos. O Deltoide Anterior é muito exigido no supino e precisa descansar.<br>
-                        * **Sugestão de Ajuste:** Use nossa divisão ABC híbrida de alto volume (5 exercícios por bloco) para otimizar a fadiga. Quer que eu sugira uma lista de substituição para algum músculo fraco específico hoje?`;
-            }
+            const systemInstruction = `Você é um Personal Trainer real e experiente. O atleta chama-se ${window.appState.name}, pesa ${window.appState.stats.weight}kg, tem ${window.appState.stats.height}m de altura e foca em ${window.appState.stats.goal}. 
+            Se o usuário relatar qualquer dor, exija a pausa do exercício imediatamente e forneça uma alternativa segura ou correção postural minuciosa. Responda de forma direta usando markdown limpo em português.`;
 
-            return `💪 **Entendido!** Anotei sua observação. Para otimizar esse detalhe no seu treino atual, foque na fase **excêntrica** (descida) controlando o peso por 3 segundos. <br><br>Se houver qualquer dor articular ou se quiser reorganizar a ordem dos exercícios de hoje para corrigir falhas, pode me mandar os nomes que eu altero a estratégia para você!`;
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${window.appState.apiKey}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ role: "user", parts: [{ text: `${systemInstruction}\n\nAtleta pergunta: ${query}` }] }]
+                    })
+                });
+
+                const data = await response.json();
+                if(data.candidates && data.candidates[0].content.parts[0].text) {
+                    let textResponse = data.candidates[0].content.parts[0].text;
+                    aiBubble.innerHTML = textResponse.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                } else {
+                    aiBubble.innerHTML = "❌ Erro na API. Verifique os limites da sua chave.";
+                }
+            } catch (error) {
+                aiBubble.innerHTML = "❌ Falha ao conectar com o motor de IA.";
+            }
+            msgBody.scrollTop = msgBody.scrollHeight;
         }
 
-        // --- CONTROLE DE TIMER DE DESCANSO ---
-        let countdown = null;
-        let timeRemaining = 60;
-        let isTimerRunning = false;
-
+        // CONTROLE DO TIMER DE DESCANSO
+        let countdown = null; let timeRemaining = 60; let isTimerRunning = false;
         function updateTimerDisplay() {
             const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
             const s = (timeRemaining % 60).toString().padStart(2, '0');
             document.getElementById('timer-display').textContent = `${m}:${s}`;
         }
-
         function toggleTimer() {
             const btn = document.getElementById('btn-start-toggle');
-            if (isTimerRunning) {
-                clearInterval(countdown);
-                isTimerRunning = false;
-                btn.textContent = "Iniciar";
-                btn.style.background = "var(--primary)";
-            } else {
-                isTimerRunning = true;
-                btn.textContent = "Pausar";
-                btn.style.background = "#eccc68";
+            if (isTimerRunning) { clearInterval(countdown); isTimerRunning = false; btn.textContent = "Iniciar"; btn.style.background = "var(--primary)"; }
+            else {
+                isTimerRunning = true; btn.textContent = "Pausar"; btn.style.background = "#eccc68";
                 countdown = setInterval(() => {
-                    if (timeRemaining > 0) {
-                        timeRemaining--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(countdown);
-                        isTimerRunning = false;
-                        document.getElementById('timer-display').textContent = "GO!";
-                        btn.textContent = "Iniciar";
-                        btn.style.background = "var(--primary)";
-                    }
+                    if (timeRemaining > 0) { timeRemaining--; updateTimerDisplay(); }
+                    else { clearInterval(countdown); isTimerRunning = false; document.getElementById('timer-display').textContent = "GO!"; btn.textContent = "Iniciar"; btn.style.background = "var(--primary)"; }
                 }, 1000);
             }
         }
-
-        function setQuickTimer(sec) {
-            clearInterval(countdown);
-            isTimerRunning = false;
-            timeRemaining = sec;
-            updateTimerDisplay();
-            document.getElementById('btn-start-toggle').textContent = "Iniciar";
-            document.getElementById('btn-start-toggle').style.background = "var(--primary)";
-        }
-
-        function resetTimer() {
-            setQuickTimer(60);
-        }
-
+        function setQuickTimer(sec) { clearInterval(countdown); isTimerRunning = false; timeRemaining = sec; updateTimerDisplay(); document.getElementById('btn-start-toggle').textContent = "Iniciar"; document.getElementById('btn-start-toggle').style.background = "var(--primary)"; }
+        function resetTimer() { setQuickTimer(60); }
         function editTime() {
             let userPrompt = prompt("Tempo de descanso (MM:SS):", "01:00");
             if (userPrompt) {
                 let parts = userPrompt.split(':');
                 if (parts.length === 2) {
-                    let min = parseInt(parts[0], 10);
-                    let sec = parseInt(parts[1], 10);
-                    if (!isNaN(min) && !isNaN(sec) && sec < 60) {
-                        timeRemaining = (min * 60) + sec;
-                        updateTimerDisplay();
-                    }
+                    let min = parseInt(parts[0], 10); let sec = parseInt(parts[1], 10);
+                    if (!isNaN(min) && !isNaN(sec) && sec < 60) { timeRemaining = (min * 60) + sec; updateTimerDisplay(); }
                 }
             }
         }

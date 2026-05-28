@@ -3,218 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Training - Foco & Evolução</title>
+    <title>Hybrid Fitness Pro Ultimate</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
     <style>
+        :root {
+            --bg-main: #0f1115;
+            --bg-card: #181c24;
+            --bg-nav: #12141c;
+            --primary: #ff3838;
+            --primary-glow: rgba(255, 56, 56, 0.2);
+            --accent: #00d2d3;
+            --accent-glow: rgba(0, 210, 211, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            --border: #222834;
+            --success: #2ed573;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+
         .hidden { display: none !important; }
+
+        .auth-card, .setup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .brand-logo {
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .brand-logo span { color: var(--primary); }
+
+        .abc-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+        .abc-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .exercise-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .exercise-visual-box {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
+        }
+        .exercise-visual-box svg {
+            fill: none;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+        }
+
+        .timer-val { 
+            font-family: monospace; 
+            background: var(--bg-main);
+            border: 1px dashed var(--border);
+            color: var(--accent);
+        }
+
+        .bottom-nav {
+            background: var(--bg-nav);
+            border-top: 1px solid var(--border);
+        }
+        .nav-item {
+            color: var(--text-muted);
+        }
+        .nav-item.active { color: var(--primary); }
+
+        .ai-floating-btn {
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            animation: pulseIA 2s infinite;
+        }
+        @keyframes pulseIA {
+            0% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
+            50% { transform: scale(1.06); box-shadow: 0 4px 25px rgba(0, 210, 211, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
+        }
+
+        .chat-bubble.ai { background: var(--bg-card); border: 1px solid var(--border); }
+        .chat-bubble.user { background: var(--accent); color: #000; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
+<body class="font-sans min-h-screen flex flex-col justify-between pb-24">
 
-    <div id="auth-screen" class="max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-        <h2 id="auth-title" class="text-2xl font-bold text-center mb-6 text-green-400">Entrar no Hybrid Training</h2>
+    <div class="w-full max-w-xl mx-auto p-4 md:p-6 flex-1 flex flex-col justify-center">
         
-        <form id="auth-form" class="space-y-4">
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">E-mail</label>
-                <input type="email" id="auth-email" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 focus:border-green-500 focus:outline-none text-white">
+        <div id="auth-screen" class="auth-card p-8 w-full">
+            <div class="brand-logo text-center text-3xl mb-6 tracking-wider">Hybrid<span>Fitness</span></div>
+            
+            <div class="flex gap-4 mb-6 border-b-2 border-gray-800 pb-2">
+                <button id="tab-login" class="text-lg font-bold text-red-500 border-b-4 border-red-500 pb-2 px-2 focus:outline-none">Entrar</button>
+                <button id="tab-register" class="text-lg font-bold text-gray-500 pb-2 px-2 focus:outline-none">Cadastrar</button>
             </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Senha</label>
-                <input type="password" id="auth-password" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 focus:border-green-500 focus:outline-none text-white">
-            </div>
-            <button type="submit" id="auth-submit-btn" class="w-full bg-green-500 hover:bg-green-600 text-gray-900 font-bold py-2.5 rounded transition">
-                Entrar
-            </button>
-        </form>
 
-        <div class="text-center mt-4">
-            <button id="toggle-auth-mode" class="text-sm text-gray-400 hover:text-green-400 underline">
-                Não tem uma conta? Cadastre-se
-            </button>
+            <form id="auth-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">E-mail do Atleta</label>
+                    <input type="email" id="auth-email" required placeholder="atleta@email.com" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Senha</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-sm uppercase tracking-widest transition shadow-lg">
+                    Acessar Painel
+                </button>
+            </form>
+        </div>
+
+        <div id="setup-screen" class="hidden setup-card p-8 w-full">
+            <div class="brand-logo text-center text-2xl mb-6 tracking-wider">Configuração<span>Inicial</span></div>
+            
+            <form id="setup-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
+                    <input type="text" id="setup-name" required placeholder="Seu Nome" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:outline-none">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Peso (kg)</label>
+                        <input type="number" step="0.1" id="setup-weight" required placeholder="78" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Altura (m)</label>
+                        <input type="number" step="0.01" id="setup-height" required placeholder="1.64" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Idade</label>
+                        <input type="number" id="setup-age" required placeholder="30" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Gênero</label>
+                        <select id="setup-gender" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:outline-none">
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Objetivo</label>
+                        <select id="setup-goal" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:outline-none">
+                            <option value="Hipertrofia">💪 Hipertrofia</option>
+                            <option value="Definição">🔥 Queima & Definição</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-sm uppercase tracking-widest transition shadow-lg">
+                    Gerar Minha Ficha de Treino
+                </button>
+            </form>
+        </div>
+
+        <div id="app-screen" class="hidden w-full space-y-4">
+            
+            <div class="p-5 rounded-2xl border border-gray-800" style="background: linear-gradient(135deg, #1e2430, #141821);">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 id="user-name" class="text-xl font-bold text-white">Atleta</h3>
+                        <p id="user-stats" class="text-sm text-gray-400 mt-0.5">00kg | 0.00m | 00 anos</p>
+                        <button id="logout-btn" class="bg-red-950 hover:bg-red-900 text-red-400 text-xs font-semibold px-2.5 py-1 rounded-md border border-red-800 mt-2 transition">
+                            Sair da Conta
+                        </button>
+                    </div>
+                    <div id="user-goal" class="text-xs font-bold px-3 py-1.5 rounded-full text-cyan-400 bg-cyan-950 border border-cyan-800">
+                        Objetivo
+                    </div>
+                </div>
+
+                <div class="p-4 bg-black bg-opacity-25 border border-gray-800 rounded-xl space-y-2">
+                    <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">📊 Diagnóstico Corporal</div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <span class="text-gray-400 block">IMC:</span>
+                            <strong id="lbl-imc-val" class="text-white text-sm">--</strong>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 block">Status:</span>
+                            <strong id="lbl-imc-status" class="text-white text-sm">Calculando...</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2.5">
+                <button class="abc-btn active flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A">Treino A</button>
+                <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-B">Treino B</button>
+                <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-C">Treino C</button>
+            </div>
+
+            <div id="workout-container" class="space-y-3"></div>
+
+            <div class="p-4 bg-gray-800 rounded-2xl border border-gray-800 text-center">
+                <span class="text-xs text-gray-400 font-bold uppercase tracking-widest block mb-1">⏱️ Descanso</span>
+                <div class="timer-val text-4xl font-extrabold px-6 py-2 rounded-xl w-max mx-auto border mb-3 select-none cursor-pointer" id="timer-display">01:00</div>
+                <div class="flex gap-2 justify-center text-xs">
+                    <button class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg" id="btn-start-toggle">Iniciar</button>
+                    <button class="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300" id="btn-quick-60">60s</button>
+                    <button class="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-300" id="btn-quick-90">90s</button>
+                    <button class="px-3 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-500" id="btn-reset-timer">Reset</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div id="setup-screen" class="hidden max-w-md w-full mx-auto my-auto p-6 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-        <h2 class="text-2xl font-bold text-center mb-6 text-green-400">Configure seu Perfil</h2>
-        <form id="setup-form">
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-1">Nome Completo</label>
-                <input type="text" id="setup-name" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
-            </div>
-            <div class="grid grid-cols-2 gap-4 mb-4">
+    <button class="ai-floating-btn fixed bottom-24 right-5 w-14 h-14 rounded-full border border-white border-opacity-20 flex justify-center items-center z-40 focus:outline-none" id="ai-btn" style="display: none;">
+        <svg class="w-7 h-7 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M12 2c1.1 0 2 .9 2 2v1c2.42 0 4.57 1.25 5.82 3.14l1.11-1.11c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-1.07 1.07C21.72 10.23 22 11.08 22 12c0 1.1-.9 2-2 2h-1v1c0 2.42-1.25 4.57-3.14 5.82l1.11 1.11c.39.39.39 1.02 0 1.41-.39.39-1.02.39-1.41 0l-1.07-1.07c-.72.45-1.57.73-2.49.73-1.1 0-2-.9-2-2v-1H9c-2.42 0-4.57-1.25-5.82-3.14l-1.11 1.11c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41l1.07-1.07C2.28 13.77 2 12.92 2 12c0-1.1.9-2 2-2h1V9c0-2.42 1.25-4.57 3.14-5.82L7.03 2.07c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0l1.07 1.07c.72-.45 1.57-.73 2.49-.73zm0 4c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-2.5 4c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm5 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z"/>
+        </svg>
+    </button>
+
+    <div class="fixed inset-0 md:inset-auto md:bottom-40 md:right-5 md:w-96 md:h-[500px] bg-gray-900 border border-gray-800 z-50 flex flex-col hidden rounded-2xl overflow-hidden shadow-2xl" id="ai-chat">
+        <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Peso (kg)</label>
-                    <input type="number" step="0.1" id="setup-weight" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Altura (m)</label>
-                    <input type="number" step="0.01" id="setup-height" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
+                    <h4 class="text-sm font-bold text-white">Personal IA Real</h4>
+                    <span class="text-xs text-gray-400">Offline Integrado</span>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Idade</label>
-                    <input type="number" id="setup-age" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Gênero</label>
-                    <select id="setup-gender" class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
-                        <option value="masculino">Masculino</option>
-                        <option value="feminino">Feminino</option>
-                        <option value="outro">Outro</option>
-                    </select>
-                </div>
+            <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl font-bold px-2">&times;</button>
+        </div>
+        <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm" id="ai-chat-messages">
+            <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200">
+                Olá! Sou seu Personal Trainer de Inteligência Artificial Real. 💪<br><br> Estou pronto para otimizar suas sequências, ajustar seus descansos e corrigir execuções.
             </div>
-            <div class="mb-6">
-                <label class="block text-sm font-medium mb-1">Objetivo Principal</label>
-                <input type="text" id="setup-goal" placeholder="Ex: Ganhar força, Hipertrofia, Calistenia" required class="w-full p-2.5 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none">
-            </div>
-            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-gray-900 font-bold py-2.5 rounded transition">
-                Salvar Perfil e Começar
-            </button>
-        </form>
+        </div>
+        <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
+            <input type="text" id="ai-chat-input" placeholder="Pergunte algo ao Personal..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
+            <button id="btn-send-chat" class="bg-cyan-500 text-black font-bold px-4 rounded-xl text-sm">Enviar</button>
+        </div>
     </div>
 
-    <div id="app-screen" class="hidden flex-1 w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-        <header class="flex justify-between items-center border-b border-gray-800 pb-4 mb-6">
-            <div>
-                <h1 class="text-xl md:text-3xl font-bold">Olá, <span id="user-display-name" class="text-green-400">Atleta</span>!</h1>
-                <p class="text-sm text-gray-400">Foco nos treinos e consistência hoje.</p>
-            </div>
-            <button id="logout-btn" class="bg-red-950 hover:bg-red-900 text-red-200 text-sm px-4 py-2 rounded transition border border-red-700">
-                Sair
-            </button>
-        </header>
-
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-800 p-4 rounded-lg border border-gray-700 mb-6">
-            <div class="text-center p-2">
-                <span class="block text-xs text-gray-400 uppercase tracking-wider">Peso</span>
-                <span id="card-weight" class="text-xl font-bold">-- kg</span>
-            </div>
-            <div class="text-center p-2">
-                <span class="block text-xs text-gray-400 uppercase tracking-wider">Altura</span>
-                <span id="card-height" class="text-xl font-bold">-- m</span>
-            </div>
-            <div class="text-center p-2">
-                <span class="block text-xs text-gray-400 uppercase tracking-wider">Idade</span>
-                <span id="card-age" class="text-xl font-bold">-- anos</span>
-            </div>
-            <div class="text-center p-2">
-                <span class="block text-xs text-gray-400 uppercase tracking-wider">Objetivo</span>
-                <span id="card-goal" class="text-xl font-bold truncate block px-2">--</span>
-            </div>
-        </section>
-
-        <main class="bg-gray-800 rounded-lg p-6 border border-gray-700 text-center">
-            <p class="text-gray-400">Seu painel de treinos diários e gerenciador de séries está pronto para ser customizado.</p>
-            <div class="mt-6 p-8 border-2 border-dashed border-gray-700 rounded-lg text-gray-500">
-                [ Espaço para renderização das suas rotinas de Push-ups / Pull-ups e Calistenia ]
-            </div>
-        </main>
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 h-20 flex justify-around items-center z-30" id="app-nav" style="display: none;">
+        <button class="nav-item active flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-casa">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Casa
+        </button>
+        <button class="nav-item flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-academia">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            Academia
+        </button>
     </div>
-
-    <footer class="text-center py-4 text-xs text-gray-600 border-t border-gray-800 mt-6">
-        Hybrid Training &copy; 2026 - Conectado ao Cloud Supabase
-    </footer>
 
     <script>
         const SUPABASE_URL = "https://xpxldtaqcopgorgtkyja.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhweGxkdGFxY29wZ29yZ3RreWphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDM3NjQsImV4cCI6MjA5NTUxOTc2NH0.U-ko_p1TzpirYN06Jh8lxLJL0Bf2TiyMECrpyA4QqGA";
 
-        let supabase;
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        try {
-            if (typeof supabase !== 'undefined' && supabase.createClient) {
-                supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } else if (typeof window.supabase !== 'undefined') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } else {
-                alert("Erro: Biblioteca do Supabase não carregou.");
+        // Vetores SVG padrões
+        const bonecoVectors = {
+            push: `<svg class="w-10 h-10" viewBox="0 0 24 24"><path d="M19 14l-4-4M5 14l4-4M12 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-6 14h12M9 11h6v3H9z"/></svg>`,
+            pull: `<svg class="w-10 h-10" viewBox="0 0 24 24"><path d="M12 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-5 4h10v2H7zm2 4h6v6H9zM3 19h18"/></svg>`,
+            legs: `<svg class="w-10 h-10" viewBox="0 0 24 24"><path d="M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3 5h6v4H9zm-1 6h3v5H8zm5 0h3v5h-3z"/></svg>`
+        };
+
+        // Estrutura das rotinas estáticas trazidas do seu app original
+        const defaultRoutine = {
+            casa: {
+                A: [
+                    { name: "Flexão de Braço Padrão", desc: "Foco no peitoral e tríceps. Mantenha o core firme.", meta: "4 SÉRIES x FALHA", vector: bonecoVectors.push },
+                    { name: "Flexão Diamante (Mãos Juntas)", desc: "Aproximação das mãos intensificando a ação do tríceps.", meta: "3 SÉRIES x 12 REPS", vector: bonecoVectors.push },
+                    { name: "Mergulho no Banco", desc: "Apoie as mãos na borda e desça flexionando os cotovelos.", meta: "3 SÉRIES x 15 REPS", vector: bonecoVectors.push }
+                ],
+                B: [
+                    { name: "Barra Fixa Pronada", desc: "Puxe o corpo controladamente até o queixo passar a barra.", meta: "4 SÉRIES x 8-12 REPS", vector: bonecoVectors.pull },
+                    { name: "Remada Curvada Unilateral", desc: "Puxe o peso em direção ao quadril esmagando a dorsal.", meta: "4 SÉRIES x 12 REPS", vector: bonecoVectors.pull }
+                ],
+                C: [
+                    { name: "Agachamento Livre Postural", desc: "Mantenha os pés na largura dos ombros e desça com controle.", meta: "4 SÉRIES x 20 REPS", vector: bonecoVectors.legs },
+                    { name: "Agachamento Búlgaro", desc: "Coloque um pé para trás apoiado no banco e desça verticalmente.", meta: "4 SÉRIES x 12 REPS", vector: bonecoVectors.legs }
+                ]
+            },
+            academia: {
+                A: [
+                    { name: "Supino Reto com Barra", desc: "Controle a descida até o peito e empurre com explosão.", meta: "4 SÉRIES x 10 REPS", vector: bonecoVectors.push },
+                    { name: "Supino Inclinado com Halteres", desc: "Trabalho forte na porção superior do peitoral.", meta: "4 SÉRIES x 12 REPS", vector: bonecoVectors.push }
+                ],
+                B: [
+                    { name: "Puxada Alta no Pulley", desc: "Puxe a barra em direção ao peitoral com tronco firme.", meta: "4 SÉRIES x 12 REPS", vector: bonecoVectors.pull }
+                ],
+                C: [
+                    { name: "Leg Press 45°", desc: "Empurre a plataforma mantendo a lombar totalmente apoiada.", meta: "4 SÉRIES x 12 REPS", vector: bonecoVectors.legs }
+                ]
             }
-        } catch (e) {
-            alert("Falha na inicialização: " + e.message);
-        }
+        };
 
+        // Estados Globais do Sistema
+        let currentEnvironment = "casa";
+        let currentDay = "A";
+        let currentUser = null;
+        let timerInterval = null;
+        let timeRemaining = 60;
+        let isTimerRunning = false;
+        let isSignUpMode = false;
+
+        // Elementos DOM
         const authScreen = document.getElementById('auth-screen');
         const setupScreen = document.getElementById('setup-screen');
         const appScreen = document.getElementById('app-screen');
+        const appNav = document.getElementById('app-nav');
+        const aiBtn = document.getElementById('ai-btn');
 
-        const authForm = document.getElementById('auth-form');
-        const authTitle = document.getElementById('auth-title');
-        const authEmail = document.getElementById('auth-email');
-        const authPassword = document.getElementById('auth-password');
-        const authSubmitBtn = document.getElementById('auth-submit-btn');
-        const toggleAuthMode = document.getElementById('toggle-auth-mode');
+        // Alternador de Abas de Autenticação
+        document.getElementById('tab-login').addEventListener('click', () => setAuthMode(false));
+        document.getElementById('tab-register').addEventListener('click', () => setAuthMode(true));
 
-        const setupForm = document.getElementById('setup-form');
-
-        let isSignUpMode = false;
-        let currentUser = null;
-
-        toggleAuthMode.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            isSignUpMode = !isSignUpMode;
-            if (isSignUpMode) {
-                authTitle.innerText = "Criar Nova Conta";
-                authSubmitBtn.innerText = "Cadastrar";
-                toggleAuthMode.innerText = "Já possui uma conta? Entre aqui";
+        function setAuthMode(signup) {
+            isSignUpMode = signup;
+            if(signup) {
+                document.getElementById('tab-register').className = "text-lg font-bold text-red-500 border-b-4 border-red-500 pb-2 px-2 focus:outline-none";
+                document.getElementById('tab-login').className = "text-lg font-bold text-gray-500 pb-2 px-2 focus:outline-none";
+                document.getElementById('auth-submit-btn').innerText = "Criar Conta";
             } else {
-                authTitle.innerText = "Entrar no Hybrid Training";
-                authSubmitBtn.innerText = "Entrar";
-                toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
+                document.getElementById('tab-login').className = "text-lg font-bold text-red-500 border-b-4 border-red-500 pb-2 px-2 focus:outline-none";
+                document.getElementById('tab-register').className = "text-lg font-bold text-gray-500 pb-2 px-2 focus:outline-none";
+                document.getElementById('auth-submit-btn').innerText = "Acessar Painel";
             }
-        });
+        }
 
-        authForm.addEventListener('submit', async (e) => {
+        // Fluxo de Autenticação (Login / Cadastro)
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = authEmail.value.trim();
-            const password = authPassword.value;
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+            const btn = document.getElementById('auth-submit-btn');
 
-            if (!supabase) return;
+            btn.disabled = true;
+            btn.innerText = "Processando...";
 
-            try {
-                if (isSignUpMode) {
-                    authSubmitBtn.innerText = "Cadastrando...";
-                    authSubmitBtn.disabled = true;
-                    const { data, error } = await supabase.auth.signUp({ email, password });
-                    if (error) {
-                        alert("Erro no cadastro: " + error.message);
-                    } else if (data?.user) {
-                        alert("Cadastro feito com sucesso! Agora entre com suas credenciais.");
-                        isSignUpMode = false;
-                        authTitle.innerText = "Entrar no Hybrid Training";
-                        authSubmitBtn.innerText = "Entrar";
-                        toggleAuthMode.innerText = "Não tem uma conta? Cadastre-se";
-                        authPassword.value = "";
-                    }
-                } else {
-                    authSubmitBtn.innerText = "Entrando...";
-                    authSubmitBtn.disabled = true;
-                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                    if (error) {
-                        alert("Erro no login: " + error.message);
-                    } else {
-                        await checkUserSession();
-                    }
+            if (isSignUpMode) {
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) alert("Erro: " + error.message);
+                else {
+                    alert("Conta criada! Mude para a aba 'Entrar' e faça login.");
+                    setAuthMode(false);
                 }
-            } catch (err) {
-                alert("Erro interno: " + err.message);
-            } finally {
-                authSubmitBtn.disabled = false;
-                authSubmitBtn.innerText = isSignUpMode ? "Cadastrar" : "Entrar";
+            } else {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) alert("Erro nas credenciais: " + error.message);
+                else await checkSession();
             }
+            btn.disabled = false;
         });
 
-        setupForm.addEventListener('submit', async (e) => {
+        // Configuração de Novo Perfil
+        document.getElementById('setup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return;
 
-            const profileData = {
+            const profile = {
                 id: currentUser.id,
                 name: document.getElementById('setup-name').value,
                 weight: parseFloat(document.getElementById('setup-weight').value),
@@ -224,62 +382,203 @@
                 goal: document.getElementById('setup-goal').value
             };
 
-            const { error } = await supabase.from('atleta_perfil').insert([profileData]);
-
-            if (error) {
-                alert("Erro ao salvar perfil: " + error.message);
-            } else {
-                showAppLayout(profileData);
-            }
+            const { error } = await supabase.from('atleta_perfil').insert([profile]);
+            if (error) alert("Erro ao salvar: " + error.message);
+            else await checkSession();
         });
 
+        // Logout
         document.getElementById('logout-btn').addEventListener('click', async () => {
-            if(supabase) await supabase.auth.signOut();
-            authScreen.classList.remove('hidden');
-            setupScreen.classList.add('hidden');
-            appScreen.classList.add('hidden');
-            authForm.reset();
+            await supabase.auth.signOut();
+            location.reload();
         });
 
-        async function checkUserSession() {
-            if (!supabase) return;
+        // Gerenciador de Abas de Exercícios (ABC)
+        ['A', 'B', 'C'].forEach(day => {
+            document.getElementById(`btn-${day}`).addEventListener('click', () => {
+                ['A', 'B', 'C'].forEach(d => document.getElementById(`btn-${d}`).classList.remove('active'));
+                document.getElementById(`btn-${day}`).classList.add('active');
+                currentDay = day;
+                renderWorkout();
+            });
+        });
+
+        // Alternador de Ambiente (Casa / Academia)
+        document.getElementById('nav-casa').addEventListener('click', () => switchEnvironment('casa'));
+        document.getElementById('nav-academia').addEventListener('click', () => switchEnvironment('academia'));
+
+        function switchEnvironment(env) {
+            currentEnvironment = env;
+            document.getElementById('nav-casa').classList.remove('active');
+            document.getElementById('nav-academia').classList.remove('active');
+            document.getElementById(`nav-${env}`).classList.add('active');
+            renderWorkout();
+        }
+
+        // Renderização Dinâmica dos Exercícios na Ficha
+        function renderWorkout() {
+            const container = document.getElementById('workout-container');
+            container.innerHTML = "";
+
+            const list = defaultRoutine[currentEnvironment][currentDay] || [];
+
+            if(list.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">Nenhum exercício agendado para hoje.</p>`;
+                return;
+            }
+
+            list.forEach(ex => {
+                const card = document.createElement('div');
+                card.className = "exercise-card rounded-xl overflow-hidden flex flex-col";
+                card.innerHTML = `
+                    <div class="flex p-4 gap-4 items-center">
+                        <div class="exercise-visual-box w-14 h-14 rounded-xl flex items-center justify-center text-gray-400">
+                            ${ex.vector || bonecoVectors.push}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-white">${ex.name}</h4>
+                            <p class="text-xs text-gray-400 mt-0.5">${ex.desc}</p>
+                        </div>
+                    </div>
+                    <div class="bg-black bg-opacity-25 px-4 py-2.5 flex justify-between items-center border-t border-gray-800 text-xs">
+                        <span class="font-bold text-red-500 tracking-wider">${ex.meta}</span>
+                        <span class="text-green-400 font-medium bg-green-950 bg-opacity-40 border border-green-900 px-2 py-0.5 rounded">Ativo</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Sistema do Cronômetro de Descanso
+        const display = document.getElementById('timer-display');
+        const startBtn = document.getElementById('btn-start-toggle');
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const s = (timeRemaining % 60).toString().padStart(2, '0');
+            display.innerText = `${m}:${s}`;
+        }
+
+        function toggleTimer() {
+            if(isTimerRunning) {
+                clearInterval(timerInterval);
+                startBtn.innerText = "Iniciar";
+                startBtn.className = "px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg";
+            } else {
+                timerInterval = setInterval(() => {
+                    if(timeRemaining > 0) {
+                        timeRemaining--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        alert("Hora de esmagar a próxima série! Descanso encerrado.");
+                        resetTimer();
+                    }
+                }, 1000);
+                startBtn.innerText = "Pausar";
+                startBtn.className = "px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg";
+            }
+            isTimerRunning = !isTimerRunning;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeRemaining = 60;
+            isTimerRunning = false;
+            startBtn.innerText = "Iniciar";
+            startBtn.className = "px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg";
+            updateTimerDisplay();
+        }
+
+        document.getElementById('btn-start-toggle').addEventListener('click', toggleTimer);
+        document.getElementById('btn-quick-60').addEventListener('click', () => { timeRemaining = 60; updateTimerDisplay(); });
+        document.getElementById('btn-quick-90').addEventListener('click', () => { timeRemaining = 90; updateTimerDisplay(); });
+        document.getElementById('btn-reset-timer').addEventListener('click', resetTimer);
+
+        // Chat da Inteligência Artificial (Ações de Tela)
+        const chatBox = document.getElementById('ai-chat');
+        document.getElementById('ai-btn').addEventListener('click', () => chatBox.classList.remove('hidden'));
+        document.getElementById('close-ai-chat').addEventListener('click', () => chatBox.classList.add('hidden'));
+
+        document.getElementById('btn-send-chat').addEventListener('click', sendChat);
+        document.getElementById('ai-chat-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChat(); });
+
+        function sendChat() {
+            const input = document.getElementById('ai-chat-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            const msgContainer = document.getElementById('ai-chat-messages');
+            
+            // Mensagem do usuário
+            const userBubble = document.createElement('div');
+            userBubble.className = "chat-bubble user p-3 rounded-2xl max-w-[85%] self-end ml-auto text-black font-medium";
+            userBubble.innerText = txt;
+            msgContainer.appendChild(userBubble);
+            input.value = "";
+
+            // Resposta Automática Simulada (Personal)
+            setTimeout(() => {
+                const aiBubble = document.createElement('div');
+                aiBubble.className = "chat-bubble ai p-3 rounded-2xl max-w-[85%] text-gray-200";
+                aiBubble.innerHTML = `Entendido! Como seu Personal Trainer, recomendo manter a cadência de 2 segundos na subida e 2 na descida para maximizar a eficiência no treino de hoje.`;
+                msgContainer.appendChild(aiBubble);
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }, 800);
+        }
+
+        // Validador de Sessão Permanente com Supabase
+        async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
             
-            if (session) {
+            if(session) {
                 currentUser = session.user;
-                const { data: perfil, error } = await supabase
+                
+                const { data: perfil } = await supabase
                     .from('atleta_perfil')
                     .select('*')
                     .eq('id', currentUser.id)
                     .single();
 
-                if (error || !perfil) {
+                if(!perfil) {
                     authScreen.classList.add('hidden');
                     setupScreen.classList.remove('hidden');
                     appScreen.classList.add('hidden');
                 } else {
-                    showAppLayout(perfil);
+                    authScreen.classList.add('hidden');
+                    setupScreen.classList.add('hidden');
+                    appScreen.classList.remove('hidden');
+                    appNav.style.display = "flex";
+                    aiBtn.style.display = "flex";
+
+                    // Injetar dados salvos nos painéis
+                    document.getElementById('user-name').innerText = perfil.name;
+                    document.getElementById('user-stats').innerText = `${perfil.weight}kg | ${perfil.height}m | ${perfil.age} anos`;
+                    document.getElementById('user-goal').innerText = perfil.goal;
+
+                    // Cálculo do IMC real do banco de dados
+                    const imc = (perfil.weight / (perfil.height * perfil.height)).toFixed(1);
+                    document.getElementById('lbl-imc-val').innerText = imc;
+                    
+                    let status = "Peso Ideal";
+                    if(imc < 18.5) status = "Abaixo do peso";
+                    else if(imc >= 25 && imc < 30) status = "Sobrepeso";
+                    else if(imc >= 30) status = "Obesidade";
+                    document.getElementById('lbl-imc-status').innerText = status;
+
+                    renderWorkout();
                 }
             } else {
                 authScreen.classList.remove('hidden');
                 setupScreen.classList.add('hidden');
                 appScreen.classList.add('hidden');
+                appNav.style.display = "none";
+                aiBtn.style.display = "none";
             }
         }
 
-        function showAppLayout(perfil) {
-            authScreen.classList.add('hidden');
-            setupScreen.classList.add('hidden');
-            appScreen.classList.remove('hidden');
-
-            document.getElementById('user-display-name').innerText = perfil.name;
-            document.getElementById('card-weight').innerText = `${perfil.weight} kg`;
-            document.getElementById('card-height').innerText = `${perfil.height} m`;
-            document.getElementById('card-age').innerText = `${perfil.age} anos`;
-            document.getElementById('card-goal').innerText = perfil.goal;
-        }
-
-        checkUserSession();
+        // Inicializar verificação ao abrir a página
+        checkSession();
     </script>
 </body>
 </html>

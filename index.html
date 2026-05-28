@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hybrid Fitness Pro Ultimate</title>
     
+    <!-- Tailwind CSS para estilização moderna -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <!-- Ícones para os botões -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Biblioteca do Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
     
     <style>
@@ -83,20 +86,6 @@
             color: var(--text-muted);
         }
         .nav-item.active { color: var(--primary); }
-
-        .ai-floating-btn {
-            background: linear-gradient(135deg, var(--accent), #00a8ff);
-            box-shadow: 0 4px 20px var(--accent-glow);
-            animation: pulseIA 2s infinite;
-        }
-        @keyframes pulseIA {
-            0 { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
-            50% { transform: scale(1.06); box-shadow: 0 4px 25px rgba(0, 210, 211, 0.6); }
-            100% { transform: scale(1); box-shadow: 0 4px 20px var(--accent-glow); }
-        }
-
-        .chat-bubble.ai { background: var(--bg-card); border: 1px solid var(--border); }
-        .chat-bubble.user { background: var(--accent); color: #000; }
         
         /* Custom Checkbox */
         .custom-checkbox {
@@ -121,12 +110,14 @@
 
     <div class="w-full max-w-xl mx-auto p-4 md:p-6 flex-1 flex flex-col justify-center">
         
+        <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
         <div id="auth-screen" class="auth-card p-8 w-full">
             <div class="brand-logo text-center text-3xl mb-6 tracking-wider">Hybrid<span>Fitness</span></div>
             
             <h2 id="auth-title" class="text-xl font-bold text-center text-white mb-4">Acessar Painel</h2>
             
             <form id="auth-form" class="space-y-4">
+                <!-- Campo Nome (Fica escondido no modo Login, aparece no modo Cadastro) -->
                 <div id="name-field" class="hidden">
                     <label class="block text-xs uppercase font-semibold text-gray-400 mb-1 tracking-wider">Nome Completo</label>
                     <input type="text" id="auth-name" placeholder="Seu nome" class="w-full p-3.5 rounded-lg bg-gray-900 border border-gray-800 text-white focus:border-red-500 focus:outline-none">
@@ -146,14 +137,17 @@
                 </button>
             </form>
 
+            <!-- Alternador de Telas (Login / Cadastro) -->
             <div class="text-center mt-6 text-sm text-gray-400">
                 <span id="auth-toggle-text">Novo por aqui?</span> 
                 <button onclick="toggleAuthMode()" id="btn-auth-toggle" class="text-red-500 font-semibold hover:underline ml-1">Criar uma conta</button>
             </div>
         </div>
 
+        <!-- TELA PRINCIPAL DO APP -->
         <div id="app-screen" class="hidden w-full space-y-4">
             
+            <!-- Painel Superior de Perfil -->
             <div class="p-5 rounded-2xl border border-gray-800" style="background: linear-gradient(135deg, #1e2430, #141821);">
                 <div class="flex justify-between items-start mb-4">
                     <div>
@@ -170,6 +164,7 @@
                     </div>
                 </div>
 
+                <!-- Bloco de Diagnóstico Corporal -->
                 <div class="p-4 bg-black bg-opacity-25 border border-gray-800 rounded-xl space-y-2">
                     <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider">📊 Diagnóstico Corporal & Progresso</div>
                     <div class="grid grid-cols-2 gap-2 text-xs">
@@ -185,13 +180,16 @@
                 </div>
             </div>
 
+            <!-- CONTEÚDO DAS ABAS DE TREINO (CASA E ACADEMIA) -->
             <div id="workout-content-area" class="space-y-4">
+                <!-- Seletores de Treino ABC -->
                 <div class="flex gap-2.5">
                     <button class="abc-btn active flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-A" onclick="changeDay('A')">Treino A</button>
                     <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-B" onclick="changeDay('B')">Treino B</button>
                     <button class="abc-btn flex-1 py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase" id="btn-C" onclick="changeDay('C')">Treino C</button>
                 </div>
 
+                <!-- Barra de Progresso Diária Dinâmica -->
                 <div class="p-3 bg-gray-800 rounded-xl border border-gray-700 space-y-1.5">
                     <div class="flex justify-between text-xs font-bold uppercase tracking-wider">
                         <span class="text-gray-400">Progresso do Treino</span>
@@ -202,13 +200,16 @@
                     </div>
                 </div>
 
+                <!-- Indicador de exercícios -->
                 <div class="flex justify-between items-center px-1">
                     <span class="text-xs uppercase font-bold text-gray-400 tracking-wider">Exercícios do Dia</span>
                     <span id="category-counter" class="text-xs px-2.5 py-1 bg-gray-800 border border-gray-700 text-gray-300 rounded-full font-bold">0 Exercícios</span>
                 </div>
 
+                <!-- Listagem Dinâmica dos Exercícios -->
                 <div id="workout-container" class="space-y-3"></div>
 
+                <!-- Módulo de Descanso / Cronômetro -->
                 <div class="p-4 bg-gray-800 rounded-2xl border border-gray-800 text-center">
                     <span class="text-xs text-gray-400 font-bold uppercase tracking-widest block mb-1">⏱️ Descanso</span>
                     <div class="timer-val text-4xl font-extrabold px-6 py-2 rounded-xl w-max mx-auto border mb-3 select-none cursor-pointer" id="timer-display">01:00</div>
@@ -221,6 +222,7 @@
                 </div>
             </div>
 
+            <!-- CONTEÚDO DA ABA DE PROGRESSO (HISTÓRICO) -->
             <div id="progress-content-area" class="hidden space-y-4">
                 <div class="p-4 bg-gray-800 border border-gray-700 rounded-xl">
                     <h4 class="text-sm font-bold text-white mb-3 uppercase tracking-wider">📈 Histórico de Cargas & Evolução</h4>
@@ -244,6 +246,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE EDIÇÃO DE EXERCÍCIO -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -277,6 +280,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE ATUALIZAÇÃO DE PESO -->
     <div id="weight-modal" class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -293,36 +297,7 @@
         </div>
     </div>
 
-    <button class="ai-floating-btn fixed bottom-24 right-5 w-14 h-14 rounded-full border border-white border-opacity-20 flex justify-center items-center z-40 focus:outline-none" id="ai-btn" style="display: none;">
-        <i class="fas fa-robot text-white text-xl"></i>
-    </button>
-
-    <div class="fixed inset-x-4 bottom-24 md:inset-x-auto md:bottom-40 md:right-5 md:w-96 bg-gray-900 border border-gray-800 z-50 flex flex-col hidden rounded-2xl overflow-hidden shadow-2xl" id="ai-chat" style="height: 450px; max-height: 60vh;">
-        <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <div>
-                    <h4 class="text-sm font-bold text-white">Hybrid Personal IA</h4>
-                    <span class="text-xs text-gray-400 uppercase tracking-wider">Modo Simulação Ativo</span>
-                </div>
-            </div>
-            <button id="close-ai-chat" class="text-gray-400 hover:text-white text-xl focus:outline-none">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="flex-1 p-4 overflow-y-auto space-y-3 text-sm flex flex-col" id="ai-chat-messages">
-            <div class="chat-bubble ai p-3.5 rounded-2xl max-w-[85%] text-gray-200">
-                Fala Thiago! Sou o seu Coach de Treinos Inteligente. O que você gostaria de mudar na sua ficha ou ajustar nos treinos hoje?
-            </div>
-        </div>
-        
-        <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
-            <input type="text" id="ai-chat-input" placeholder="Diga o que mudar no treino..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white outline-none">
-            <button id="btn-send-chat" class="bg-red-600 text-white font-bold px-4 rounded-xl text-sm transition hover:bg-red-700">Enviar</button>
-        </div>
-    </div>
-
+    <!-- ABA DE NAVEGAÇÃO INFERIOR COMPLETA -->
     <div class="bottom-nav fixed bottom-0 left-0 right-0 h-20 flex justify-around items-center z-30" id="app-nav" style="display: none;">
         <button class="nav-item active flex flex-col items-center gap-1 text-xs font-bold focus:outline-none" id="nav-casa" onclick="changeTab('casa')">
             <i class="fas fa-home text-lg"></i>Treino Casa
@@ -397,11 +372,6 @@
         const authScreen = document.getElementById('auth-screen');
         const appScreen = document.getElementById('app-screen');
         const appNav = document.getElementById('app-nav');
-        const aiBtn = document.getElementById('ai-btn');
-        const chatBox = document.getElementById('ai-chat');
-        const chatMessages = document.getElementById('ai-chat-messages');
-        const chatInput = document.getElementById('ai-chat-input');
-        const sendChatBtn = document.getElementById('btn-send-chat');
 
         // Função para alternar dinamicamente entre Login e Cadastro
         function toggleAuthMode() {
@@ -626,48 +596,6 @@
             renderWorkout();
         }
 
-        aiBtn.addEventListener('click', () => {
-            chatBox.classList.toggle('hidden');
-            scrollToBottomIA();
-        });
-        document.getElementById('close-ai-chat').addEventListener('click', () => chatBox.classList.add('hidden'));
-
-        function scrollToBottomIA() {
-            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
-        }
-
-        function enviarMensagemParaIA() {
-            const text = chatInput.value.trim();
-            if(!text) return;
-
-            const userDiv = document.createElement('div');
-            userDiv.className = "chat-bubble user p-3.5 rounded-2xl max-w-[85%] self-end text-sm";
-            userDiv.innerText = text;
-            chatMessages.appendChild(userDiv);
-            chatInput.value = '';
-            scrollToBottomIA();
-
-            setTimeout(() => {
-                const aiDiv = document.createElement('div');
-                aiDiv.className = "chat-bubble ai p-3.5 rounded-2xl max-w-[85%] self-start text-sm text-gray-200";
-                
-                const lowerText = text.toLowerCase();
-                if (lowerText.includes('mudar') || lowerText.includes('trocar') || lowerText.includes('substituir')) {
-                    aiDiv.innerText = "Entendido! Clique no ícone de lápis 📝 ao lado de qualquer exercício para alterá-lo, ou use o botão de exclusão 🗑️ se quiser removê-lo completamente da sua rotina atual.";
-                } else if (lowerText.includes('treino') || lowerText.includes('ficha')) {
-                    aiDiv.innerText = `Você está visualizando a rotina do Treino ${currentDay} no modo ${currentEnvironment === 'casa' ? 'Treino Casa' : 'Academia'}. Posso te ajudar a planejar as séries e repetições se quiser ajustar manualmente nos botões de edição!`;
-                } else {
-                    aiDiv.innerText = "Excelente pergunta! Para manter o foco na hipertrofia híbrida, certifique-se de executar os movimentos de forma controlada, focando na falha concêntrica entre 10 a 15 repetições e descansando de 60 a 90 segundos.";
-                }
-                
-                chatMessages.appendChild(aiDiv);
-                scrollToBottomIA();
-            }, 700);
-        }
-
-        sendChatBtn.addEventListener('click', enviarMensagemParaIA);
-        chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') enviarMensagemParaIA(); });
-
         // Cronômetro de Descanso
         let timerInterval = null;
         let timeRemaining = 60;
@@ -724,19 +652,15 @@
             if (authMode === 'cadastro') {
                 const nameInput = document.getElementById('auth-name').value;
                 if(nameInput.trim() !== "") {
-                    userProfile.name = nameInput; // Atualiza o perfil com o nome cadastrado
+                    userProfile.name = nameInput;
                 }
                 alert(`Cadastro realizado com sucesso para: ${email}! Redirecionando para o painel...`);
-            } else {
-                // Modo Login convencional
-                // Aqui você pode manter as chamadas do supabase.auth.signInWithPassword se tiver configurado
             }
 
             // Esconde a tela de login/cadastro e abre o app
             authScreen.classList.add('hidden');
             appScreen.classList.remove('hidden');
             appNav.style.display = 'flex';
-            aiBtn.style.display = 'flex';
             
             updateProfileUI();
             renderWorkout();
